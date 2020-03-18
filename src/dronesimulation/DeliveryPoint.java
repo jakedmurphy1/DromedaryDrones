@@ -14,4 +14,12 @@ public class DeliveryPoint {
     public double getDistTo(DeliveryPoint dp) {
         return Math.sqrt(Math.pow(this.x - dp.x, 2) + Math.pow(this.y - dp.y, 2));
     }
+
+    public double getX() {
+        return this.x;
+    }
+
+    public double getY() {
+        return this.y;
+    }
 }
