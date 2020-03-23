@@ -12,7 +12,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-
+	//test
     @Override
     public void start(Stage primaryStage) throws Exception{
     	
@@ -63,7 +63,10 @@ public class Main extends Application {
 
     public static void main(String[] args) {
     	
-        launch(args);
+        //launch(args);
+    	
+    	CampusMap gcc = new CampusMap("Grove City College");
+    	gcc.printCampusPoints();
         
     }
     
