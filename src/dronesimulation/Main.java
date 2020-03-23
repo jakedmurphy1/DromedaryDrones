@@ -19,7 +19,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("simulation.fxml"));
         primaryStage.setTitle("Drone Simulation");
         
-        //GUI Setup Testing Branching
+        //GUI Setup Testing Branchingg
         Button startSimulation = new Button("Start Simulation");
         startSimulation.setMaxSize(200, 50);
         startSimulation.setTranslateX(110);
