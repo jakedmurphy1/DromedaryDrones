@@ -40,5 +40,9 @@ public class Menu {
 		}
 		System.out.println("\n");
 	}
+	
+	public ArrayList<Order> getOrderList() {
+		return orderList;
+	}
 
 }

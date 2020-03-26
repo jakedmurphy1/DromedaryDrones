@@ -3,6 +3,8 @@ package dronesimulation;
 import javafx.scene.control.*;
 import javafx.scene.text.*;
 
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,6 +14,8 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+	
+	public int capacity;
 	//test
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -65,8 +69,28 @@ public class Main extends Application {
     	
         //launch(args);
     	
-    	CampusMap gcc = new CampusMap("Grove City College");
-    	gcc.printCampusPoints();
+    	Order a = new Order(1, 1, 1, 0.1, 1);
+    	Order b = new Order(2, 2, 2, 0.1, 2);
+    	Order c = new Order(3, 3, 3, 0.1, 3);
+    	Order d = new Order(4, 4, 4, 0.1, 4);
+    	Order e = new Order(5, 5, 5, 0.1, 5);
+    	
+    	Menu m = new Menu();
+    	m.addOrder(a);
+    	m.addOrder(b);
+    	m.addOrder(c);
+    	m.addOrder(d);
+    	m.addOrder(e);
+    	
+    	Knapsack test = new Knapsack(m, 3);
+    	
+    	ArrayList<Order> myArray = test.solve();
+    	
+    	for(Order o : myArray) {
+    		System.out.println(o.getOrderWeight());
+    	}
+    	
+
         
     }
     
