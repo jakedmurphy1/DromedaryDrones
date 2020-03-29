@@ -9,7 +9,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -18,12 +17,13 @@ public class Main extends Application {
 	
     @Override
     public void start(Stage primaryStage) throws Exception{
-    	
-        Parent root = FXMLLoader.load(getClass().getResource("simulation.fxml"));
+    	//Do we need this??
+        //Parent root = FXMLLoader.load(getClass().getResource("simulation.fxml"));
         primaryStage.setTitle("Drone Simulation");
         
         //GUI Setup
-        /* MAIN SCREEN
+        
+        /* WELCOME SCREEN */
         Button startSimulation = new Button("Start Simulation");
         startSimulation.setMaxSize(200, 50);
         startSimulation.setTranslateX(110);
@@ -55,13 +55,19 @@ public class Main extends Application {
         layout.getChildren().add(defaultSettings);
         layout.getChildren().add(title);
         layout.getChildren().add(description);
-        */
         
-        /* CUSTOM SIMULATION SETTINGS */
+    
+
+  
         
-        Label title = new Label("Setup/Custom Simulation");
-        title.setTranslateY(-160);
-        title.setFont(new Font("Arial", 25));
+        /* CUSTOM SIMULATION SETTINGS SCREEN */
+        Button customSimulationBackButton = new Button("Back");
+        customSimulationBackButton.setTranslateX(-320);
+        customSimulationBackButton.setTranslateY(-170);
+        
+        Label simulationSettingsTitle = new Label("Setup/Custom Simulation");
+        simulationSettingsTitle.setTranslateY(-160);
+        simulationSettingsTitle.setFont(new Font("Arial", 25));
         
         Label orderTypes = new Label("Order Types");
         orderTypes.setTranslateX(-150);
@@ -268,58 +274,81 @@ public class Main extends Application {
         deleteSelectedRow.setTranslateX(-165);
         deleteSelectedRow.setTranslateY(150);
         
-        Button startSimulation = new Button("Start Simulation");
-        startSimulation.setTranslateX(-25);
-        startSimulation.setTranslateY(150);
+        Button startSimulationSettings = new Button("Start Simulation");
+        startSimulationSettings.setTranslateX(-25);
+        startSimulationSettings.setTranslateY(150);
         
         //Add elements to layout/view
-        StackPane layout= new StackPane();
-        layout.getChildren().add(title);
-        layout.getChildren().add(orderTypes);
-        layout.getChildren().add(orderFrequency);
-        layout.getChildren().add(r);
-        layout.getChildren().add(r2);
-        layout.getChildren().add(burgers);
-        layout.getChildren().add(fries);
-        layout.getChildren().add(drinks);
-        layout.getChildren().add(probability);
-        layout.getChildren().add(weight);
-        layout.getChildren().add(burgers1);
-        layout.getChildren().add(burgers2);
-        layout.getChildren().add(burgers3);
-        layout.getChildren().add(fries1);
-        layout.getChildren().add(fries2);
-        layout.getChildren().add(fries3);
-        layout.getChildren().add(drinks1);
-        layout.getChildren().add(drinks2);
-        layout.getChildren().add(drinks3);
-        layout.getChildren().add(probability1);
-        layout.getChildren().add(probability2);
-        layout.getChildren().add(probability3);
-        layout.getChildren().add(weight1);
-        layout.getChildren().add(weight2);
-        layout.getChildren().add(weight3);
-        layout.getChildren().add(hour);
-        layout.getChildren().add(numOrders);
-        layout.getChildren().add(r3);
-        layout.getChildren().add(hour1);
-        layout.getChildren().add(hour2);
-        layout.getChildren().add(hour3);
-        layout.getChildren().add(hour4);
-        layout.getChildren().add(hourField1);
-        layout.getChildren().add(hourField2);
-        layout.getChildren().add(hourField3);
-        layout.getChildren().add(hourField4);
-        layout.getChildren().add(addOrder);
-        layout.getChildren().add(deleteSelectedRow);
-        layout.getChildren().add(startSimulation);
+        StackPane layout2 = new StackPane();
+        layout2.getChildren().add(customSimulationBackButton);
+        layout2.getChildren().add(simulationSettingsTitle);
+        layout2.getChildren().add(orderTypes);
+        layout2.getChildren().add(orderFrequency);
+        layout2.getChildren().add(r);
+        layout2.getChildren().add(r2);
+        layout2.getChildren().add(burgers);
+        layout2.getChildren().add(fries);
+        layout2.getChildren().add(drinks);
+        layout2.getChildren().add(probability);
+        layout2.getChildren().add(weight);
+        layout2.getChildren().add(burgers1);
+        layout2.getChildren().add(burgers2);
+        layout2.getChildren().add(burgers3);
+        layout2.getChildren().add(fries1);
+        layout2.getChildren().add(fries2);
+        layout2.getChildren().add(fries3);
+        layout2.getChildren().add(drinks1);
+        layout2.getChildren().add(drinks2);
+        layout2.getChildren().add(drinks3);
+        layout2.getChildren().add(probability1);
+        layout2.getChildren().add(probability2);
+        layout2.getChildren().add(probability3);
+        layout2.getChildren().add(weight1);
+        layout2.getChildren().add(weight2);
+        layout2.getChildren().add(weight3);
+        layout2.getChildren().add(hour);
+        layout2.getChildren().add(numOrders);
+        layout2.getChildren().add(r3);
+        layout2.getChildren().add(hour1);
+        layout2.getChildren().add(hour2);
+        layout2.getChildren().add(hour3);
+        layout2.getChildren().add(hour4);
+        layout2.getChildren().add(hourField1);
+        layout2.getChildren().add(hourField2);
+        layout2.getChildren().add(hourField3);
+        layout2.getChildren().add(hourField4);
+        layout2.getChildren().add(addOrder);
+        layout2.getChildren().add(deleteSelectedRow);
+        layout2.getChildren().add(startSimulationSettings);
         
-        //Create and Set the Scene
+        
+        
+        
+        /* SET THE SCENES */
         Scene scene1 = new Scene(layout, 750, 400);
+        Scene scene2 = new Scene(layout2, 750, 400);
         primaryStage.setScene(scene1);
-        
-        //Show it
         primaryStage.show();
+        
+        
+        
+        
+        /* SETUP BUTTON ACTIONS */
+        simulationSettings.setOnAction(e-> {
+        	//Create and Set the Scene
+            primaryStage.setScene(scene2);
+            primaryStage.show();
+        });
+        
+        customSimulationBackButton.setOnAction(e-> {
+        	//Create and Set the Scene
+            primaryStage.setScene(scene1);
+            primaryStage.show();
+        });
+        
+        startSimulation.setOnAction(e-> {
+        	//Start the simulation
+        });
         
     }
 
