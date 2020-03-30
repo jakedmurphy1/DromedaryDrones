@@ -15,4 +15,5 @@ public class Order {
 	public int getMealWeight() {
 		return meal.getWeight();
 	}
+	public DeliveryPoint getDeliveryPoint() { return point; }
 }
