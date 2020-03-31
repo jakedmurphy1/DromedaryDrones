@@ -71,7 +71,7 @@ public class Simulation {
 					deliveryTime = scheme.fillDrone(drone);
 					totalDeliveries++;
 					totalDeliveryTime += deliveryTime;
-				    nextAvailableMinute += deliveryTime + drone.getTurnAroundTime();
+				    nextAvailableMinute += Math.ceil(deliveryTime + drone.getTurnAroundTime());
 				}
 				minute++;
 			} //minute loop
