@@ -1,5 +1,11 @@
 package dronesimulation;
 
+<<<<<<< HEAD
+=======
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+>>>>>>> continued working in Simulation
 import java.util.Random;
 
 public class Simulation {
@@ -15,10 +21,22 @@ public class Simulation {
 	
 	//List of all delivery points
 	private DeliveryPoint[] points;
+<<<<<<< HEAD
 
 	private Random rand;
 	
 	public Simulation(CampusMap map, MealProbability[] mealProbs, int[] ordersPerHour) {
+=======
+	
+	//Drone
+	private Drone drone;
+	private boolean droneIsReady;
+	private int droneReadyTime; //time after drone leaves that it will be back and ready to deploy again
+		
+	private Random rand;
+	
+	public Simulation(DeliveryPoint[] points, MealProbability[] mealProbs, int[] ordersPerHour, Drone drone) {
+>>>>>>> continued working in Simulation
 		fifo = new FIFO();
 		drone = new Drone();
 		rand = new Random();
@@ -26,6 +44,9 @@ public class Simulation {
 		this.points = map.getPoints();
 		this.mealProbs = mealProbs;
 		this.ordersPerHour = ordersPerHour;
+		this.drone = drone;
+		
+		droneIsReady = true;
 	}
 	
 	public void run() {
@@ -66,6 +87,7 @@ public class Simulation {
 
 					scheme.addOrder(order);
 				}
+<<<<<<< HEAD
 				// Pack the drone if available
 				if (nextAvailableMinute <= minute) {
 					deliveryTime = scheme.fillDrone(drone);
@@ -80,5 +102,20 @@ public class Simulation {
 			System.out.println("time spent delivering: " + totalDeliveryTime);
 			System.out.println();
 		} //simulation loop
+=======
+				
+				//Check if drone is ready to deploy
+				if(!droneIsReady && minute == droneReadyTime) {
+					droneIsReady = true;
+				}
+				
+				if(droneIsReady) {
+					//Fill drone and set when drone will be ready again
+					droneReadyTime = minute + drone.getFlightTime(scheme.fillDrone(drone.getCargoWeight())) + drone.getTurnAroundTime();
+					droneIsReady = false;
+				}
+			}
+		}
+>>>>>>> continued working in Simulation
 	}
 }

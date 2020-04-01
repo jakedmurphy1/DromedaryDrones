@@ -12,8 +12,15 @@ public class Order {
 		this.point = point;
 	}
 	
-	public int getMealWeight() {
+	public double getMealWeight() {
 		return meal.getWeight();
 	}
+<<<<<<< HEAD
 	public DeliveryPoint getDeliveryPoint() { return point; }
+=======
+	
+	public DeliveryPoint getPoint() {
+		return point;
+	}
+>>>>>>> continued working in Simulation
 }
