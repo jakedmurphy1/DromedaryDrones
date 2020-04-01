@@ -13,6 +13,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import java.util.HashMap;
+
 public class Main extends Application {
 	
     @Override
@@ -40,7 +42,7 @@ public class Main extends Application {
         title.setTranslateY(-160);
         title.setFont(new Font("Arial", 25));
         
-        Label description = new Label("Welcome to the drone delivery simulation by Dromedary Drones! Click ‘Start Simulation’ to begin a new simulation with the default settings, or make a custom simulation in the settings tab.");
+        Label description = new Label("Welcome to the drone delivery simulation by Dromedary Drones! Click ï¿½Start Simulationï¿½ to begin a new simulation with the default settings, or make a custom simulation in the settings tab.");
         description.setTranslateY(-100);
         description.setWrapText(true);
         description.setMaxWidth(600);
@@ -353,7 +355,29 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-    	
+        /*CampusMap map = new CampusMap("Grove City College");
+        int[] ordersPerHour = {15, 17, 14, 12}; //TODO: get the actual default nums
+        FoodItem burger = new FoodItem(6);
+        FoodItem fries = new FoodItem(4);
+        FoodItem drink = new FoodItem(14);
+        // Meal 1
+        HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
+        items1.put(burger, 1);
+        items1.put(drink, 1);
+        Meal meal1 = new Meal(items1);
+        MealProbability mp1 = new MealProbability(meal1, 0.5);
+        // Meal 2
+        HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
+        items2.put(burger, 1);
+        items2.put(fries, 1);
+        Meal meal2 = new Meal(items2);
+        MealProbability mp2 = new MealProbability(meal2, 0.5);
+
+        MealProbability[] mp = {mp1, mp2};
+
+        Simulation sim = new Simulation(map, mp, ordersPerHour);
+        sim.run();*/
+
         launch(args);
         
     }

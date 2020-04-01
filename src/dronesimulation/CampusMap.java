@@ -37,7 +37,11 @@ public class CampusMap {
 			campus.put("Alumni", new DeliveryPoint(650, -3000));
 		}
 	}
-	
+
+	public DeliveryPoint[] getPoints() {
+		return campus.values().toArray(DeliveryPoint[]::new);
+	}
+
 	public void printCampusPoints() {
 		for(String key: campus.keySet()) {
 			System.out.println("Building: " + key + " points: (" + 
