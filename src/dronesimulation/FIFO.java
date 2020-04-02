@@ -12,36 +12,17 @@ public class FIFO implements DeliveryScheme {
 	}
 	
 	@Override
-<<<<<<< HEAD
-<<<<<<< HEAD
 	public double fillDrone(final Drone drone) {
 		if(orders.size() == 0) return 0;
 
 		int weight = 0;
 		List<Order> deliveries = new LinkedList<>();
-=======
-	public List<DeliveryPoint> fillDrone(final double weightCap) {
-		int weight = 0;
-		List<DeliveryPoint> deliveries = new LinkedList<>();
->>>>>>> continued working in Simulation
-=======
-	public List<DeliveryPoint> fillDrone(final double weightCap) {
-		int weight = 0;
-		List<DeliveryPoint> deliveries = new LinkedList<>();
-=======
-	public double fillDrone(final Drone drone) {
-		if(orders.size() == 0) return 0;
 
-		int weight = 0;
-		List<Order> deliveries = new LinkedList<>();
->>>>>>> Simulation now runs without errors. Needs more testing.
->>>>>>> Simulation now runs without errors. Needs more testing.
-		
 		//Add orders until next order would make drone too heavy
 		while(orders.peek() != null && weight + orders.peek().getMealWeight() < drone.getCargoWeight()) {
 			Order order = orders.poll();
 			
-			deliveries.add(order.getPoint());
+			deliveries.add(order);
 			
 			weight += order.getMealWeight();
 		}

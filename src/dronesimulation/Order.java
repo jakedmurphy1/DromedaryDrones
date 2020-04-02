@@ -15,21 +15,6 @@ public class Order {
 	public double getMealWeight() {
 		return meal.getWeight();
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 	public DeliveryPoint getDeliveryPoint() { return point; }
-=======
-=======
->>>>>>> Simulation now runs without errors. Needs more testing.
-	
-	public DeliveryPoint getPoint() {
-		return point;
-	}
-<<<<<<< HEAD
->>>>>>> continued working in Simulation
-=======
-=======
-	public DeliveryPoint getDeliveryPoint() { return point; }
->>>>>>> Simulation now runs without errors. Needs more testing.
->>>>>>> Simulation now runs without errors. Needs more testing.
 }
