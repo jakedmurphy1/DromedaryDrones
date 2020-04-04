@@ -67,7 +67,7 @@ public class Simulation {
 					scheme.addOrder(order);
 				}
 				// Pack the drone if available
-				if (nextAvailableMinute <= minute) {
+				if (nextAvailableMinute <= minute && !scheme.isEmpty()) {
 					deliveryTime = scheme.fillDrone(drone);
 					totalDeliveries++;
 					totalDeliveryTime += deliveryTime;
