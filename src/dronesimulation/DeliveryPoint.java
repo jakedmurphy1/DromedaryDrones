@@ -22,4 +22,20 @@ public class DeliveryPoint {
     public double getY() {
         return this.y;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == this) {
+            return true;
+        }
+
+        if(!(o instanceof DeliveryPoint)) {
+            return false;
+        }
+
+        DeliveryPoint dp = (DeliveryPoint) o;
+
+        return (dp.x == this.x) && (dp.y == this.y);
+    }
+
 }

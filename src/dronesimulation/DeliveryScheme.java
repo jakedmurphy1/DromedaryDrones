@@ -1,5 +1,6 @@
 package dronesimulation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
@@ -10,4 +11,6 @@ public interface DeliveryScheme {
 	public void addOrder(Order order);
 
 	public boolean isEmpty();
+
+	public ArrayList<Order> getDeliveredOrders();
 }

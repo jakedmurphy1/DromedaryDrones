@@ -1,5 +1,11 @@
 package dronesimulation;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.Buffer;
+import java.util.List;
 import java.util.Random;
 
 public class Simulation {
@@ -17,11 +23,22 @@ public class Simulation {
 	private DeliveryPoint[] points;
 
 	private Random rand;
+
+	//A temporary CSV file containing output
+	private File tempOutputFile;
+	private BufferedWriter writer;
 	
 	public Simulation(CampusMap map, MealProbability[] mealProbs, int[] ordersPerHour) {
 		fifo = new FIFO();
 		drone = new Drone();
 		rand = new Random();
+		try {
+			tempOutputFile = File.createTempFile("droneSim", ".csv");
+			writer = new BufferedWriter(new FileWriter(tempOutputFile));
+		} catch (IOException e) {
+			// TODO: proper error handling
+			e.printStackTrace();
+		}
 		
 		this.points = map.getPoints();
 		this.mealProbs = mealProbs;
@@ -75,10 +92,20 @@ public class Simulation {
 				}
 				minute++;
 			} //minute loop
-			System.out.println("One round complete, avg: " + totalDeliveryTime/totalDeliveries);
-			System.out.println("total deliveries: " + totalDeliveries);
-			System.out.println("time spent delivering: " + totalDeliveryTime);
-			System.out.println();
+
+			// All of the orders from the current simulation
+			List<Order> deliveredOrders = scheme.getDeliveredOrders();
+
+			// Output to CSV file
+			try {
+				for (Order deliveredOrder : deliveredOrders) {
+					// TODO: add initial order timestamp as well as
+					// the time it was delivered, the place it was delivered to, etc.
+					writer.write(simCount + "," + deliveredOrder.getMealWeight());
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		} //simulation loop
 	}
 }
