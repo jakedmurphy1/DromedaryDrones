@@ -12,5 +12,5 @@ public interface DeliveryScheme {
 
 	public boolean isEmpty();
 
-	public ArrayList<Order> getDeliveredOrders();
+	public List<Order> getDeliveredOrders();
 }
