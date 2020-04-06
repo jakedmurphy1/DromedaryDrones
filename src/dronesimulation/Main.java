@@ -16,11 +16,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Main extends Application {
 	
 	int addOrderYAxis = 165;
+	int numAddOrders = 0;
 	
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -309,7 +311,6 @@ public class Main extends Application {
         scrollPane.setContent(pane);
         
         //Add More Orders TextField array
-        int i = 0;
         TextField addBurgers[] = new TextField[99];
         TextField addFries[] = new TextField[99];
         TextField addDrinks[] = new TextField[99];
@@ -357,39 +358,41 @@ public class Main extends Application {
         
         /* SETUP BUTTON ACTIONS */
         addOrder.setOnAction(e-> {
-        	addBurgers[i] = new TextField();
-        	addBurgers[i].setTranslateX(30);
-        	addBurgers[i].setTranslateY(addOrderYAxis);
-        	addBurgers[i].setMaxWidth(40);
-        	pane.getChildren().add(addBurgers[i]);
+        	addBurgers[numAddOrders] = new TextField();
+        	addBurgers[numAddOrders].setTranslateX(30);
+        	addBurgers[numAddOrders].setTranslateY(addOrderYAxis);
+        	addBurgers[numAddOrders].setMaxWidth(40);
+        	pane.getChildren().add(addBurgers[numAddOrders]);
         	
-        	addFries[i] = new TextField();
-        	addFries[i].setTranslateX(97);
-        	addFries[i].setTranslateY(addOrderYAxis);
-        	addFries[i].setMaxWidth(40);
-        	pane.getChildren().add(addFries[i]);
+        	addFries[numAddOrders] = new TextField();
+        	addFries[numAddOrders].setTranslateX(97);
+        	addFries[numAddOrders].setTranslateY(addOrderYAxis);
+        	addFries[numAddOrders].setMaxWidth(40);
+        	pane.getChildren().add(addFries[numAddOrders]);
         	
-        	addDrinks[i] = new TextField();
-        	addDrinks[i].setTranslateX(162);
-        	addDrinks[i].setTranslateY(addOrderYAxis);
-        	addDrinks[i].setMaxWidth(40);
-        	pane.getChildren().add(addDrinks[i]);
+        	addDrinks[numAddOrders] = new TextField();
+        	addDrinks[numAddOrders].setTranslateX(162);
+        	addDrinks[numAddOrders].setTranslateY(addOrderYAxis);
+        	addDrinks[numAddOrders].setMaxWidth(40);
+        	pane.getChildren().add(addDrinks[numAddOrders]);
         	
-        	addProbability[i] = new TextField();
-        	addProbability[i].setTranslateX(245);
-        	addProbability[i].setTranslateY(addOrderYAxis);
-        	addProbability[i].setMaxWidth(40);
-        	pane.getChildren().add(addProbability[i]);
+        	addProbability[numAddOrders] = new TextField();
+        	addProbability[numAddOrders].setTranslateX(245);
+        	addProbability[numAddOrders].setTranslateY(addOrderYAxis);
+        	addProbability[numAddOrders].setMaxWidth(40);
+        	pane.getChildren().add(addProbability[numAddOrders]);
         	
-        	addWeight[i] = new TextField();
-        	addWeight[i].setTranslateX(324);
-        	addWeight[i].setTranslateY(addOrderYAxis);
-        	addWeight[i].setMaxWidth(40);
-        	pane.getChildren().add(addWeight[i]);
+        	addWeight[numAddOrders] = new TextField();
+        	addWeight[numAddOrders].setTranslateX(324);
+        	addWeight[numAddOrders].setTranslateY(addOrderYAxis);
+        	addWeight[numAddOrders].setMaxWidth(40);
+        	pane.getChildren().add(addWeight[numAddOrders]);
         	
         	addOrderYAxis += 40;
         	
         	pane.setPrefHeight(pane.getHeight() + 40);
+        	
+        	numAddOrders++;
         	
         });
         
@@ -406,34 +409,119 @@ public class Main extends Application {
         });
         
         startSimulation.setOnAction(e-> {
-        	//Start the simulation
+        	//Start the simulation with DEFAULT settings
+        	
+        	FoodItem burgerItem = new FoodItem(6);
+            FoodItem friesItem = new FoodItem(4);
+            FoodItem drinkItem = new FoodItem(14);
+            
+        	CampusMap map = new CampusMap("Grove City College");
+            int[] ordersPerHour = {15, 17, 22, 12};
+            // Meal 1
+            HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
+            items1.put(burgerItem, 2);
+            items1.put(drinkItem, 1);
+            Meal meal1 = new Meal(items1);
+            MealProbability mp1 = new MealProbability(meal1, 0.5);
+            // Meal 2
+            HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
+            items2.put(burgerItem, 1);
+            items2.put(friesItem, 1);
+            Meal meal2 = new Meal(items2);
+            MealProbability mp2 = new MealProbability(meal2, 0.5);
+
+            MealProbability[] mp = {mp1, mp2};
+
+            Simulation sim = new Simulation(map, mp, ordersPerHour);
+            sim.run();
+            
+        });
+        
+        startSimulationSettings.setOnAction(e-> {
+        	//Start the simulation with CUSTOM settings
+        	
+        	FoodItem burgerItem = new FoodItem(6);
+            FoodItem friesItem = new FoodItem(4);
+            FoodItem drinkItem = new FoodItem(14);
+            
+        	CampusMap map = new CampusMap("Grove City College");
+        	
+        	//Get orders per hour from user input
+            int[] ordersPerHour = new int[4];
+            ordersPerHour[0] = Integer.parseInt(hour1.getText());
+            ordersPerHour[1] = Integer.parseInt(hour2.getText());
+            ordersPerHour[2] = Integer.parseInt(hour3.getText());
+            ordersPerHour[3] = Integer.parseInt(hour4.getText());
+            
+            //Create arraylist to hold order then convert to array later
+            ArrayList<MealProbability> groupOrders = new ArrayList<MealProbability>();
+            
+            //Get any custom orders entered by user
+            if (!probability1.getText().equals("")) {
+            	HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
+            	items1.put(burgerItem, Integer.parseInt(burgers1.getText()));
+                items1.put(drinkItem, Integer.parseInt(drinks1.getText()));
+                items1.put(friesItem, Integer.parseInt(fries1.getText()));
+                
+                Meal meal1 = new Meal(items1);
+                MealProbability mp1 = new MealProbability(meal1, Integer.parseInt(probability1.getText()));
+                groupOrders.add(mp1);
+                System.out.println(mp1.getProbability());
+            }
+			if (!probability2.getText().equals("")) {
+				HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
+				items2.put(burgerItem, Integer.parseInt(burgers2.getText()));
+                items2.put(drinkItem, Integer.parseInt(drinks2.getText()));
+                items2.put(friesItem, Integer.parseInt(fries2.getText()));
+                
+                Meal meal2 = new Meal(items2);
+                MealProbability mp2 = new MealProbability(meal2, Integer.parseInt(probability2.getText()));
+                groupOrders.add(mp2);
+                System.out.println(mp2.getProbability());
+            }
+			if (!probability3.getText().equals("")) {
+				HashMap<FoodItem, Integer> items3 = new HashMap<FoodItem, Integer>();
+				items3.put(burgerItem, Integer.parseInt(burgers3.getText()));
+                items3.put(drinkItem, Integer.parseInt(drinks3.getText()));
+                items3.put(friesItem, Integer.parseInt(fries3.getText()));
+                
+                Meal meal3 = new Meal(items3);
+                MealProbability mp3 = new MealProbability(meal3, Integer.parseInt(probability3.getText()));
+                groupOrders.add(mp3);
+                System.out.println(mp3.getProbability());
+			}
+			
+			
+			//Add in any textFields the user implemented using the addOrder button
+			
+			for (int j = 0; j < numAddOrders; j++) {
+				if (!addProbability[j].getText().equals("")) {
+					HashMap<FoodItem, Integer> newItem = new HashMap<FoodItem, Integer>();
+					newItem.put(burgerItem, Integer.parseInt(addBurgers[j].getText()));
+	                newItem.put(drinkItem, Integer.parseInt(addDrinks[j].getText()));
+	                newItem.put(friesItem, Integer.parseInt(addFries[j].getText()));
+	                
+	                Meal newMeal = new Meal(newItem);
+	                MealProbability newMealProbability = new MealProbability(newMeal, Integer.parseInt(addProbability[j].getText()));
+	                groupOrders.add(newMealProbability);
+	                System.out.println(newMealProbability.getProbability());
+				}
+			}
+            
+			//Convert arrayList to array to support being passed into Simulation
+			MealProbability[] mp = new MealProbability[groupOrders.size()];
+			for (int j = 0; j < groupOrders.size(); j++) {
+				mp[j] = groupOrders.get(j);
+			}
+
+            Simulation sim = new Simulation(map, mp, ordersPerHour);
+            sim.run();
+            
         });
         
     }
 
     public static void main(String[] args) {
-        /*CampusMap map = new CampusMap("Grove City College");
-        int[] ordersPerHour = {15, 17, 14, 12}; //TODO: get the actual default nums
-        FoodItem burger = new FoodItem(6);
-        FoodItem fries = new FoodItem(4);
-        FoodItem drink = new FoodItem(14);
-        // Meal 1
-        HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
-        items1.put(burger, 1);
-        items1.put(drink, 1);
-        Meal meal1 = new Meal(items1);
-        MealProbability mp1 = new MealProbability(meal1, 0.5);
-        // Meal 2
-        HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
-        items2.put(burger, 1);
-        items2.put(fries, 1);
-        Meal meal2 = new Meal(items2);
-        MealProbability mp2 = new MealProbability(meal2, 0.5);
-
-        MealProbability[] mp = {mp1, mp2};
-
-        Simulation sim = new Simulation(map, mp, ordersPerHour);
-        sim.run();*/
 
         launch(args);
         
