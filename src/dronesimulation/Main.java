@@ -13,6 +13,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Main extends Application {
@@ -349,7 +350,53 @@ public class Main extends Application {
         });
         
         startSimulation.setOnAction(e-> {
-        	//Start the simulation
+        	//Gather meal probabilities
+        	ArrayList<MealProbability> mealProbs = new ArrayList<>();
+        	FoodItem burger = new FoodItem(BURGER_WEIGHT);
+        	FoodItem fry = new FoodItem(FRIES_WEIGHT);
+        	FoodItem drink = new FoodItem(DRINK_WEIGHT);
+        	Meal meal;
+        	
+        	meal = new Meal(new HashMap<FoodItem, Integer>() {
+        		{
+        			put(burger, Integer.parseInt(burgers1.getText()));
+        			put(fry, Integer.parseInt(fries1.getText()));
+        			put(drink, Integer.parseInt(drinks1.getText()));
+        		}
+        	});
+        	
+        	mealProbs.add(new MealProbability(meal, Double.parseDouble(probability1.getText())));
+        	
+        	meal = new Meal(new HashMap<FoodItem, Integer>() {
+        		{
+        			put(burger, Integer.parseInt(burgers2.getText()));
+        			put(fry, Integer.parseInt(fries2.getText()));
+        			put(drink, Integer.parseInt(drinks2.getText()));
+        		}
+        	});
+        	
+        	mealProbs.add(new MealProbability(meal, Double.parseDouble(probability2.getText())));
+        	
+        	meal = new Meal(new HashMap<FoodItem, Integer>() {
+        		{
+        			put(burger, Integer.parseInt(burgers3.getText()));
+        			put(fry, Integer.parseInt(fries3.getText()));
+        			put(drink, Integer.parseInt(drinks3.getText()));
+        		}
+        	});
+        	
+        	mealProbs.add(new MealProbability(meal, Double.parseDouble(probability3.getText())));
+
+        	//Gather orders per hour
+        	int[] ordersPerHour = new int[] {
+        			Integer.parseInt(hourField1.getText()),
+        			Integer.parseInt(hourField1.getText()),
+        			Integer.parseInt(hourField1.getText()),
+        			Integer.parseInt(hourField1.getText())
+        	};
+        	
+        	//Start simulation
+        	Simulation sim = new Simulation(map, mealProbs.toArray(), ordersPerHour);
         });
         
     }
