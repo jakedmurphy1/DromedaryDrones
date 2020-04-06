@@ -1,10 +1,6 @@
 package dronesimulation;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.Buffer;
+import java.io.*;
 import java.util.List;
 import java.util.Random;
 
@@ -107,5 +103,29 @@ public class Simulation {
 				e.printStackTrace();
 			}
 		} //simulation loop
+	}
+
+	// Intended to be used after the simulation
+	// has been run and a file has been chosen
+	// via .showSaveDialog in the GUI
+	public void saveCSV(File fileToSave) {
+		try {
+			// Copy the contents of tempOutputFile to fileToSave
+			FileReader fr = new FileReader(tempOutputFile);
+			BufferedReader br = new BufferedReader(fr);
+			FileWriter fw = new FileWriter(fileToSave);
+			String currentLine = br.readLine();
+
+			while(currentLine != null) {
+				fw.write(currentLine);
+				currentLine = br.readLine();
+			}
+			fw.flush();
+			fw.close();
+			br.close();
+		} catch(IOException e) {
+			// TODO: proper error handling
+            e.printStackTrace();
+		}
 	}
 }
