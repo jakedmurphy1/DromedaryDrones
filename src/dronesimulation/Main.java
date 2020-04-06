@@ -410,7 +410,7 @@ public class Main extends Application {
         
         startSimulation.setOnAction(e-> {
         	//Start the simulation with DEFAULT settings
-        	
+        	Drone drone = new Drone();
         	FoodItem burgerItem = new FoodItem(6);
             FoodItem friesItem = new FoodItem(4);
             FoodItem drinkItem = new FoodItem(14);
@@ -422,12 +422,28 @@ public class Main extends Application {
             items1.put(burgerItem, 2);
             items1.put(drinkItem, 1);
             Meal meal1 = new Meal(items1);
+            
+            //Verify order weight
+            if(meal1.getWeight() > drone.getCargoWeight())
+            {
+            	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+            	return;
+            }
+            
             MealProbability mp1 = new MealProbability(meal1, 0.5);
             // Meal 2
             HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
             items2.put(burgerItem, 1);
             items2.put(friesItem, 1);
             Meal meal2 = new Meal(items2);
+            
+            //Verify order weight
+            if(meal2.getWeight() > drone.getCargoWeight())
+            {
+            	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+            	return;
+            }
+            
             MealProbability mp2 = new MealProbability(meal2, 0.5);
 
             MealProbability[] mp = {mp1, mp2};
@@ -439,7 +455,7 @@ public class Main extends Application {
         
         startSimulationSettings.setOnAction(e-> {
         	//Start the simulation with CUSTOM settings
-        	
+        	Drone drone = new Drone();
         	FoodItem burgerItem = new FoodItem(6);
             FoodItem friesItem = new FoodItem(4);
             FoodItem drinkItem = new FoodItem(14);
@@ -464,6 +480,14 @@ public class Main extends Application {
                 items1.put(friesItem, Integer.parseInt(fries1.getText()));
                 
                 Meal meal1 = new Meal(items1);
+                
+                //Verify order weight
+                if(meal1.getWeight() > drone.getCargoWeight())
+                {
+                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+                	return;
+                }
+
                 MealProbability mp1 = new MealProbability(meal1, Integer.parseInt(probability1.getText()));
                 groupOrders.add(mp1);
                 System.out.println(mp1.getProbability());
@@ -475,6 +499,14 @@ public class Main extends Application {
                 items2.put(friesItem, Integer.parseInt(fries2.getText()));
                 
                 Meal meal2 = new Meal(items2);
+                
+                //Verify order weight
+                if(meal2.getWeight() > drone.getCargoWeight())
+                {
+                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+                	return;
+                }
+
                 MealProbability mp2 = new MealProbability(meal2, Integer.parseInt(probability2.getText()));
                 groupOrders.add(mp2);
                 System.out.println(mp2.getProbability());
@@ -486,6 +518,14 @@ public class Main extends Application {
                 items3.put(friesItem, Integer.parseInt(fries3.getText()));
                 
                 Meal meal3 = new Meal(items3);
+                
+                //Verify order weight
+                if(meal3.getWeight() > drone.getCargoWeight())
+                {
+                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+                	return;
+                }
+
                 MealProbability mp3 = new MealProbability(meal3, Integer.parseInt(probability3.getText()));
                 groupOrders.add(mp3);
                 System.out.println(mp3.getProbability());
@@ -502,6 +542,14 @@ public class Main extends Application {
 	                newItem.put(friesItem, Integer.parseInt(addFries[j].getText()));
 	                
 	                Meal newMeal = new Meal(newItem);
+	                
+	                //Verify order weight
+	                if(newMeal.getWeight() > drone.getCargoWeight())
+	                {
+	                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+	                	return;
+	                }
+
 	                MealProbability newMealProbability = new MealProbability(newMeal, Integer.parseInt(addProbability[j].getText()));
 	                groupOrders.add(newMealProbability);
 	                System.out.println(newMealProbability.getProbability());
