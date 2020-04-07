@@ -16,6 +16,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,6 +25,12 @@ public class Main extends Application {
 	
 	int addOrderYAxis = 165;
 	int numAddOrders = 0;
+	
+	String userDir = System.getProperty("user.dir");
+	String fileLoc = userDir + "\\customSettings.txt";
+	
+	FileWriter fw;
+	PrintWriter pw;
 	
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -462,12 +470,33 @@ public class Main extends Application {
             
         	CampusMap map = new CampusMap("Grove City College");
         	
+        	
         	//Get orders per hour from user input
             int[] ordersPerHour = new int[4];
             ordersPerHour[0] = Integer.parseInt(hour1.getText());
             ordersPerHour[1] = Integer.parseInt(hour2.getText());
             ordersPerHour[2] = Integer.parseInt(hour3.getText());
             ordersPerHour[3] = Integer.parseInt(hour4.getText());
+            
+            //File I/O for stochastic flow of custom orders
+            try {
+            	
+            	fw = new FileWriter(fileLoc, true);
+            	pw = new PrintWriter(fw);
+            	
+            	pw.print("Begin custom order\n");
+            	
+            	pw.print("Orders per hour\n");
+            	for(int i = 0; i < ordersPerHour.length; i++) {
+            		pw.print(ordersPerHour[i] + "\n");
+            	}
+            	
+            	pw.flush();
+            	pw.close();
+            	
+            } catch(Exception exception) {
+            	exception.printStackTrace();
+            }
             
             //Create arraylist to hold order then convert to array later
             ArrayList<MealProbability> groupOrders = new ArrayList<MealProbability>();
@@ -491,6 +520,25 @@ public class Main extends Application {
                 MealProbability mp1 = new MealProbability(meal1, Integer.parseInt(probability1.getText()));
                 groupOrders.add(mp1);
                 System.out.println(mp1.getProbability());
+                
+                // File I/O to add first meal to custom settings file
+                try {
+                	
+                	fw = new FileWriter(fileLoc, true);
+                	pw = new PrintWriter(fw);
+                	
+                	pw.print("Orders listed as follows: #burgers, #drinks, #fries, weight, probability\n");
+                	
+                	pw.print(Integer.parseInt(burgers1.getText()) + "\t" + Integer.parseInt(drinks1.getText()) + 
+                			"\t" + Integer.parseInt(fries1.getText()) + "\t" + meal1.getWeight() + "\t" + Integer.parseInt(probability1.getText()) + "\n");
+                	
+                	pw.flush();
+                	pw.close();
+                	
+                } catch(Exception exception) {
+                	exception.printStackTrace();
+                }
+                
             }
 			if (!probability2.getText().equals("")) {
 				HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
@@ -510,6 +558,22 @@ public class Main extends Application {
                 MealProbability mp2 = new MealProbability(meal2, Integer.parseInt(probability2.getText()));
                 groupOrders.add(mp2);
                 System.out.println(mp2.getProbability());
+                
+                try {
+                	
+                	fw = new FileWriter(fileLoc, true);
+                	pw = new PrintWriter(fw);       
+                	
+                	pw.print(Integer.parseInt(burgers2.getText()) + "\t" + Integer.parseInt(drinks2.getText()) + 
+                			"\t" + Integer.parseInt(fries2.getText()) + "\t" + meal2.getWeight() + "\t" + Integer.parseInt(probability2.getText()) + "\n");
+                	
+                	pw.flush();
+                	pw.close();
+                	
+                } catch(Exception exception) {
+                	exception.printStackTrace();
+                }
+                
             }
 			if (!probability3.getText().equals("")) {
 				HashMap<FoodItem, Integer> items3 = new HashMap<FoodItem, Integer>();
@@ -529,6 +593,22 @@ public class Main extends Application {
                 MealProbability mp3 = new MealProbability(meal3, Integer.parseInt(probability3.getText()));
                 groupOrders.add(mp3);
                 System.out.println(mp3.getProbability());
+                
+                try {
+                	
+                	fw = new FileWriter(fileLoc, true);
+                	pw = new PrintWriter(fw);
+                	
+                	pw.print(Integer.parseInt(burgers3.getText()) + "\t" + Integer.parseInt(drinks3.getText()) + 
+                			"\t" + Integer.parseInt(fries3.getText()) + "\t" + meal3.getWeight() + "\t" + Integer.parseInt(probability3.getText()) + "\n");
+                	
+                	pw.flush();
+                	pw.close();
+                	
+                } catch(Exception exception) {
+                	exception.printStackTrace();
+                }
+                
 			}
 			
 			
@@ -553,6 +633,22 @@ public class Main extends Application {
 	                MealProbability newMealProbability = new MealProbability(newMeal, Integer.parseInt(addProbability[j].getText()));
 	                groupOrders.add(newMealProbability);
 	                System.out.println(newMealProbability.getProbability());
+	                
+	                try {
+	                	
+	                	fw = new FileWriter(fileLoc, true);
+	                	pw = new PrintWriter(fw);
+	                	
+	                	pw.print(Integer.parseInt(addBurgers[j].getText()) + "\t" + Integer.parseInt(addDrinks[j].getText()) + 
+	                			"\t" + Integer.parseInt(addFries[j].getText()) + "\t" + newMeal.getWeight() + "\t" + Integer.parseInt(addProbability[j].getText()) + "\n");
+	                	
+	                	pw.flush();
+	                	pw.close();
+	                	
+	                } catch(Exception exception) {
+	                	exception.printStackTrace();
+	                }
+	                
 				}
 			}
             
@@ -562,6 +658,21 @@ public class Main extends Application {
 				mp[j] = groupOrders.get(j);
 			}
 
+			//File I/O to let us know we have reached the end of a custom order
+			try {
+				
+				fw = new FileWriter(fileLoc, true);
+				pw = new PrintWriter(fw);
+				
+				pw.print("End custom order\n");
+				
+				pw.flush();
+				pw.close();
+				
+			} catch(Exception exception) {
+				exception.printStackTrace();
+			}
+			
             Simulation sim = new Simulation(map, mp, ordersPerHour);
             sim.run();
             
