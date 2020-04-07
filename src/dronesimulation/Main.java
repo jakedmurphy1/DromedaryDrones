@@ -1,6 +1,7 @@
 package dronesimulation;
 
 import javafx.scene.control.*;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.text.*;
 import javafx.scene.paint.Color;
 
@@ -8,14 +9,20 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Main extends Application {
+	
+	int addOrderYAxis = 165;
+	int numAddOrders = 0;
 	
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -81,17 +88,6 @@ public class Main extends Application {
         orderFrequency.setTranslateY(-100);
         orderFrequency.setFont(new Font("Arial", 15));
         
-        Rectangle r = new Rectangle();
-        r.setTranslateX(-150);
-        r.setTranslateY(25);
-        r.setWidth(400);
-        r.setHeight(200);
-        r.setArcWidth(20);
-        r.setArcHeight(20);
-        r.setFill(Color.TRANSPARENT);
-        r.setStroke(Color.BLACK);
-        r.setStrokeWidth(2);
-        
         Rectangle r2 = new Rectangle();
         r2.setTranslateX(205);
         r2.setTranslateY(5);
@@ -104,109 +100,109 @@ public class Main extends Application {
         r2.setStrokeWidth(2);
         
         Label burgers = new Label("Burgers");
-        burgers.setTranslateX(-300);
-        burgers.setTranslateY(-50);
+        burgers.setTranslateX(25);
+        burgers.setTranslateY(15);
         burgers.setFont(new Font("Arial", 15));
         
         Label fries = new Label("Fries");
-        fries.setTranslateX(-230);
-        fries.setTranslateY(-50);
+        fries.setTranslateX(100);
+        fries.setTranslateY(15);
         fries.setFont(new Font("Arial", 15));
         
         Label drinks = new Label("Drinks");
-        drinks.setTranslateX(-160);
-        drinks.setTranslateY(-50);
+        drinks.setTranslateX(160);
+        drinks.setTranslateY(15);
         drinks.setFont(new Font("Arial", 15));
         
         Label probability = new Label("Probability");
-        probability.setTranslateX(-80);
-        probability.setTranslateY(-50);
+        probability.setTranslateX(230);
+        probability.setTranslateY(15);
         probability.setFont(new Font("Arial", 15));
         
         Label weight = new Label("Weight");
-        weight.setTranslateX(0);
-        weight.setTranslateY(-50);
+        weight.setTranslateX(320);
+        weight.setTranslateY(15);
         weight.setFont(new Font("Arial", 15));
         
         //Text Fields
         //Burgers
         TextField burgers1 = new TextField();
-        burgers1.setTranslateX(-300);
-        burgers1.setTranslateY(-20);
+        burgers1.setTranslateX(30);
+        burgers1.setTranslateY(45);
         burgers1.setMaxWidth(40);
         
         TextField burgers2 = new TextField();
-        burgers2.setTranslateX(-300);
-        burgers2.setTranslateY(20);
+        burgers2.setTranslateX(30);
+        burgers2.setTranslateY(85);
         burgers2.setMaxWidth(40);
         
         TextField burgers3 = new TextField();
-        burgers3.setTranslateX(-300);
-        burgers3.setTranslateY(60);
+        burgers3.setTranslateX(30);
+        burgers3.setTranslateY(125);
         burgers3.setMaxWidth(40);
         
         //Fries
         TextField fries1 = new TextField();
-        fries1.setTranslateX(-230);
-        fries1.setTranslateY(-20);
+        fries1.setTranslateX(97);
+        fries1.setTranslateY(45);
         fries1.setMaxWidth(40);
         
         TextField fries2 = new TextField();
-        fries2.setTranslateX(-230);
-        fries2.setTranslateY(20);
+        fries2.setTranslateX(97);
+        fries2.setTranslateY(85);
         fries2.setMaxWidth(40);
         
         TextField fries3 = new TextField();
-        fries3.setTranslateX(-230);
-        fries3.setTranslateY(60);
+        fries3.setTranslateX(97);
+        fries3.setTranslateY(125);
         fries3.setMaxWidth(40);
         
         //Drinks
         TextField drinks1 = new TextField();
-        drinks1.setTranslateX(-160);
-        drinks1.setTranslateY(-20);
+        drinks1.setTranslateX(162);
+        drinks1.setTranslateY(45);
         drinks1.setMaxWidth(40);
         
         TextField drinks2 = new TextField();
-        drinks2.setTranslateX(-160);
-        drinks2.setTranslateY(20);
+        drinks2.setTranslateX(162);
+        drinks2.setTranslateY(85);
         drinks2.setMaxWidth(40);
         
         TextField drinks3 = new TextField();
-        drinks3.setTranslateX(-160);
-        drinks3.setTranslateY(60);
+        drinks3.setTranslateX(162);
+        drinks3.setTranslateY(125);
         drinks3.setMaxWidth(40);
         
         //Probability
         TextField probability1 = new TextField();
-        probability1.setTranslateX(-80);
-        probability1.setTranslateY(-20);
+        probability1.setTranslateX(245);
+        probability1.setTranslateY(45);
         probability1.setMaxWidth(40);
         
         TextField probability2 = new TextField();
-        probability2.setTranslateX(-80);
-        probability2.setTranslateY(20);
+        probability2.setTranslateX(245);
+        probability2.setTranslateY(85);
         probability2.setMaxWidth(40);
         
         TextField probability3 = new TextField();
-        probability3.setTranslateX(-80);
-        probability3.setTranslateY(60);
+        probability3.setTranslateX(245);
+        probability3.setTranslateY(125);
         probability3.setMaxWidth(40);
         
         //Weight
         TextField weight1 = new TextField();
-        weight1.setTranslateX(0);
-        weight1.setTranslateY(-20);
+        weight1.setTranslateX(324);
+        weight1.setTranslateY(45);
         weight1.setMaxWidth(40);
         
         TextField weight2 = new TextField();
-        weight2.setTranslateX(0);
-        weight2.setTranslateY(20);
+        weight2.setTranslateX(324);
+        weight2.setTranslateY(85);
         weight2.setMaxWidth(40);
         
         TextField weight3 = new TextField();
-        weight3.setTranslateX(0);
-        weight3.setTranslateY(60);
+        weight3.setTranslateX(324);
+        weight3.setTranslateY(125);
         weight3.setMaxWidth(40);
         
         //Order Frequency Section
@@ -280,34 +276,60 @@ public class Main extends Application {
         startSimulationSettings.setTranslateX(-25);
         startSimulationSettings.setTranslateY(150);
         
+        //Set scroll pane
+        Pane pane = new Pane();
+        pane.setPrefHeight(200);
+        pane.setPrefWidth(385);
+        pane.getChildren().add(burgers);
+        pane.getChildren().add(fries);
+        pane.getChildren().add(drinks);
+        pane.getChildren().add(probability);
+        pane.getChildren().add(weight);
+        pane.getChildren().add(burgers1);
+        pane.getChildren().add(burgers2);
+        pane.getChildren().add(burgers3);
+        pane.getChildren().add(fries1);
+        pane.getChildren().add(fries2);
+        pane.getChildren().add(fries3);
+        pane.getChildren().add(drinks1);
+        pane.getChildren().add(drinks2);
+        pane.getChildren().add(drinks3);
+        pane.getChildren().add(probability1);
+        pane.getChildren().add(probability2);
+        pane.getChildren().add(probability3);
+        pane.getChildren().add(weight1);
+        pane.getChildren().add(weight2);
+        pane.getChildren().add(weight3);
+        //pane.setStyle("-fx-background-color: #87CEFA;");
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+        scrollPane.setTranslateX(-150);
+        scrollPane.setTranslateY(25);
+        scrollPane.setMaxWidth(400);
+        scrollPane.setMaxHeight(200);
+        scrollPane.setContent(pane);
+        
+        //Add More Orders TextField array
+        TextField addBurgers[] = new TextField[99];
+        TextField addFries[] = new TextField[99];
+        TextField addDrinks[] = new TextField[99];
+        TextField addProbability[] = new TextField[99];
+        TextField addWeight[] = new TextField[99];
+        
+ 
+        
+        
         //Add elements to layout/view
         StackPane layout2 = new StackPane();
         layout2.getChildren().add(customSimulationBackButton);
         layout2.getChildren().add(simulationSettingsTitle);
         layout2.getChildren().add(orderTypes);
         layout2.getChildren().add(orderFrequency);
-        layout2.getChildren().add(r);
         layout2.getChildren().add(r2);
-        layout2.getChildren().add(burgers);
-        layout2.getChildren().add(fries);
-        layout2.getChildren().add(drinks);
-        layout2.getChildren().add(probability);
-        layout2.getChildren().add(weight);
-        layout2.getChildren().add(burgers1);
-        layout2.getChildren().add(burgers2);
-        layout2.getChildren().add(burgers3);
-        layout2.getChildren().add(fries1);
-        layout2.getChildren().add(fries2);
-        layout2.getChildren().add(fries3);
-        layout2.getChildren().add(drinks1);
-        layout2.getChildren().add(drinks2);
-        layout2.getChildren().add(drinks3);
-        layout2.getChildren().add(probability1);
-        layout2.getChildren().add(probability2);
-        layout2.getChildren().add(probability3);
-        layout2.getChildren().add(weight1);
-        layout2.getChildren().add(weight2);
-        layout2.getChildren().add(weight3);
+        
+        layout2.getChildren().addAll(scrollPane);
+        
         layout2.getChildren().add(hour);
         layout2.getChildren().add(numOrders);
         layout2.getChildren().add(r3);
@@ -325,7 +347,6 @@ public class Main extends Application {
         
         
         
-        
         /* SET THE SCENES */
         Scene scene1 = new Scene(layout, 750, 400);
         Scene scene2 = new Scene(layout2, 750, 400);
@@ -336,6 +357,45 @@ public class Main extends Application {
         
         
         /* SETUP BUTTON ACTIONS */
+        addOrder.setOnAction(e-> {
+        	addBurgers[numAddOrders] = new TextField();
+        	addBurgers[numAddOrders].setTranslateX(30);
+        	addBurgers[numAddOrders].setTranslateY(addOrderYAxis);
+        	addBurgers[numAddOrders].setMaxWidth(40);
+        	pane.getChildren().add(addBurgers[numAddOrders]);
+        	
+        	addFries[numAddOrders] = new TextField();
+        	addFries[numAddOrders].setTranslateX(97);
+        	addFries[numAddOrders].setTranslateY(addOrderYAxis);
+        	addFries[numAddOrders].setMaxWidth(40);
+        	pane.getChildren().add(addFries[numAddOrders]);
+        	
+        	addDrinks[numAddOrders] = new TextField();
+        	addDrinks[numAddOrders].setTranslateX(162);
+        	addDrinks[numAddOrders].setTranslateY(addOrderYAxis);
+        	addDrinks[numAddOrders].setMaxWidth(40);
+        	pane.getChildren().add(addDrinks[numAddOrders]);
+        	
+        	addProbability[numAddOrders] = new TextField();
+        	addProbability[numAddOrders].setTranslateX(245);
+        	addProbability[numAddOrders].setTranslateY(addOrderYAxis);
+        	addProbability[numAddOrders].setMaxWidth(40);
+        	pane.getChildren().add(addProbability[numAddOrders]);
+        	
+        	addWeight[numAddOrders] = new TextField();
+        	addWeight[numAddOrders].setTranslateX(324);
+        	addWeight[numAddOrders].setTranslateY(addOrderYAxis);
+        	addWeight[numAddOrders].setMaxWidth(40);
+        	pane.getChildren().add(addWeight[numAddOrders]);
+        	
+        	addOrderYAxis += 40;
+        	
+        	pane.setPrefHeight(pane.getHeight() + 40);
+        	
+        	numAddOrders++;
+        	
+        });
+        
         simulationSettings.setOnAction(e-> {
         	//Create and Set the Scene
             primaryStage.setScene(scene2);
@@ -349,34 +409,167 @@ public class Main extends Application {
         });
         
         startSimulation.setOnAction(e-> {
-        	//Start the simulation
+        	//Start the simulation with DEFAULT settings
+        	Drone drone = new Drone();
+        	FoodItem burgerItem = new FoodItem(6);
+            FoodItem friesItem = new FoodItem(4);
+            FoodItem drinkItem = new FoodItem(14);
+            
+        	CampusMap map = new CampusMap("Grove City College");
+            int[] ordersPerHour = {15, 17, 22, 12};
+            // Meal 1
+            HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
+            items1.put(burgerItem, 2);
+            items1.put(drinkItem, 1);
+            Meal meal1 = new Meal(items1);
+            
+            //Verify order weight
+            if(meal1.getWeight() > drone.getCargoWeight())
+            {
+            	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+            	return;
+            }
+            
+            MealProbability mp1 = new MealProbability(meal1, 0.5);
+            // Meal 2
+            HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
+            items2.put(burgerItem, 1);
+            items2.put(friesItem, 1);
+            Meal meal2 = new Meal(items2);
+            
+            //Verify order weight
+            if(meal2.getWeight() > drone.getCargoWeight())
+            {
+            	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+            	return;
+            }
+            
+            MealProbability mp2 = new MealProbability(meal2, 0.5);
+
+            MealProbability[] mp = {mp1, mp2};
+
+            Simulation sim = new Simulation(map, mp, ordersPerHour);
+            sim.run();
+            
+        });
+        
+        startSimulationSettings.setOnAction(e-> {
+        	//Start the simulation with CUSTOM settings
+        	Drone drone = new Drone();
+        	FoodItem burgerItem = new FoodItem(6);
+            FoodItem friesItem = new FoodItem(4);
+            FoodItem drinkItem = new FoodItem(14);
+            
+        	CampusMap map = new CampusMap("Grove City College");
+        	
+        	//Get orders per hour from user input
+            int[] ordersPerHour = new int[4];
+            ordersPerHour[0] = Integer.parseInt(hour1.getText());
+            ordersPerHour[1] = Integer.parseInt(hour2.getText());
+            ordersPerHour[2] = Integer.parseInt(hour3.getText());
+            ordersPerHour[3] = Integer.parseInt(hour4.getText());
+            
+            //Create arraylist to hold order then convert to array later
+            ArrayList<MealProbability> groupOrders = new ArrayList<MealProbability>();
+            
+            //Get any custom orders entered by user
+            if (!probability1.getText().equals("")) {
+            	HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
+            	items1.put(burgerItem, Integer.parseInt(burgers1.getText()));
+                items1.put(drinkItem, Integer.parseInt(drinks1.getText()));
+                items1.put(friesItem, Integer.parseInt(fries1.getText()));
+                
+                Meal meal1 = new Meal(items1);
+                
+                //Verify order weight
+                if(meal1.getWeight() > drone.getCargoWeight())
+                {
+                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+                	return;
+                }
+
+                MealProbability mp1 = new MealProbability(meal1, Integer.parseInt(probability1.getText()));
+                groupOrders.add(mp1);
+                System.out.println(mp1.getProbability());
+            }
+			if (!probability2.getText().equals("")) {
+				HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
+				items2.put(burgerItem, Integer.parseInt(burgers2.getText()));
+                items2.put(drinkItem, Integer.parseInt(drinks2.getText()));
+                items2.put(friesItem, Integer.parseInt(fries2.getText()));
+                
+                Meal meal2 = new Meal(items2);
+                
+                //Verify order weight
+                if(meal2.getWeight() > drone.getCargoWeight())
+                {
+                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+                	return;
+                }
+
+                MealProbability mp2 = new MealProbability(meal2, Integer.parseInt(probability2.getText()));
+                groupOrders.add(mp2);
+                System.out.println(mp2.getProbability());
+            }
+			if (!probability3.getText().equals("")) {
+				HashMap<FoodItem, Integer> items3 = new HashMap<FoodItem, Integer>();
+				items3.put(burgerItem, Integer.parseInt(burgers3.getText()));
+                items3.put(drinkItem, Integer.parseInt(drinks3.getText()));
+                items3.put(friesItem, Integer.parseInt(fries3.getText()));
+                
+                Meal meal3 = new Meal(items3);
+                
+                //Verify order weight
+                if(meal3.getWeight() > drone.getCargoWeight())
+                {
+                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+                	return;
+                }
+
+                MealProbability mp3 = new MealProbability(meal3, Integer.parseInt(probability3.getText()));
+                groupOrders.add(mp3);
+                System.out.println(mp3.getProbability());
+			}
+			
+			
+			//Add in any textFields the user implemented using the addOrder button
+			
+			for (int j = 0; j < numAddOrders; j++) {
+				if (!addProbability[j].getText().equals("")) {
+					HashMap<FoodItem, Integer> newItem = new HashMap<FoodItem, Integer>();
+					newItem.put(burgerItem, Integer.parseInt(addBurgers[j].getText()));
+	                newItem.put(drinkItem, Integer.parseInt(addDrinks[j].getText()));
+	                newItem.put(friesItem, Integer.parseInt(addFries[j].getText()));
+	                
+	                Meal newMeal = new Meal(newItem);
+	                
+	                //Verify order weight
+	                if(newMeal.getWeight() > drone.getCargoWeight())
+	                {
+	                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+	                	return;
+	                }
+
+	                MealProbability newMealProbability = new MealProbability(newMeal, Integer.parseInt(addProbability[j].getText()));
+	                groupOrders.add(newMealProbability);
+	                System.out.println(newMealProbability.getProbability());
+				}
+			}
+            
+			//Convert arrayList to array to support being passed into Simulation
+			MealProbability[] mp = new MealProbability[groupOrders.size()];
+			for (int j = 0; j < groupOrders.size(); j++) {
+				mp[j] = groupOrders.get(j);
+			}
+
+            Simulation sim = new Simulation(map, mp, ordersPerHour);
+            sim.run();
+            
         });
         
     }
 
     public static void main(String[] args) {
-        /*CampusMap map = new CampusMap("Grove City College");
-        int[] ordersPerHour = {15, 17, 14, 12}; //TODO: get the actual default nums
-        FoodItem burger = new FoodItem(6);
-        FoodItem fries = new FoodItem(4);
-        FoodItem drink = new FoodItem(14);
-        // Meal 1
-        HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
-        items1.put(burger, 1);
-        items1.put(drink, 1);
-        Meal meal1 = new Meal(items1);
-        MealProbability mp1 = new MealProbability(meal1, 0.5);
-        // Meal 2
-        HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
-        items2.put(burger, 1);
-        items2.put(fries, 1);
-        Meal meal2 = new Meal(items2);
-        MealProbability mp2 = new MealProbability(meal2, 0.5);
-
-        MealProbability[] mp = {mp1, mp2};
-
-        Simulation sim = new Simulation(map, mp, ordersPerHour);
-        sim.run();*/
 
         launch(args);
         
