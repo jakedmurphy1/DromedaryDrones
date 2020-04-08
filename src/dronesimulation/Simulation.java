@@ -75,7 +75,7 @@ public class Simulation {
 					DeliveryPoint point = points[rand.nextInt(points.length)];
 
 					//Give order to delivery scheme
-					Order order = new Order(mealProbs[mealIndex].getMeal(), point);
+					Order order = new Order(mealProbs[mealIndex].getMeal(), point, minute);
 
 					scheme.addOrder(order);
 				}
