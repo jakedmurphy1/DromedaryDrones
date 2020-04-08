@@ -70,17 +70,30 @@ public class Knapsack implements DeliveryScheme{
 		}
 		
 		int buffer = 0;
+		
 		for(int i = 0; i < toRemove.size(); i++) {
 			orders.remove(toRemove.get(i) - buffer);
 			buffer++;
 		}
 		
 		//Make sure that the orders can be delivered
-		double flightTime = drone.getFlightTime(deliveries);
+		//double flightTime = drone.getFlightTime(deliveries);
+		double flightTime = 0;
+		// Calculate the flight time for all deliveries to be fulfilled
+		for(int i = 0; i < drone.getFlightTime(deliveries).length; i++) {
+			flightTime += drone.getFlightTime(deliveries)[i];
+		}
+		
+		//If the flight time is too long, remove the last order and try again
 		while(flightTime > drone.getMaxFlightTime()) {
+			flightTime = 0;
 			// Remove a point and see if the flight is now feasible
-			deliveries.remove(deliveries.size() - 1);
-			flightTime = drone.getFlightTime(deliveries);
+			Order order = deliveries.remove(deliveries.size() - 1);
+			//Put the order back in the orders array so it is still delivered
+			orders.add(order);
+			for(int i = 0; i < drone.getFlightTime(deliveries).length; i++) {
+				flightTime += drone.getFlightTime(deliveries)[i];
+			}
 		}
 
 		return flightTime;
@@ -116,6 +129,12 @@ public class Knapsack implements DeliveryScheme{
 			weight += a.getMealWeight();
 		}
 		return weight;
+	}
+
+	@Override
+	public List<Order> getDeliveredOrders() {
+		
+		return deliveries;
 	}
 	
 	
