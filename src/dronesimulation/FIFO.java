@@ -12,17 +12,18 @@ public class FIFO implements DeliveryScheme {
 	
 	public FIFO() {
 		pendingOrders = new LinkedList<>();
+		deliveredOrders = new LinkedList<>();
 	}
 	
 	@Override
-	public double fillDrone(final Drone drone) {
+	public double fillDrone(final Drone drone, int currentMinute) {
 		if(pendingOrders.size() == 0) return 0;
 
 		int weight = 0;
 		List<Order> deliveries = new ArrayList<>();
 
 		//Add orders until next order would make drone too heavy
-		while(pendingOrders.getFirst() != null && weight + pendingOrders.getFirst().getMealWeight() < drone.getCargoWeight()) {
+		while(pendingOrders.peek() != null && weight + pendingOrders.getFirst().getMealWeight() < drone.getCargoWeight()) {
 			Order order = pendingOrders.poll();
 			
 			deliveries.add(order);
@@ -31,12 +32,12 @@ public class FIFO implements DeliveryScheme {
 			weight += order.getMealWeight();
 		}
 		//Make sure that the orders can be delivered
-		double[] deliveryTimes = drone.getFlightTime(deliveries);
+		double[] deliveryTimes = drone.getFlightTime(deliveries, currentMinute);
 		while(deliveryTimes[deliveryTimes.length - 1] > drone.getMaxFlightTime()) {
 			// Remove a point and see if the flight is now feasible
 			Order removedOrder = deliveries.remove(deliveries.size() - 1);
 			pendingOrders.addFirst(removedOrder);
-			deliveryTimes = drone.getFlightTime(deliveries);
+			deliveryTimes = drone.getFlightTime(deliveries, currentMinute);
 		}
 		
 		//Set delivery time for each order
@@ -62,5 +63,10 @@ public class FIFO implements DeliveryScheme {
 	@Override
 	public List<Order> getDeliveredOrders() {
 		return deliveredOrders;
+	}
+
+	@Override
+	public void clearDeliveredOrders() {
+		deliveredOrders.clear();
 	}
 }

@@ -39,7 +39,7 @@ public class Drone {
     // that indicates the total time it took to get
     // back home, so the return value is of length
     // deliveries.size() + 1
-    public double[] getFlightTime(List<Order> deliveries) {
+    public double[] getFlightTime(List<Order> deliveries, int currentMinute) {
         // The return value, + 1 to accommodate the time to get back
         // to the home point
         double[] deliveryTimes = new double[deliveries.size() + 1];
@@ -73,7 +73,7 @@ public class Drone {
                 // in all the deliveries at this point
                 for(int j = 0; j < deliveries.size(); j++) {
                     if(orderedPoints[i+1].equals(deliveries.get(j).getDeliveryPoint())) {
-                        deliveryTimes[j] = totalTime;
+                        deliveryTimes[j] = totalTime + currentMinute;
                     }
                 }
             }

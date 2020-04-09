@@ -16,16 +16,16 @@ public class Knapsack implements DeliveryScheme{
 	private ArrayList<Integer> toRemove = new ArrayList<Integer>();
 	private ArrayList<Integer> toRemoveTemp = new ArrayList<Integer>();
 	
-	public Knapsack(ArrayList<Order> order) {
+	public Knapsack() {
 		this.weight = 0;
-		this.orders = order;
+		this.orders = new ArrayList<>();
 		temp = new ArrayList<Order>();
 		deliveries = new ArrayList<Order>();
 		delivered = new ArrayList<Order>();
 	}
 
 	@Override
-	public double fillDrone(final Drone drone) {
+	public double fillDrone(final Drone drone, int currentMinute) {
 		if(orders.size() == 0) return 0;
 		sortOrders(orders);
 		
@@ -82,11 +82,11 @@ public class Knapsack implements DeliveryScheme{
 		 * Calculate the total time it will take the drone to deliver all orders
 		 * If the time is too long, take off the last order
 		 */
-		double[] times = drone.getFlightTime(deliveries);
+		double[] times = drone.getFlightTime(deliveries, currentMinute);
 		while(times[times.length - 1] > drone.getMaxFlightTime()) {
 			Order order = deliveries.remove(deliveries.size() - 1);
 			orders.add(order);
-			times = drone.getFlightTime(deliveries);
+			times = drone.getFlightTime(deliveries, currentMinute);
 		}
 		
 		/*
@@ -143,6 +143,11 @@ public class Knapsack implements DeliveryScheme{
 	public List<Order> getDeliveredOrders() {
 		
 		return deliveries;
+	}
+
+	@Override
+	public void clearDeliveredOrders() {
+		deliveries.clear();
 	}
 	
 	
