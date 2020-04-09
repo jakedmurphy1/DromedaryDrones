@@ -22,6 +22,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+
 public class Main extends Application {
 	
 	int addOrderYAxis = 165;
@@ -677,9 +680,17 @@ public class Main extends Application {
 			
             Simulation sim = new Simulation(map, mp, ordersPerHour);
             sim.run();
-            System.out.println("got here");
-            File placeToSave = new File("temp.csv");
-            sim.saveCSV(placeToSave);
+
+            // Open file dialoge to save file (based on code from codejava.net)
+            JFrame parent = new JFrame();
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Save simulation results");
+            
+            int userSelection = fileChooser.showSaveDialog(parent);
+            if(userSelection == JFileChooser.APPROVE_OPTION) {
+            	File fileToSave = new File("results.csv");
+            	sim.saveCSV(fileToSave);
+            }
         });
         
     }
