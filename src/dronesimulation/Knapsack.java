@@ -8,120 +8,76 @@ import java.util.Queue;
 
 public class Knapsack implements DeliveryScheme{
 	
-	private int weight;
-	private ArrayList<Order> orders;
-	private ArrayList<Order> temp;
-	private ArrayList<Order> deliveries;
-	private ArrayList<Order> delivered;
-	private ArrayList<Integer> toRemove = new ArrayList<Integer>();
-	private ArrayList<Integer> toRemoveTemp = new ArrayList<Integer>();
+	private ArrayList<Order> pending;	/* Arraylist of orders still to be delivered */
+	private ArrayList<Order> delivered; /* Arraylist of orders that have been delivered */
+	
 	
 	public Knapsack() {
-		this.weight = 0;
-		this.orders = new ArrayList<>();
-		temp = new ArrayList<Order>();
-		deliveries = new ArrayList<Order>();
-		delivered = new ArrayList<Order>();
+		pending = new ArrayList<Order>();	/* Initialize pending */
+		delivered = new ArrayList<Order>(); /* Initialize delivered */
 	}
 
 	@Override
-	public double fillDrone(final Drone drone, int currentMinute) {
-		if(orders.size() == 0) return 0;
-		sortOrders(orders);
-		System.out.println("finished sort");
+	public double fillDrone(Drone drone, int currentMinute) {
 		
-		int startIndex = 0;
-
-		while(startIndex < orders.size()) {
-			weight = 0;
-			temp = new ArrayList<Order>();
-			//Add as much weight to the drone as possible
-			for(int i = startIndex; i < orders.size(); i++) {
-				if((weight + orders.get(i).getMealWeight()) <= drone.getCargoWeight()) {
-					weight += orders.get(i).getMealWeight();
-					Order toAdd = orders.get(i);
-					toRemoveTemp.add(i);
-					temp.add(toAdd);
-				}
-			}
-			
-			if(getWeight(temp) == drone.getCargoWeight()) {
-				break;
-			}
-			
-			else {
-				if(startIndex == 0) {
-					deliveries = (ArrayList<Order>) temp.clone();
-					toRemove = (ArrayList<Integer>) toRemoveTemp.clone();
-					temp.clear();
-					toRemoveTemp.clear();
-				}
-				else if(startIndex > 0){
-					if(getWeight(temp) > getWeight(deliveries)) {
-						deliveries = temp;
-						temp.clear();
-						
-						toRemove = (ArrayList<Integer>) toRemoveTemp.clone();
-						toRemoveTemp.clear();
-					}
-				}
-			}
-			
-			temp.clear();
-			toRemoveTemp.clear();
-			
-			startIndex++;
-			
+		/* If there are no orders waiting to be delivered */
+		if(pending.size() == 0) {
+			return 0;
 		}
-	
 		
-		/*
-		 * Add all orders to the delivered list indicating they have been delivered
-		 */
-		delivered.addAll(deliveries);
-
+		/* Sort orders from heaviest to lightest */
+		sortOrders(pending);
 		
-		/*
-		 * Calculate the total time it will take the drone to deliver all orders
-		 * If the time is too long, take off the last order
-		 */
+		int weight = 0; /* Total weight of delivery */
+		
+		ArrayList<Order> deliveries = new ArrayList<Order>(); /* Orders to be "packed" onto drone */
+		
+		/* Maximize weight of drone by adding as many orders as will fit */
+		for(int i = 0; i < pending.size(); i++) {
+			if(weight + pending.get(i).getMealWeight() < drone.getCargoWeight()) {
+				Order packed = pending.remove(i);
+				deliveries.add(packed);
+				weight += packed.getMealWeight();
+			}
+		}
+		
 		double[] times = drone.getFlightTime(deliveries, currentMinute);
+		/* While the time it would take to deliver the orders is greater than max flight time, remove orders */
 		while(times[times.length - 1] > drone.getMaxFlightTime()) {
-			Order order = deliveries.remove(deliveries.size() - 1);
-			orders.add(order);
+			Order removed = deliveries.remove(deliveries.size() - 1);
+			pending.add(removed);
 			times = drone.getFlightTime(deliveries, currentMinute);
-		}
+		} /* End while */
 		
-		int buffer = 0;
-		
-		for(int i = 0; i < toRemove.size(); i++) {
-			
-			toRemove.set(i, toRemove.get(i) - buffer);
-			
-			deliveries.remove(toRemove.get(i));
-	
-		}
-		
-		/*
-		 * Get the time that each order was delivered
-		 */
+		/* Set the delivery time for each order */
 		for(int i = 0; i < times.length - 1; i++) {
 			deliveries.get(i).setTotalDeliveryTime(times[i] - deliveries.get(i).getOrderTime());
 		}
 		
-		
-		// Total delivery time
-		System.out.println("finished knapsack");
-		
-		//orders.clear();
+		delivered.addAll(deliveries);
 		
 		return times[times.length - 1];
+
 	}
 
 	@Override
 	public void addOrder(Order order) {
-		orders.add(order);
-		
+		pending.add(order);
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return pending.isEmpty();
+	}
+
+	@Override
+	public List<Order> getDeliveredOrders() {
+		return delivered;
+	}
+
+	@Override
+	public void clearDeliveredOrders() {
+		delivered.clear();
 	}
 	
 	public void sortOrders(ArrayList<Order> a) {
@@ -133,34 +89,6 @@ public class Knapsack implements DeliveryScheme{
 			}
 		}
 	}
-
-	@Override
-	public boolean isEmpty() {
-		if(orders.isEmpty()) {
-			return true;
-		}
-		return false;
-	}
-	
-	public int getWeight(List<Order> list) {
-		int weight = 0;
-		for(Order a : list) {
-			weight += a.getMealWeight();
-		}
-		return weight;
-	}
-
-	@Override
-	public List<Order> getDeliveredOrders() {
-		
-		return delivered;
-	}
-
-	@Override
-	public void clearDeliveredOrders() {
-		delivered.clear();
-	}
-	
 	
 	
 	
