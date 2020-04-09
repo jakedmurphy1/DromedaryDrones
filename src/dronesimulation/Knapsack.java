@@ -1,5 +1,6 @@
 package dronesimulation;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,7 +12,7 @@ public class Knapsack implements DeliveryScheme{
 	private ArrayList<Order> orders;
 	private ArrayList<Order> temp;
 	private ArrayList<Order> deliveries;
-	
+	private ArrayList<Order> delivered;
 	private ArrayList<Integer> toRemove = new ArrayList<Integer>();
 	private ArrayList<Integer> toRemoveTemp = new ArrayList<Integer>();
 	
@@ -20,6 +21,7 @@ public class Knapsack implements DeliveryScheme{
 		this.orders = order;
 		temp = new ArrayList<Order>();
 		deliveries = new ArrayList<Order>();
+		delivered = new ArrayList<Order>();
 	}
 
 	@Override
@@ -76,27 +78,33 @@ public class Knapsack implements DeliveryScheme{
 			buffer++;
 		}
 		
-		//Make sure that the orders can be delivered
-		//double flightTime = drone.getFlightTime(deliveries);
-		double flightTime = 0;
-		// Calculate the flight time for all deliveries to be fulfilled
-		for(int i = 0; i < drone.getFlightTime(deliveries).length; i++) {
-			flightTime += drone.getFlightTime(deliveries)[i];
+		/*
+		 * Calculate the total time it will take the drone to deliver all orders
+		 * If the time is too long, take off the last order
+		 */
+		double[] times = drone.getFlightTime(deliveries);
+		while(times[times.length - 1] > drone.getMaxFlightTime()) {
+			Order order = deliveries.remove(deliveries.size() - 1);
+			orders.add(order);
+			times = drone.getFlightTime(deliveries);
 		}
 		
-		//If the flight time is too long, remove the last order and try again
-		while(flightTime > drone.getMaxFlightTime()) {
-			flightTime = 0;
-			// Remove a point and see if the flight is now feasible
-			Order order = deliveries.remove(deliveries.size() - 1);
-			//Put the order back in the orders array so it is still delivered
-			orders.add(order);
-			for(int i = 0; i < drone.getFlightTime(deliveries).length; i++) {
-				flightTime += drone.getFlightTime(deliveries)[i];
-			}
+		/*
+		 * Get the time that each order was delivered
+		 */
+		for(int i = 0; i < times.length - 1; i++) {
+			deliveries.get(i).setTotalDeliveryTime(times[i] - deliveries.get(i).getOrderTime());
 		}
-
-		return flightTime;
+		
+		/*
+		 * Add all orders to the delivered list indicating they have been delivered
+		 */
+		for(Order a : deliveries) {
+			delivered.add(a);
+		}
+		
+		// Total delivery time
+		return times[times.length - 1];
 	}
 
 	@Override
