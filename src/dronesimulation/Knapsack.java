@@ -31,9 +31,11 @@ public class Knapsack implements DeliveryScheme{
 		System.out.println("finished sort");
 		
 		int startIndex = 0;
+
 		while(startIndex < orders.size()) {
 			weight = 0;
 			temp = new ArrayList<Order>();
+			//Add as much weight to the drone as possible
 			for(int i = startIndex; i < orders.size(); i++) {
 				if((weight + orders.get(i).getMealWeight()) <= drone.getCargoWeight()) {
 					weight += orders.get(i).getMealWeight();
@@ -71,18 +73,13 @@ public class Knapsack implements DeliveryScheme{
 			startIndex++;
 			
 		}
+	
 		
-		int buffer = 0;
-		
-		for(int i = 0; i < toRemove.size(); i++) {
-			if(toRemove.get(i) - buffer > 0) {
-				orders.remove(toRemove.get(i) - buffer);
-			} else {
-				orders.remove(toRemove.get(i));
-			}
-			
-			buffer++;
-		}
+		/*
+		 * Add all orders to the delivered list indicating they have been delivered
+		 */
+		delivered.addAll(orders);
+
 		
 		/*
 		 * Calculate the total time it will take the drone to deliver all orders
@@ -95,22 +92,29 @@ public class Knapsack implements DeliveryScheme{
 			times = drone.getFlightTime(deliveries, currentMinute);
 		}
 		
+		int buffer = 0;
+		
+		for(int i = 0; i < toRemove.size(); i++) {
+			
+			toRemove.set(i, toRemove.get(i) - buffer);
+			
+			orders.remove(toRemove.get(i));
+	
+		}
+		
 		/*
 		 * Get the time that each order was delivered
 		 */
 		for(int i = 0; i < times.length - 1; i++) {
-			deliveries.get(i).setTotalDeliveryTime(times[i] - deliveries.get(i).getOrderTime());
+			orders.get(i).setTotalDeliveryTime(times[i] - orders.get(i).getOrderTime());
 		}
 		
-		/*
-		 * Add all orders to the delivered list indicating they have been delivered
-		 */
-		for(Order a : deliveries) {
-			delivered.add(a);
-		}
 		
 		// Total delivery time
 		System.out.println("finished knapsack");
+		
+		//orders.clear();
+		
 		return times[times.length - 1];
 	}
 
@@ -149,12 +153,12 @@ public class Knapsack implements DeliveryScheme{
 	@Override
 	public List<Order> getDeliveredOrders() {
 		
-		return deliveries;
+		return orders;
 	}
 
 	@Override
 	public void clearDeliveredOrders() {
-		deliveries.clear();
+		orders.clear();
 	}
 	
 	
