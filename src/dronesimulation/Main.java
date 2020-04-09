@@ -16,10 +16,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 
 public class Main extends Application {
 	
@@ -675,6 +679,17 @@ public class Main extends Application {
 			
             Simulation sim = new Simulation(map, mp, ordersPerHour);
             sim.run();
+            
+            // Open file dialoge to save file (based on code from codejava.net)
+            JFrame parent = new JFrame();
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Save simulation results");
+            
+            int userSelection = fileChooser.showSaveDialog(parent);
+            if(userSelection == JFileChooser.APPROVE_OPTION) {
+            	File fileToSave = new File("results.csv");
+            	sim.saveCSV(fileToSave);
+            }
             
         });
         
