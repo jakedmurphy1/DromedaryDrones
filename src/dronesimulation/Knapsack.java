@@ -74,7 +74,12 @@ public class Knapsack implements DeliveryScheme{
 		int buffer = 0;
 		
 		for(int i = 0; i < toRemove.size(); i++) {
-			orders.remove(toRemove.get(i) - buffer);
+			if(toRemove.get(i) - buffer > 0) {
+				orders.remove(toRemove.get(i) - buffer);
+			} else {
+				orders.remove(toRemove.get(i));
+			}
+			
 			buffer++;
 		}
 		
