@@ -51,8 +51,8 @@ public class Knapsack implements DeliveryScheme{
 			
 			else {
 				if(startIndex == 0) {
-					deliveries = temp;
-					toRemove = toRemoveTemp;
+					deliveries = (ArrayList<Order>) temp.clone();
+					toRemove = (ArrayList<Integer>) toRemoveTemp.clone();
 					temp.clear();
 					toRemoveTemp.clear();
 				}
@@ -78,7 +78,7 @@ public class Knapsack implements DeliveryScheme{
 		/*
 		 * Add all orders to the delivered list indicating they have been delivered
 		 */
-		delivered.addAll(orders);
+		delivered.addAll(deliveries);
 
 		
 		/*
@@ -98,7 +98,7 @@ public class Knapsack implements DeliveryScheme{
 			
 			toRemove.set(i, toRemove.get(i) - buffer);
 			
-			orders.remove(toRemove.get(i));
+			deliveries.remove(toRemove.get(i));
 	
 		}
 		
@@ -106,7 +106,7 @@ public class Knapsack implements DeliveryScheme{
 		 * Get the time that each order was delivered
 		 */
 		for(int i = 0; i < times.length - 1; i++) {
-			orders.get(i).setTotalDeliveryTime(times[i] - orders.get(i).getOrderTime());
+			deliveries.get(i).setTotalDeliveryTime(times[i] - deliveries.get(i).getOrderTime());
 		}
 		
 		
@@ -153,12 +153,12 @@ public class Knapsack implements DeliveryScheme{
 	@Override
 	public List<Order> getDeliveredOrders() {
 		
-		return orders;
+		return delivered;
 	}
 
 	@Override
 	public void clearDeliveredOrders() {
-		orders.clear();
+		delivered.clear();
 	}
 	
 	
