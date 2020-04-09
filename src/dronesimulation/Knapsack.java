@@ -28,6 +28,7 @@ public class Knapsack implements DeliveryScheme{
 	public double fillDrone(final Drone drone, int currentMinute) {
 		if(orders.size() == 0) return 0;
 		sortOrders(orders);
+		System.out.println("finished sort");
 		
 		int startIndex = 0;
 		while(startIndex < orders.size()) {
@@ -58,7 +59,7 @@ public class Knapsack implements DeliveryScheme{
 						deliveries = temp;
 						temp.clear();
 						
-						toRemove = toRemoveTemp;
+						toRemove = (ArrayList<Integer>) toRemoveTemp.clone();
 						toRemoveTemp.clear();
 					}
 				}
@@ -109,6 +110,7 @@ public class Knapsack implements DeliveryScheme{
 		}
 		
 		// Total delivery time
+		System.out.println("finished knapsack");
 		return times[times.length - 1];
 	}
 

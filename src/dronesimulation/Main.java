@@ -16,6 +16,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -458,7 +459,8 @@ public class Main extends Application {
 
             Simulation sim = new Simulation(map, mp, ordersPerHour);
             sim.run();
-            
+            File placeToSave = new File("temp.csv");
+            sim.saveCSV(placeToSave);
         });
         
         startSimulationSettings.setOnAction(e-> {
@@ -675,7 +677,9 @@ public class Main extends Application {
 			
             Simulation sim = new Simulation(map, mp, ordersPerHour);
             sim.run();
-            
+            System.out.println("got here");
+            File placeToSave = new File("temp.csv");
+            sim.saveCSV(placeToSave);
         });
         
     }

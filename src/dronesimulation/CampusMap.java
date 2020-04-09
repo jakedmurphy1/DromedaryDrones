@@ -6,13 +6,16 @@ import java.util.HashSet;
 public class CampusMap {
 	
 	private HashMap<String, DeliveryPoint> campus;
+	private DeliveryPoint dispatchPoint;
 	
 	public CampusMap(String college) {
 		
 		campus = new HashMap<String, DeliveryPoint>();
 		
-		if(college == "Grove City College") {
-			campus.put("SAC", new DeliveryPoint(0,0));
+		if(college.equals("Grove City College")) {
+			// TODO: use this in TSP during sprint 2
+		    dispatchPoint = new DeliveryPoint(0, 0);
+			//campus.put("SAC", new DeliveryPoint(0,0));
 			campus.put("HAL", new DeliveryPoint(0,50));
 			campus.put("Hoyt", new DeliveryPoint(500, -300));
 			campus.put("Library", new DeliveryPoint(600, -200));

@@ -23,12 +23,12 @@ public class DroneTest {
         Meal meal1 = new Meal(items1);
 
         List<Order> deliveries = new ArrayList<>();
-        deliveries.add(new Order(meal1, new DeliveryPoint(0, 50)));
-        deliveries.add(new Order(meal1, new DeliveryPoint(0, -350)));
-        deliveries.add(new Order(meal1, new DeliveryPoint(0, -350)));
+        deliveries.add(new Order(meal1, new DeliveryPoint(0, 50), 1));
+        deliveries.add(new Order(meal1, new DeliveryPoint(0, -350), 2));
+        deliveries.add(new Order(meal1, new DeliveryPoint(0, -350),3));
 
         Drone drone = new Drone();
-        double[] ans = drone.getFlightTime(deliveries);
+        double[] ans = drone.getFlightTime(deliveries, 0);
 
         Assert.assertEquals(ans[ans.length - 1], 2.49129, 0.01);
         Assert.assertEquals(ans.length, 4);
