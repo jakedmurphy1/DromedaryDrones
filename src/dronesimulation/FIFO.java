@@ -26,7 +26,6 @@ public class FIFO implements DeliveryScheme {
 			Order order = pendingOrders.poll();
 			
 			deliveries.add(order);
-			deliveredOrders.add(order);
 			
 			weight += order.getMealWeight();
 		}
