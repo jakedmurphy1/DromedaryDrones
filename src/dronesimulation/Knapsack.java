@@ -41,6 +41,9 @@ public class Knapsack implements DeliveryScheme{
 				 deliveries.add(add);
 				 weight += add.getMealWeight();
 			}
+			else {
+				break;
+			}
 		}
 		
 		/* Maximize weight of drone by adding as many orders as will fit */
