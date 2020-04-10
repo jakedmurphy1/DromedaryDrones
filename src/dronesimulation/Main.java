@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -422,6 +423,21 @@ public class Main extends Application {
         
         startSimulation.setOnAction(e-> {
         	//Start the simulation with DEFAULT settings
+        	
+        	try {
+            	
+            	fw = new FileWriter(fileLoc, true);
+            	pw = new PrintWriter(fw);
+            	
+            	pw.print("Begin Default Orders\n");
+            	
+            	pw.flush();
+            	pw.close();
+            	
+            } catch(Exception exception) {
+            	exception.printStackTrace();
+            }
+        	
         	Drone drone = new Drone();
         	FoodItem burgerItem = new FoodItem(6);
             FoodItem friesItem = new FoodItem(4);
@@ -443,6 +459,24 @@ public class Main extends Application {
             }
             
             MealProbability mp1 = new MealProbability(meal1, 0.5);
+            
+            //Save the first default order to a file
+            try {
+            	
+            	fw = new FileWriter(fileLoc, true);
+            	pw = new PrintWriter(fw);
+            	
+            	pw.print("Orders listed as follows: #burgers, #drinks, #fries, weight, probability\n");
+            	
+            	pw.print("2, 1, 0, " + meal1.getWeight() + ", " + mp1.getProbability() + "\n");
+            	
+            	pw.flush();
+            	pw.close();
+            	
+            } catch(Exception exception) {
+            	exception.printStackTrace();
+            }
+            
             // Meal 2
             HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
             items2.put(burgerItem, 1);
@@ -459,11 +493,41 @@ public class Main extends Application {
             MealProbability mp2 = new MealProbability(meal2, 0.5);
 
             MealProbability[] mp = {mp1, mp2};
+            
+          //Save the second default order to a file
+            try {
+            	
+            	fw = new FileWriter(fileLoc, true);
+            	pw = new PrintWriter(fw);
+            	
+            	pw.print("1, 0, 1, " + meal2.getWeight() + ", " + mp2.getProbability() + "\n");
+            	
+            	pw.flush();
+            	pw.close();
+            	
+            } catch(Exception exception) {
+            	exception.printStackTrace();
+            }
 
             Simulation sim = new Simulation(map, mp, ordersPerHour);
             sim.run();
-            File placeToSave = new File("temp.csv");
-            sim.saveCSV(placeToSave);
+            //File placeToSave = new File("temp.csv");
+            //sim.saveCSV(placeToSave);
+            
+            // Open file save dialog to let the user choose where they want results saved
+            // Adapted from https://www.genuinecoder.com/save-files-javafx-filechooser/
+            FileChooser fileChooser = new FileChooser();
+            FileChooser.ExtensionFilter extensions = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+            fileChooser.getExtensionFilters().add(extensions);
+            
+            File results = fileChooser.showSaveDialog(primaryStage);
+            
+            if(results != null) {
+            	sim.saveCSV(results);
+            }
+            
+            
+            
         });
         
         startSimulationSettings.setOnAction(e-> {
@@ -680,17 +744,19 @@ public class Main extends Application {
 			
             Simulation sim = new Simulation(map, mp, ordersPerHour);
             sim.run();
-
-            // Open file dialoge to save file (based on code from codejava.net)
-            JFrame parent = new JFrame();
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Save simulation results");
             
-            int userSelection = fileChooser.showSaveDialog(parent);
-            if(userSelection == JFileChooser.APPROVE_OPTION) {
-            	File fileToSave = new File("results.csv");
-            	sim.saveCSV(fileToSave);
+            // Open file save dialog to let the user choose where they want results saved
+            // Adapted from https://www.genuinecoder.com/save-files-javafx-filechooser/
+            FileChooser fileChooser = new FileChooser();
+            FileChooser.ExtensionFilter extensions = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+            fileChooser.getExtensionFilters().add(extensions);
+            
+            File results = fileChooser.showSaveDialog(primaryStage);
+            
+            if(results != null) {
+            	sim.saveCSV(results);
             }
+            
         });
         
     }
