@@ -10,11 +10,13 @@ public class Knapsack implements DeliveryScheme{
 	
 	private ArrayList<Order> pending;	/* Arraylist of orders still to be delivered */
 	private ArrayList<Order> delivered; /* Arraylist of orders that have been delivered */
+	private ArrayList<Order> skipped;	/* Arraylist of orders that have been skipped */
 	
 	
 	public Knapsack() {
 		pending = new ArrayList<Order>();	/* Initialize pending */
 		delivered = new ArrayList<Order>(); /* Initialize delivered */
+		skipped = new ArrayList<Order>();	/* Initialize skipped */	
 	}
 
 	@Override
@@ -32,9 +34,18 @@ public class Knapsack implements DeliveryScheme{
 		
 		ArrayList<Order> deliveries = new ArrayList<Order>(); /* Orders to be "packed" onto drone */
 		
+		/* Add orders that have previouslt been skipped first */
+		while(!skipped.isEmpty()) {
+			if(weight + skipped.get(0).getMealWeight() <= drone.getCargoWeight()) {
+				 Order add = skipped.remove(0);
+				 deliveries.add(add);
+				 weight += add.getMealWeight();
+			}
+		}
+		
 		/* Maximize weight of drone by adding as many orders as will fit */
 		for(int i = 0; i < pending.size(); i++) {
-			if(weight + pending.get(i).getMealWeight() < drone.getCargoWeight()) {
+			if(weight + pending.get(i).getMealWeight() <= drone.getCargoWeight()) {
 				Order packed = pending.remove(i);
 				deliveries.add(packed);
 				weight += packed.getMealWeight();
