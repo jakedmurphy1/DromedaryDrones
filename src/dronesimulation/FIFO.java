@@ -1,47 +1,71 @@
 package dronesimulation;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
 public class FIFO implements DeliveryScheme {
-	LinkedList<Order> orders;
+	LinkedList<Order> pendingOrders;
+	
+	LinkedList<Order> deliveredOrders;
 	
 	public FIFO() {
-		orders = new LinkedList<>();
+		pendingOrders = new LinkedList<>();
+		deliveredOrders = new LinkedList<>();
 	}
 	
 	@Override
-	public double fillDrone(final Drone drone) {
-		if(orders.size() == 0) return 0;
+	public double fillDrone(final Drone drone, int currentMinute) {
+		if(pendingOrders.size() == 0) return 0;
 
 		int weight = 0;
-		List<Order> deliveries = new LinkedList<>();
+		List<Order> deliveries = new ArrayList<>();
 
 		//Add orders until next order would make drone too heavy
-		while(orders.getFirst() != null && weight + orders.getFirst().getMealWeight() < drone.getCargoWeight()) {
-			Order order = orders.poll();
+		while(pendingOrders.peek() != null && weight + pendingOrders.getFirst().getMealWeight() < drone.getCargoWeight()) {
+			Order order = pendingOrders.poll();
 			
 			deliveries.add(order);
 			
 			weight += order.getMealWeight();
 		}
 		//Make sure that the orders can be delivered
-		double flightTime = drone.getFlightTime(deliveries);
-		while(flightTime > drone.getMaxFlightTime()) {
+		double[] deliveryTimes = drone.getFlightTime(deliveries, currentMinute);
+		while(deliveryTimes[deliveryTimes.length - 1] > drone.getMaxFlightTime()) {
 			// Remove a point and see if the flight is now feasible
-			orders.addFirst(deliveries.remove(deliveries.size() - 1));
-			flightTime = drone.getFlightTime(deliveries);
+			Order removedOrder = deliveries.remove(deliveries.size() - 1);
+			pendingOrders.addFirst(removedOrder);
+			deliveryTimes = drone.getFlightTime(deliveries, currentMinute);
 		}
-
-		return flightTime;
+		
+		//Set delivery time for each order
+		for(int orderNum = 0; orderNum < deliveryTimes.length - 1; orderNum++) {
+			deliveries.get(orderNum).setTotalDeliveryTime(deliveryTimes[orderNum] - deliveries.get(orderNum).getOrderTime());
+		}
+		
+		//Add orders delivered this time to list of all delivered orders for simulation
+		deliveredOrders.addAll(deliveries);
+		
+		//Return total delivery time
+		return deliveryTimes[deliveryTimes.length - 1];
 	}
 	
 	@Override
 	public void addOrder(Order order) {
-		orders.add(order);
+		pendingOrders.add(order);
 	}
 
 	@Override
-	public boolean isEmpty() { return orders.isEmpty(); }
+	public boolean isEmpty() { return pendingOrders.isEmpty(); }
+
+	@Override
+	public List<Order> getDeliveredOrders() {
+		return deliveredOrders;
+	}
+
+	@Override
+	public void clearDeliveredOrders() {
+		deliveredOrders.clear();
+	}
 }

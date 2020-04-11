@@ -2,6 +2,10 @@ package dronesimulation;
 
 import java.util.HashSet;
 
+/*
+ * This class is adapted from:
+ * https://www.geeksforgeeks.org/travelling-salesman-problem-implementation-using-backtracking/
+ */
 public class TravellingSalesman {
     private static class TSPAnswer {
         double cost;

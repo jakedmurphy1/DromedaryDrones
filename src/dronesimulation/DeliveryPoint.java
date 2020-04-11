@@ -22,4 +22,31 @@ public class DeliveryPoint {
     public double getY() {
         return this.y;
     }
+
+    // Adapted from https://www.geeksforgeeks.org/overriding-equals-method-in-java/
+    @Override
+    public boolean equals(Object o) {
+        if(o == this) {
+            return true;
+        }
+
+        if(!(o instanceof DeliveryPoint)) {
+            return false;
+        }
+
+        DeliveryPoint dp = (DeliveryPoint) o;
+
+        return (dp.x == this.x) && (dp.y == this.y);
+    }
+
+    // Adapted from https://www.codexpedia.com/java/java-set-and-hashset-with-custom-class/
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Double.hashCode(x);
+        result = prime * result + Double.hashCode(y);
+        return result;
+    }
+
 }

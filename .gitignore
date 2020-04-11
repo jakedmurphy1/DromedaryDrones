@@ -1,13 +1,12 @@
 /out
 /.idea
 /*.iml
-<<<<<<< HEAD
 /bin/
-=======
 .classpath
 .project
 .settings/
 bin/
 build.fxbuild
 src/application/
->>>>>>> added more to .gitignore
+temp.csv
+customSettings.txt
