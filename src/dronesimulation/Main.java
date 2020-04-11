@@ -540,6 +540,7 @@ public class Main extends Application {
             
         });
         
+        //custom simulation
         startSimulationSettings.setOnAction(e-> {
         	//Get user input
         	ArrayList<String> allUserInput = new ArrayList<String>();
@@ -681,6 +682,25 @@ public class Main extends Application {
 	                MealProbability mp1 = new MealProbability(meal1, Double.parseDouble(probability1.getText()));
 	                groupOrders.add(mp1);
 	                System.out.println(mp1.getProbability());
+	                
+	                //File I/O to add save details of first custom order
+	                try {
+	                	
+	                	fw = new FileWriter(fileLoc, true);
+	                	pw = new PrintWriter(fw);
+	                	
+	                	pw.print("Orders listed as follows: #burgers, #drinks, #fries, weight, probability\n");
+	                	
+	                	pw.print(Integer.parseInt(burgers1.getText()) + ", " + Integer.parseInt(drinks1.getText()) + ", " + 
+	                			Integer.parseInt(fries1.getText()) + ", " + meal1.getWeight() + ", " + mp1.getProbability());
+	                	
+	                	pw.flush();
+	                	pw.close();
+	                	
+	                } catch(Exception exception) {
+	                	exception.printStackTrace();
+	                }
+	                
 	            }
 				if (!probability2.getText().equals("")) {
 					HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
@@ -700,6 +720,23 @@ public class Main extends Application {
 	                MealProbability mp2 = new MealProbability(meal2, Double.parseDouble(probability2.getText()));
 	                groupOrders.add(mp2);
 	                System.out.println(mp2.getProbability());
+	                
+	                //File I/O to add save details of second custom order
+	                try {
+	                	
+	                	fw = new FileWriter(fileLoc, true);
+	                	pw = new PrintWriter(fw);
+	                	
+	                	pw.print(Integer.parseInt(burgers2.getText()) + ", " + Integer.parseInt(drinks2.getText()) + ", " + 
+	                			Integer.parseInt(fries2.getText()) + ", " + meal2.getWeight() + ", " + mp2.getProbability());
+	                	
+	                	pw.flush();
+	                	pw.close();
+	                	
+	                } catch(Exception exception) {
+	                	exception.printStackTrace();
+	                }
+	                
 	            }
 				if (!probability3.getText().equals("")) {
 					HashMap<FoodItem, Integer> items3 = new HashMap<FoodItem, Integer>();
@@ -719,6 +756,23 @@ public class Main extends Application {
 	                MealProbability mp3 = new MealProbability(meal3, Double.parseDouble(probability3.getText()));
 	                groupOrders.add(mp3);
 	                System.out.println(mp3.getProbability());
+	                
+	                //File I/O to add save details of third custom order
+	                try {
+	                	
+	                	fw = new FileWriter(fileLoc, true);
+	                	pw = new PrintWriter(fw);
+	                	
+	                	pw.print(Integer.parseInt(burgers3.getText()) + ", " + Integer.parseInt(drinks3.getText()) + ", " + 
+	                			Integer.parseInt(fries3.getText()) + ", " + meal3.getWeight() + ", " + mp3.getProbability());
+	                	
+	                	pw.flush();
+	                	pw.close();
+	                	
+	                } catch(Exception exception) {
+	                	exception.printStackTrace();
+	                }
+	                
 				}
 				
 				
@@ -743,6 +797,23 @@ public class Main extends Application {
 		                MealProbability newMealProbability = new MealProbability(newMeal, Double.parseDouble(addProbability[j].getText()));
 		                groupOrders.add(newMealProbability);
 		                System.out.println(newMealProbability.getProbability());
+		                
+		                //File I/O to add save details of each successive custom order
+		                try {
+		                	
+		                	fw = new FileWriter(fileLoc, true);
+		                	pw = new PrintWriter(fw);		                	
+		                	
+		                	pw.print(Integer.parseInt(addBurgers[j].getText()) + ", " + Integer.parseInt(addDrinks[j].getText()) + ", " + 
+		                			Integer.parseInt(addFries[j].getText()) + ", " + newMeal.getWeight() + ", " + newMealProbability.getProbability());
+		                	
+		                	pw.flush();
+		                	pw.close();
+		                	
+		                } catch(Exception exception) {
+		                	exception.printStackTrace();
+		                }
+		                
 					}
 				}
 	            
@@ -754,22 +825,22 @@ public class Main extends Application {
 	
 	            Simulation sim = new Simulation(map, mp, ordersPerHour);
 	            sim.run();
+	            
+	            // Open file save dialog to let the user choose where they want results saved
+	            // Adapted from https://www.genuinecoder.com/save-files-javafx-filechooser/
+	            FileChooser fileChooser = new FileChooser();
+	            FileChooser.ExtensionFilter extensions = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+	            fileChooser.getExtensionFilters().add(extensions);
+	            
+	            File results = fileChooser.showSaveDialog(primaryStage);
+	            
+	            if(results != null) {
+	            	sim.saveCSV(results);
+	            }
         	}
         	else {
         		errorMessage.setVisible(true);
         	}
-            
-            // Open file save dialog to let the user choose where they want results saved
-            // Adapted from https://www.genuinecoder.com/save-files-javafx-filechooser/
-            FileChooser fileChooser = new FileChooser();
-            FileChooser.ExtensionFilter extensions = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-            fileChooser.getExtensionFilters().add(extensions);
-            
-            File results = fileChooser.showSaveDialog(primaryStage);
-            
-            if(results != null) {
-            	sim.saveCSV(results);
-            }
             
         });
         
