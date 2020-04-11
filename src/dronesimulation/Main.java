@@ -6,6 +6,7 @@ import javafx.scene.text.*;
 import javafx.scene.paint.Color;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -330,8 +331,15 @@ public class Main extends Application {
         TextField addProbability[] = new TextField[99];
         TextField addWeight[] = new TextField[99];
         
- 
-        
+        //Create Error Message
+        Label errorMessage = new Label("** Make sure all entered numbers are Integers, except probability which must be a decimal with all fields adding up to 1.0. Do not forget the hours section. And if one input is filled on a row, ensure all other inputs in that row are filled as well. If the Add Order button is pressed, the input fields on that order all must be filled.");
+        errorMessage.setTranslateX(200);
+        errorMessage.setTranslateY(140);
+        errorMessage.setMaxWidth(230);
+        errorMessage.setWrapText(true);
+        errorMessage.setTextFill(Color.RED);
+        errorMessage.setVisible(false);
+        errorMessage.setFont(new Font("Arial", 10));
         
         //Add elements to layout/view
         StackPane layout2 = new StackPane();
@@ -357,8 +365,10 @@ public class Main extends Application {
         layout2.getChildren().add(addOrder);
         layout2.getChildren().add(deleteSelectedRow);
         layout2.getChildren().add(startSimulationSettings);
+        layout2.getChildren().add(errorMessage);
         
         
+            
         
         /* SET THE SCENES */
         Scene scene1 = new Scene(layout, 750, 400);
@@ -531,219 +541,223 @@ public class Main extends Application {
         });
         
         startSimulationSettings.setOnAction(e-> {
-        	//Start the simulation with CUSTOM settings
-        	Drone drone = new Drone();
-        	FoodItem burgerItem = new FoodItem(6);
-            FoodItem friesItem = new FoodItem(4);
-            FoodItem drinkItem = new FoodItem(14);
-            
-        	CampusMap map = new CampusMap("Grove City College");
-        	
-        	
-        	//Get orders per hour from user input
-            int[] ordersPerHour = new int[4];
-            ordersPerHour[0] = Integer.parseInt(hour1.getText());
-            ordersPerHour[1] = Integer.parseInt(hour2.getText());
-            ordersPerHour[2] = Integer.parseInt(hour3.getText());
-            ordersPerHour[3] = Integer.parseInt(hour4.getText());
-            
-            //File I/O for stochastic flow of custom orders
-            try {
-            	
-            	fw = new FileWriter(fileLoc, true);
-            	pw = new PrintWriter(fw);
-            	
-            	pw.print("Begin custom order\n");
-            	
-            	pw.print("Orders per hour\n");
-            	for(int i = 0; i < ordersPerHour.length; i++) {
-            		pw.print(ordersPerHour[i] + "\n");
-            	}
-            	
-            	pw.flush();
-            	pw.close();
-            	
-            } catch(Exception exception) {
-            	exception.printStackTrace();
-            }
-            
-            //Create arraylist to hold order then convert to array later
-            ArrayList<MealProbability> groupOrders = new ArrayList<MealProbability>();
-            
-            //Get any custom orders entered by user
-            if (!probability1.getText().equals("")) {
-            	HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
-            	items1.put(burgerItem, Integer.parseInt(burgers1.getText()));
-                items1.put(drinkItem, Integer.parseInt(drinks1.getText()));
-                items1.put(friesItem, Integer.parseInt(fries1.getText()));
-                
-                Meal meal1 = new Meal(items1);
-                
-                //Verify order weight
-                if(meal1.getWeight() > drone.getCargoWeight())
-                {
-                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
-                	return;
-                }
-
-                MealProbability mp1 = new MealProbability(meal1, Integer.parseInt(probability1.getText()));
-                groupOrders.add(mp1);
-                System.out.println(mp1.getProbability());
-                
-                // File I/O to add first meal to custom settings file
-                try {
-                	
-                	fw = new FileWriter(fileLoc, true);
-                	pw = new PrintWriter(fw);
-                	
-                	pw.print("Orders listed as follows: #burgers, #drinks, #fries, weight, probability\n");
-                	
-                	pw.print(Integer.parseInt(burgers1.getText()) + "\t" + Integer.parseInt(drinks1.getText()) + 
-                			"\t" + Integer.parseInt(fries1.getText()) + "\t" + meal1.getWeight() + "\t" + Integer.parseInt(probability1.getText()) + "\n");
-                	
-                	pw.flush();
-                	pw.close();
-                	
-                } catch(Exception exception) {
-                	exception.printStackTrace();
-                }
-                
-            }
-			if (!probability2.getText().equals("")) {
-				HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
-				items2.put(burgerItem, Integer.parseInt(burgers2.getText()));
-                items2.put(drinkItem, Integer.parseInt(drinks2.getText()));
-                items2.put(friesItem, Integer.parseInt(fries2.getText()));
-                
-                Meal meal2 = new Meal(items2);
-                
-                //Verify order weight
-                if(meal2.getWeight() > drone.getCargoWeight())
-                {
-                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
-                	return;
-                }
-
-                MealProbability mp2 = new MealProbability(meal2, Integer.parseInt(probability2.getText()));
-                groupOrders.add(mp2);
-                System.out.println(mp2.getProbability());
-                
-                try {
-                	
-                	fw = new FileWriter(fileLoc, true);
-                	pw = new PrintWriter(fw);       
-                	
-                	pw.print(Integer.parseInt(burgers2.getText()) + "\t" + Integer.parseInt(drinks2.getText()) + 
-                			"\t" + Integer.parseInt(fries2.getText()) + "\t" + meal2.getWeight() + "\t" + Integer.parseInt(probability2.getText()) + "\n");
-                	
-                	pw.flush();
-                	pw.close();
-                	
-                } catch(Exception exception) {
-                	exception.printStackTrace();
-                }
-                
-            }
-			if (!probability3.getText().equals("")) {
-				HashMap<FoodItem, Integer> items3 = new HashMap<FoodItem, Integer>();
-				items3.put(burgerItem, Integer.parseInt(burgers3.getText()));
-                items3.put(drinkItem, Integer.parseInt(drinks3.getText()));
-                items3.put(friesItem, Integer.parseInt(fries3.getText()));
-                
-                Meal meal3 = new Meal(items3);
-                
-                //Verify order weight
-                if(meal3.getWeight() > drone.getCargoWeight())
-                {
-                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
-                	return;
-                }
-
-                MealProbability mp3 = new MealProbability(meal3, Integer.parseInt(probability3.getText()));
-                groupOrders.add(mp3);
-                System.out.println(mp3.getProbability());
-                
-                try {
-                	
-                	fw = new FileWriter(fileLoc, true);
-                	pw = new PrintWriter(fw);
-                	
-                	pw.print(Integer.parseInt(burgers3.getText()) + "\t" + Integer.parseInt(drinks3.getText()) + 
-                			"\t" + Integer.parseInt(fries3.getText()) + "\t" + meal3.getWeight() + "\t" + Integer.parseInt(probability3.getText()) + "\n");
-                	
-                	pw.flush();
-                	pw.close();
-                	
-                } catch(Exception exception) {
-                	exception.printStackTrace();
-                }
-                
+        	//Get user input
+        	ArrayList<String> allUserInput = new ArrayList<String>();
+        	allUserInput.add(hourField1.getText());
+            allUserInput.add(hourField2.getText());
+            allUserInput.add(hourField3.getText());
+            allUserInput.add(hourField4.getText());
+            boolean order1Exists = true;
+            boolean order2Exists = true;
+            boolean order3Exists = true;
+        	if (burgers1.getText().isEmpty() && fries1.getText().isEmpty() && drinks1.getText().isEmpty() && weight1.getText().isEmpty()) {
+        		order1Exists = false;
+        	}
+        	if (burgers2.getText().isEmpty() && fries2.getText().isEmpty() && drinks2.getText().isEmpty() && weight2.getText().isEmpty()) {
+        		order2Exists = false;
+        	}
+			if (burgers3.getText().isEmpty() && fries3.getText().isEmpty() && drinks3.getText().isEmpty() && weight3.getText().isEmpty()) {
+				order3Exists = false;
 			}
 			
+			if (order1Exists) {
+				allUserInput.add(burgers1.getText());
+				allUserInput.add(fries1.getText());
+				allUserInput.add(drinks1.getText());
+				allUserInput.add(weight1.getText());
+			}
+			if (order2Exists) {
+				allUserInput.add(burgers2.getText());
+				allUserInput.add(fries2.getText());
+				allUserInput.add(drinks2.getText());
+				allUserInput.add(weight2.getText());
+			}
+			if (order3Exists) {
+				allUserInput.add(burgers3.getText());
+				allUserInput.add(fries3.getText());
+				allUserInput.add(drinks3.getText());
+				allUserInput.add(weight3.getText());
+			}
 			
-			//Add in any textFields the user implemented using the addOrder button
-			
-			for (int j = 0; j < numAddOrders; j++) {
-				if (!addProbability[j].getText().equals("")) {
-					HashMap<FoodItem, Integer> newItem = new HashMap<FoodItem, Integer>();
-					newItem.put(burgerItem, Integer.parseInt(addBurgers[j].getText()));
-	                newItem.put(drinkItem, Integer.parseInt(addDrinks[j].getText()));
-	                newItem.put(friesItem, Integer.parseInt(addFries[j].getText()));
+        	ArrayList<Integer> verifyUserInput = new ArrayList<Integer>();
+        	boolean verified = true;
+        	
+        	//Go through standard orders to verify
+        	for (int j = 0; j < allUserInput.size(); j++) {
+		        try {
+		        	verifyUserInput.add(Integer.parseInt(allUserInput.get(j)));
+		        }catch (NumberFormatException ex) {
+		        	verified = false;
+		        	//System.out.println("FALSE 1 " + j);
+		        	break;
+		        }
+        	}
+        	//Go through added orders to verify if any
+        	for (int j = 0; j < numAddOrders; j++) {
+        		try {
+	        		verifyUserInput.add(Integer.parseInt(addBurgers[j].getText()));
+	        		verifyUserInput.add(Integer.parseInt(addFries[j].getText()));
+	        		verifyUserInput.add(Integer.parseInt(addDrinks[j].getText()));
+	        		verifyUserInput.add(Integer.parseInt(addWeight[j].getText()));
+        		}catch (NumberFormatException ex) {
+		        	verified = false;
+		        	//System.out.println("FALSE 2 " + j);
+		        	break;
+		        }
+        	}
+        	
+        	//Go through Probabilities to verify
+        	ArrayList<String> allUserInputProbability = new ArrayList<String>();
+        	if (order1Exists) {
+        		allUserInputProbability.add(probability1.getText());
+        	}
+        	if (order2Exists) {
+        		allUserInputProbability.add(probability2.getText());
+        	}
+        	if (order3Exists) {
+        		allUserInputProbability.add(probability3.getText());
+        	}
+        	
+        	ArrayList<Double> verifyUserInputProbability = new ArrayList<Double>();
+        	
+        	for (int j = 0; j < numAddOrders; j++) {
+        		allUserInputProbability.add(addProbability[j].getText());
+        	}
+        	double addUpProbability = 0;
+        	for (int j = 0; j < allUserInputProbability.size(); j++) {
+		        try {
+		        	verifyUserInputProbability.add(Double.parseDouble(allUserInputProbability.get(j)));
+		        	addUpProbability += Double.parseDouble(allUserInputProbability.get(j));
+		        }catch (NumberFormatException ex) {
+		        	verified = false;
+		        	//System.out.println("FALSE 3 " + j);
+		        	break;
+		        }
+        	}
+        	//Verify that probability adds up to 1.0
+        	if (addUpProbability != 1.0) {
+        		//System.out.println("Probability Does Not Add Up: " + addUpProbability);
+        		verified = false;
+        	}
+        	
+        	
+        	
+        	if (verified) {
+        	
+	        	//Start the simulation with CUSTOM settings
+	        	Drone drone = new Drone();
+	        	FoodItem burgerItem = new FoodItem(6);
+	            FoodItem friesItem = new FoodItem(4);
+	            FoodItem drinkItem = new FoodItem(14);
+	            
+	        	CampusMap map = new CampusMap("Grove City College");
+	        	
+	        	//Get orders per hour from user input
+	            int[] ordersPerHour = new int[4];
+	            ordersPerHour[0] = Integer.parseInt(hour1.getText());
+	            ordersPerHour[1] = Integer.parseInt(hour2.getText());
+	            ordersPerHour[2] = Integer.parseInt(hour3.getText());
+	            ordersPerHour[3] = Integer.parseInt(hour4.getText());
+	            
+	            //Create arraylist to hold order then convert to array later
+	            ArrayList<MealProbability> groupOrders = new ArrayList<MealProbability>();
+	            
+	            //Get any custom orders entered by user
+	            if (!probability1.getText().equals("")) {
+	            	HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
+	            	items1.put(burgerItem, Integer.parseInt(burgers1.getText()));
+	                items1.put(drinkItem, Integer.parseInt(drinks1.getText()));
+	                items1.put(friesItem, Integer.parseInt(fries1.getText()));
 	                
-	                Meal newMeal = new Meal(newItem);
+	                Meal meal1 = new Meal(items1);
 	                
 	                //Verify order weight
-	                if(newMeal.getWeight() > drone.getCargoWeight())
+	                if(meal1.getWeight() > drone.getCargoWeight())
 	                {
 	                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
 	                	return;
 	                }
-
-	                MealProbability newMealProbability = new MealProbability(newMeal, Integer.parseInt(addProbability[j].getText()));
-	                groupOrders.add(newMealProbability);
-	                System.out.println(newMealProbability.getProbability());
+	
+	                MealProbability mp1 = new MealProbability(meal1, Double.parseDouble(probability1.getText()));
+	                groupOrders.add(mp1);
+	                System.out.println(mp1.getProbability());
+	            }
+				if (!probability2.getText().equals("")) {
+					HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
+					items2.put(burgerItem, Integer.parseInt(burgers2.getText()));
+	                items2.put(drinkItem, Integer.parseInt(drinks2.getText()));
+	                items2.put(friesItem, Integer.parseInt(fries2.getText()));
 	                
-	                try {
-	                	
-	                	fw = new FileWriter(fileLoc, true);
-	                	pw = new PrintWriter(fw);
-	                	
-	                	pw.print(Integer.parseInt(addBurgers[j].getText()) + "\t" + Integer.parseInt(addDrinks[j].getText()) + 
-	                			"\t" + Integer.parseInt(addFries[j].getText()) + "\t" + newMeal.getWeight() + "\t" + Integer.parseInt(addProbability[j].getText()) + "\n");
-	                	
-	                	pw.flush();
-	                	pw.close();
-	                	
-	                } catch(Exception exception) {
-	                	exception.printStackTrace();
+	                Meal meal2 = new Meal(items2);
+	                
+	                //Verify order weight
+	                if(meal2.getWeight() > drone.getCargoWeight())
+	                {
+	                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+	                	return;
 	                }
+	
+	                MealProbability mp2 = new MealProbability(meal2, Double.parseDouble(probability2.getText()));
+	                groupOrders.add(mp2);
+	                System.out.println(mp2.getProbability());
+	            }
+				if (!probability3.getText().equals("")) {
+					HashMap<FoodItem, Integer> items3 = new HashMap<FoodItem, Integer>();
+					items3.put(burgerItem, Integer.parseInt(burgers3.getText()));
+	                items3.put(drinkItem, Integer.parseInt(drinks3.getText()));
+	                items3.put(friesItem, Integer.parseInt(fries3.getText()));
 	                
+	                Meal meal3 = new Meal(items3);
+	                
+	                //Verify order weight
+	                if(meal3.getWeight() > drone.getCargoWeight())
+	                {
+	                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+	                	return;
+	                }
+	
+	                MealProbability mp3 = new MealProbability(meal3, Double.parseDouble(probability3.getText()));
+	                groupOrders.add(mp3);
+	                System.out.println(mp3.getProbability());
 				}
-			}
-            
-			//Convert arrayList to array to support being passed into Simulation
-			MealProbability[] mp = new MealProbability[groupOrders.size()];
-			for (int j = 0; j < groupOrders.size(); j++) {
-				mp[j] = groupOrders.get(j);
-			}
-
-			//File I/O to let us know we have reached the end of a custom order
-			try {
 				
-				fw = new FileWriter(fileLoc, true);
-				pw = new PrintWriter(fw);
 				
-				pw.print("End custom order\n");
+				//Add in any textFields the user implemented using the addOrder button
 				
-				pw.flush();
-				pw.close();
-				
-			} catch(Exception exception) {
-				exception.printStackTrace();
-			}
-			
-            Simulation sim = new Simulation(map, mp, ordersPerHour);
-            sim.run();
+				for (int j = 0; j < numAddOrders; j++) {
+					if (!addProbability[j].getText().equals("")) {
+						HashMap<FoodItem, Integer> newItem = new HashMap<FoodItem, Integer>();
+						newItem.put(burgerItem, Integer.parseInt(addBurgers[j].getText()));
+		                newItem.put(drinkItem, Integer.parseInt(addDrinks[j].getText()));
+		                newItem.put(friesItem, Integer.parseInt(addFries[j].getText()));
+		                
+		                Meal newMeal = new Meal(newItem);
+		                
+		                //Verify order weight
+		                if(newMeal.getWeight() > drone.getCargoWeight())
+		                {
+		                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+		                	return;
+		                }
+	
+		                MealProbability newMealProbability = new MealProbability(newMeal, Double.parseDouble(addProbability[j].getText()));
+		                groupOrders.add(newMealProbability);
+		                System.out.println(newMealProbability.getProbability());
+					}
+				}
+	            
+				//Convert arrayList to array to support being passed into Simulation
+				MealProbability[] mp = new MealProbability[groupOrders.size()];
+				for (int j = 0; j < groupOrders.size(); j++) {
+					mp[j] = groupOrders.get(j);
+				}
+	
+	            Simulation sim = new Simulation(map, mp, ordersPerHour);
+	            sim.run();
+        	}
+        	else {
+        		errorMessage.setVisible(true);
+        	}
             
             // Open file save dialog to let the user choose where they want results saved
             // Adapted from https://www.genuinecoder.com/save-files-javafx-filechooser/
