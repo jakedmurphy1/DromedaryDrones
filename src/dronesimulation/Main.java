@@ -723,7 +723,6 @@ public class Main extends Application {
 				
 				
 				//Add in any textFields the user implemented using the addOrder button
-				
 				for (int j = 0; j < numAddOrders; j++) {
 					if (!addProbability[j].getText().equals("")) {
 						HashMap<FoodItem, Integer> newItem = new HashMap<FoodItem, Integer>();
@@ -754,23 +753,23 @@ public class Main extends Application {
 	
 	            Simulation sim = new Simulation(map, mp, ordersPerHour);
 	            sim.run();
+
+                // Open file save dialog to let the user choose where they want results saved
+                // Adapted from https://www.genuinecoder.com/save-files-javafx-filechooser/
+                FileChooser fileChooser = new FileChooser();
+                FileChooser.ExtensionFilter extensions = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+                fileChooser.getExtensionFilters().add(extensions);
+
+                File results = fileChooser.showSaveDialog(primaryStage);
+
+                if(results != null) {
+                    sim.saveCSV(results);
+                }
         	}
         	else {
         		errorMessage.setVisible(true);
         	}
-            
-            // Open file save dialog to let the user choose where they want results saved
-            // Adapted from https://www.genuinecoder.com/save-files-javafx-filechooser/
-            FileChooser fileChooser = new FileChooser();
-            FileChooser.ExtensionFilter extensions = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-            fileChooser.getExtensionFilters().add(extensions);
-            
-            File results = fileChooser.showSaveDialog(primaryStage);
-            
-            if(results != null) {
-            	sim.saveCSV(results);
-            }
-            
+
         });
         
     }
