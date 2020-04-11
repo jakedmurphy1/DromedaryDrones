@@ -434,20 +434,6 @@ public class Main extends Application {
         startSimulation.setOnAction(e-> {
         	//Start the simulation with DEFAULT settings
         	
-        	try {
-            	
-            	fw = new FileWriter(fileLoc, true);
-            	pw = new PrintWriter(fw);
-            	
-            	pw.print("Begin Default Orders\n");
-            	
-            	pw.flush();
-            	pw.close();
-            	
-            } catch(Exception exception) {
-            	exception.printStackTrace();
-            }
-        	
         	Drone drone = new Drone();
         	FoodItem burgerItem = new FoodItem(6);
             FoodItem friesItem = new FoodItem(4);
@@ -470,23 +456,6 @@ public class Main extends Application {
             
             MealProbability mp1 = new MealProbability(meal1, 0.5);
             
-            //Save the first default order to a file
-            try {
-            	
-            	fw = new FileWriter(fileLoc, true);
-            	pw = new PrintWriter(fw);
-            	
-            	pw.print("Orders listed as follows: #burgers, #drinks, #fries, weight, probability\n");
-            	
-            	pw.print("2, 1, 0, " + meal1.getWeight() + ", " + mp1.getProbability() + "\n");
-            	
-            	pw.flush();
-            	pw.close();
-            	
-            } catch(Exception exception) {
-            	exception.printStackTrace();
-            }
-            
             // Meal 2
             HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
             items2.put(burgerItem, 1);
@@ -503,21 +472,6 @@ public class Main extends Application {
             MealProbability mp2 = new MealProbability(meal2, 0.5);
 
             MealProbability[] mp = {mp1, mp2};
-            
-          //Save the second default order to a file
-            try {
-            	
-            	fw = new FileWriter(fileLoc, true);
-            	pw = new PrintWriter(fw);
-            	
-            	pw.print("1, 0, 1, " + meal2.getWeight() + ", " + mp2.getProbability() + "\n");
-            	
-            	pw.flush();
-            	pw.close();
-            	
-            } catch(Exception exception) {
-            	exception.printStackTrace();
-            }
 
             Simulation sim = new Simulation(map, mp, ordersPerHour);
             sim.run();
@@ -689,6 +643,7 @@ public class Main extends Application {
 	                	fw = new FileWriter(fileLoc, true);
 	                	pw = new PrintWriter(fw);
 	                	
+	                	pw.print("Begin Custom Orders\n");
 	                	pw.print("Orders listed as follows: #burgers, #drinks, #fries, weight, probability\n");
 	                	
 	                	pw.print(Integer.parseInt(burgers1.getText()) + ", " + Integer.parseInt(drinks1.getText()) + ", " + 
@@ -806,6 +761,8 @@ public class Main extends Application {
 		                	
 		                	pw.print(Integer.parseInt(addBurgers[j].getText()) + ", " + Integer.parseInt(addDrinks[j].getText()) + ", " + 
 		                			Integer.parseInt(addFries[j].getText()) + ", " + newMeal.getWeight() + ", " + newMealProbability.getProbability());
+		                	
+		                	pw.print("End Custom Orders\n");
 		                	
 		                	pw.flush();
 		                	pw.close();
