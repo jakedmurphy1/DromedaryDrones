@@ -208,16 +208,19 @@ public class Main extends Application {
         weight1.setTranslateX(324);
         weight1.setTranslateY(45);
         weight1.setMaxWidth(40);
+        weight1.setEditable(false);
         
         TextField weight2 = new TextField();
         weight2.setTranslateX(324);
         weight2.setTranslateY(85);
         weight2.setMaxWidth(40);
+        weight2.setEditable(false);
         
         TextField weight3 = new TextField();
         weight3.setTranslateX(324);
         weight3.setTranslateY(125);
         weight3.setMaxWidth(40);
+        weight3.setEditable(false);
         
         //Order Frequency Section
         Label hour = new Label("Hour");
@@ -409,6 +412,7 @@ public class Main extends Application {
         	addWeight[numAddOrders].setTranslateX(324);
         	addWeight[numAddOrders].setTranslateY(addOrderYAxis);
         	addWeight[numAddOrders].setMaxWidth(40);
+        	addWeight[numAddOrders].setEditable(false);
         	pane.getChildren().add(addWeight[numAddOrders]);
         	
         	addOrderYAxis += 40;
@@ -550,13 +554,13 @@ public class Main extends Application {
             boolean order1Exists = true;
             boolean order2Exists = true;
             boolean order3Exists = true;
-        	if (burgers1.getText().isEmpty() && fries1.getText().isEmpty() && drinks1.getText().isEmpty() && weight1.getText().isEmpty()) {
+        	if (burgers1.getText().isEmpty() && fries1.getText().isEmpty() && drinks1.getText().isEmpty()) {
         		order1Exists = false;
         	}
-        	if (burgers2.getText().isEmpty() && fries2.getText().isEmpty() && drinks2.getText().isEmpty() && weight2.getText().isEmpty()) {
+        	if (burgers2.getText().isEmpty() && fries2.getText().isEmpty() && drinks2.getText().isEmpty()) {
         		order2Exists = false;
         	}
-			if (burgers3.getText().isEmpty() && fries3.getText().isEmpty() && drinks3.getText().isEmpty() && weight3.getText().isEmpty()) {
+			if (burgers3.getText().isEmpty() && fries3.getText().isEmpty() && drinks3.getText().isEmpty()) {
 				order3Exists = false;
 			}
 			
@@ -564,19 +568,19 @@ public class Main extends Application {
 				allUserInput.add(burgers1.getText());
 				allUserInput.add(fries1.getText());
 				allUserInput.add(drinks1.getText());
-				allUserInput.add(weight1.getText());
+				//allUserInput.add(weight1.getText());
 			}
 			if (order2Exists) {
 				allUserInput.add(burgers2.getText());
 				allUserInput.add(fries2.getText());
 				allUserInput.add(drinks2.getText());
-				allUserInput.add(weight2.getText());
+				//allUserInput.add(weight2.getText());
 			}
 			if (order3Exists) {
 				allUserInput.add(burgers3.getText());
 				allUserInput.add(fries3.getText());
 				allUserInput.add(drinks3.getText());
-				allUserInput.add(weight3.getText());
+				//allUserInput.add(weight3.getText());
 			}
 			
         	ArrayList<Integer> verifyUserInput = new ArrayList<Integer>();
@@ -598,7 +602,7 @@ public class Main extends Application {
 	        		verifyUserInput.add(Integer.parseInt(addBurgers[j].getText()));
 	        		verifyUserInput.add(Integer.parseInt(addFries[j].getText()));
 	        		verifyUserInput.add(Integer.parseInt(addDrinks[j].getText()));
-	        		verifyUserInput.add(Integer.parseInt(addWeight[j].getText()));
+	        		//verifyUserInput.add(Integer.parseInt(addWeight[j].getText()));
         		}catch (NumberFormatException ex) {
 		        	verified = false;
 		        	//System.out.println("FALSE 2 " + j);
@@ -643,12 +647,54 @@ public class Main extends Application {
         	
         	
         	if (verified) {
+        		
+        		//Declare weights of food items
+        		final int BURGER_WEIGHT = 6;
+        		final int FRIES_WEIGHT = 4;
+        		final int DRINKS_WEIGHT = 14;
+        		
+        		//Calculate Order Weights
+        		int orderWeight1 = 0;
+        		int orderWeight2 = 0;
+        		int orderWeight3 = 0;
+        		
+        		if (order1Exists) {
+	        		orderWeight1 += (Integer.parseInt(burgers1.getText()) * BURGER_WEIGHT);
+	        		orderWeight1 += (Integer.parseInt(fries1.getText()) * FRIES_WEIGHT);
+	        		orderWeight1 += (Integer.parseInt(drinks1.getText()) * DRINKS_WEIGHT);
+	        		weight1.setText(Integer.toString(orderWeight1));
+        		}
+        		if (order2Exists) {
+	        		orderWeight2 += (Integer.parseInt(burgers2.getText()) * BURGER_WEIGHT);
+	        		orderWeight2 += (Integer.parseInt(fries2.getText()) * FRIES_WEIGHT);
+	        		orderWeight2 += (Integer.parseInt(drinks2.getText()) * DRINKS_WEIGHT);
+	        		weight2.setText(Integer.toString(orderWeight2));
+        		}
+        		if (order3Exists) {
+	        		orderWeight3 += (Integer.parseInt(burgers3.getText()) * BURGER_WEIGHT);
+	        		orderWeight3 += (Integer.parseInt(fries3.getText()) * FRIES_WEIGHT);
+	        		orderWeight3 += (Integer.parseInt(drinks3.getText()) * DRINKS_WEIGHT);
+	        		weight3.setText(Integer.toString(orderWeight3));
+        		}
+        		
+        		int orderWeight;
+        		for (int j = 0; j < numAddOrders; j++) {
+        			orderWeight = 0;
+        			
+        			orderWeight += (Integer.parseInt(addBurgers[j].getText()) * BURGER_WEIGHT);
+            		orderWeight += (Integer.parseInt(addFries[j].getText()) * FRIES_WEIGHT);
+            		orderWeight += (Integer.parseInt(addDrinks[j].getText()) * DRINKS_WEIGHT);
+            		
+            		addWeight[j].setText(Integer.toString(orderWeight));
+        			
+        		}
+        		
         	
 	        	//Start the simulation with CUSTOM settings
 	        	Drone drone = new Drone();
-	        	FoodItem burgerItem = new FoodItem(6);
-	            FoodItem friesItem = new FoodItem(4);
-	            FoodItem drinkItem = new FoodItem(14);
+	        	FoodItem burgerItem = new FoodItem(BURGER_WEIGHT);
+	            FoodItem friesItem = new FoodItem(FRIES_WEIGHT);
+	            FoodItem drinkItem = new FoodItem(DRINKS_WEIGHT);
 	            
 	        	CampusMap map = new CampusMap("Grove City College");
 	        	
@@ -680,7 +726,7 @@ public class Main extends Application {
 	
 	                MealProbability mp1 = new MealProbability(meal1, Double.parseDouble(probability1.getText()));
 	                groupOrders.add(mp1);
-	                System.out.println(mp1.getProbability());
+	                //System.out.println(mp1.getProbability());
 	            }
 				if (!probability2.getText().equals("")) {
 					HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
@@ -699,7 +745,7 @@ public class Main extends Application {
 	
 	                MealProbability mp2 = new MealProbability(meal2, Double.parseDouble(probability2.getText()));
 	                groupOrders.add(mp2);
-	                System.out.println(mp2.getProbability());
+	                //System.out.println(mp2.getProbability());
 	            }
 				if (!probability3.getText().equals("")) {
 					HashMap<FoodItem, Integer> items3 = new HashMap<FoodItem, Integer>();
@@ -718,7 +764,7 @@ public class Main extends Application {
 	
 	                MealProbability mp3 = new MealProbability(meal3, Double.parseDouble(probability3.getText()));
 	                groupOrders.add(mp3);
-	                System.out.println(mp3.getProbability());
+	                //System.out.println(mp3.getProbability());
 				}
 				
 				
@@ -741,7 +787,7 @@ public class Main extends Application {
 	
 		                MealProbability newMealProbability = new MealProbability(newMeal, Double.parseDouble(addProbability[j].getText()));
 		                groupOrders.add(newMealProbability);
-		                System.out.println(newMealProbability.getProbability());
+		                //System.out.println(newMealProbability.getProbability());
 					}
 				}
 	            
