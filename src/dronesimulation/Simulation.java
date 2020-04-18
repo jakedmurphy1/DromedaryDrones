@@ -56,7 +56,6 @@ public class Simulation {
 			tempOutputFile = File.createTempFile("droneSim", ".csv");
 			FileWriter writer = new FileWriter(tempOutputFile);
 			for(int simCount = 1; simCount <= 50; simCount++) {
-				System.out.println("SIMCOUNT: " + simCount);
 				//Generate the orders to be delivered this simulation
 				orders = generateOrders();
 				totalNumOrders += orders.size();
@@ -67,7 +66,6 @@ public class Simulation {
 				deliveredOrders = simulate(knapsack);
 				// Update worst time and total time
 				for(Order o : deliveredOrders) {
-					System.out.println("In the loop");
 					totalFIFOTime += o.getTotalDeliveryTime();
 					if(o.getTotalDeliveryTime() > worstFIFOTime) {
 						worstFIFOTime = o.getTotalDeliveryTime();
