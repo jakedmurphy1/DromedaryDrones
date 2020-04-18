@@ -15,7 +15,6 @@ public class CampusMap {
 		if(college.equals("Grove City College")) {
 			// TODO: use this in TSP during sprint 2
 		    dispatchPoint = new DeliveryPoint(0, 0);
-			//campus.put("SAC", new DeliveryPoint(0,0));
 			campus.put("HAL", new DeliveryPoint(0,15));
 			campus.put("Hoyt", new DeliveryPoint(152, -91));
 			campus.put("Library", new DeliveryPoint(183, -61));
