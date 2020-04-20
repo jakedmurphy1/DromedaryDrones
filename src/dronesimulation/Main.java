@@ -438,20 +438,6 @@ public class Main extends Application {
         startSimulation.setOnAction(e-> {
         	//Start the simulation with DEFAULT settings
         	
-        	try {
-            	
-            	fw = new FileWriter(fileLoc, true);
-            	pw = new PrintWriter(fw);
-            	
-            	pw.print("Begin Default Orders\n");
-            	
-            	pw.flush();
-            	pw.close();
-            	
-            } catch(Exception exception) {
-            	exception.printStackTrace();
-            }
-        	
         	Drone drone = new Drone();
         	FoodItem burgerItem = new FoodItem(6);
             FoodItem friesItem = new FoodItem(4);
@@ -474,23 +460,6 @@ public class Main extends Application {
             
             MealProbability mp1 = new MealProbability(meal1, 0.5);
             
-            //Save the first default order to a file
-            try {
-            	
-            	fw = new FileWriter(fileLoc, true);
-            	pw = new PrintWriter(fw);
-            	
-            	pw.print("Orders listed as follows: #burgers, #drinks, #fries, weight, probability\n");
-            	
-            	pw.print("2, 1, 0, " + meal1.getWeight() + ", " + mp1.getProbability() + "\n");
-            	
-            	pw.flush();
-            	pw.close();
-            	
-            } catch(Exception exception) {
-            	exception.printStackTrace();
-            }
-            
             // Meal 2
             HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
             items2.put(burgerItem, 1);
@@ -507,21 +476,6 @@ public class Main extends Application {
             MealProbability mp2 = new MealProbability(meal2, 0.5);
 
             MealProbability[] mp = {mp1, mp2};
-            
-          //Save the second default order to a file
-            try {
-            	
-            	fw = new FileWriter(fileLoc, true);
-            	pw = new PrintWriter(fw);
-            	
-            	pw.print("1, 0, 1, " + meal2.getWeight() + ", " + mp2.getProbability() + "\n");
-            	
-            	pw.flush();
-            	pw.close();
-            	
-            } catch(Exception exception) {
-            	exception.printStackTrace();
-            }
 
             Simulation sim = new Simulation(map, mp, ordersPerHour);
             sim.run();
@@ -544,6 +498,7 @@ public class Main extends Application {
             
         });
         
+        //custom simulation
         startSimulationSettings.setOnAction(e-> {
         	//Get user input
         	ArrayList<String> allUserInput = new ArrayList<String>();
@@ -700,10 +655,10 @@ public class Main extends Application {
 	        	
 	        	//Get orders per hour from user input
 	            int[] ordersPerHour = new int[4];
-	            ordersPerHour[0] = Integer.parseInt(hourField1.getText());
-	            ordersPerHour[1] = Integer.parseInt(hourField2.getText());
-	            ordersPerHour[2] = Integer.parseInt(hourField3.getText());
-	            ordersPerHour[3] = Integer.parseInt(hourField4.getText());
+	            ordersPerHour[0] = Integer.parseInt(hour1.getText());
+	            ordersPerHour[1] = Integer.parseInt(hour2.getText());
+	            ordersPerHour[2] = Integer.parseInt(hour3.getText());
+	            ordersPerHour[3] = Integer.parseInt(hour4.getText());
 	            
 	            //Create arraylist to hold order then convert to array later
 	            ArrayList<MealProbability> groupOrders = new ArrayList<MealProbability>();
@@ -726,6 +681,29 @@ public class Main extends Application {
 	
 	                MealProbability mp1 = new MealProbability(meal1, Double.parseDouble(probability1.getText()));
 	                groupOrders.add(mp1);
+
+	                System.out.println(mp1.getProbability());
+	                
+	                //File I/O to add save details of first custom order
+	                try {
+	                	
+	                	fw = new FileWriter(fileLoc, true);
+	                	pw = new PrintWriter(fw);
+	                	
+	                	pw.print("Begin Custom Orders\n");
+	                	pw.print("Orders listed as follows: #burgers, #drinks, #fries, weight, probability\n");
+	                	
+	                	pw.print(Integer.parseInt(burgers1.getText()) + ", " + Integer.parseInt(drinks1.getText()) + ", " + 
+	                			Integer.parseInt(fries1.getText()) + ", " + meal1.getWeight() + ", " + mp1.getProbability());
+	                	
+	                	pw.flush();
+	                	pw.close();
+	                	
+	                } catch(Exception exception) {
+	                	exception.printStackTrace();
+	                }
+	                
+
 	                //System.out.println(mp1.getProbability());
 	            }
 				if (!probability2.getText().equals("")) {
@@ -745,7 +723,28 @@ public class Main extends Application {
 	
 	                MealProbability mp2 = new MealProbability(meal2, Double.parseDouble(probability2.getText()));
 	                groupOrders.add(mp2);
+
+	                System.out.println(mp2.getProbability());
+	                
+	                //File I/O to add save details of second custom order
+	                try {
+	                	
+	                	fw = new FileWriter(fileLoc, true);
+	                	pw = new PrintWriter(fw);
+	                	
+	                	pw.print(Integer.parseInt(burgers2.getText()) + ", " + Integer.parseInt(drinks2.getText()) + ", " + 
+	                			Integer.parseInt(fries2.getText()) + ", " + meal2.getWeight() + ", " + mp2.getProbability());
+	                	
+	                	pw.flush();
+	                	pw.close();
+	                	
+	                } catch(Exception exception) {
+	                	exception.printStackTrace();
+	                }
+	                
+
 	                //System.out.println(mp2.getProbability());
+
 	            }
 				if (!probability3.getText().equals("")) {
 					HashMap<FoodItem, Integer> items3 = new HashMap<FoodItem, Integer>();
@@ -764,11 +763,33 @@ public class Main extends Application {
 	
 	                MealProbability mp3 = new MealProbability(meal3, Double.parseDouble(probability3.getText()));
 	                groupOrders.add(mp3);
+
+	                System.out.println(mp3.getProbability());
+	                
+	                //File I/O to add save details of third custom order
+	                try {
+	                	
+	                	fw = new FileWriter(fileLoc, true);
+	                	pw = new PrintWriter(fw);
+	                	
+	                	pw.print(Integer.parseInt(burgers3.getText()) + ", " + Integer.parseInt(drinks3.getText()) + ", " + 
+	                			Integer.parseInt(fries3.getText()) + ", " + meal3.getWeight() + ", " + mp3.getProbability());
+	                	
+	                	pw.flush();
+	                	pw.close();
+	                	
+	                } catch(Exception exception) {
+	                	exception.printStackTrace();
+	                }
+	                
+
 	                //System.out.println(mp3.getProbability());
+
 				}
 				
 				
 				//Add in any textFields the user implemented using the addOrder button
+				
 				for (int j = 0; j < numAddOrders; j++) {
 					if (!addProbability[j].getText().equals("")) {
 						HashMap<FoodItem, Integer> newItem = new HashMap<FoodItem, Integer>();
@@ -787,7 +808,30 @@ public class Main extends Application {
 	
 		                MealProbability newMealProbability = new MealProbability(newMeal, Double.parseDouble(addProbability[j].getText()));
 		                groupOrders.add(newMealProbability);
+
+		                System.out.println(newMealProbability.getProbability());
+		                
+		                //File I/O to add save details of each successive custom order
+		                try {
+		                	
+		                	fw = new FileWriter(fileLoc, true);
+		                	pw = new PrintWriter(fw);		                	
+		                	
+		                	pw.print(Integer.parseInt(addBurgers[j].getText()) + ", " + Integer.parseInt(addDrinks[j].getText()) + ", " + 
+		                			Integer.parseInt(addFries[j].getText()) + ", " + newMeal.getWeight() + ", " + newMealProbability.getProbability());
+		                	
+		                	pw.print("End Custom Orders\n");
+		                	
+		                	pw.flush();
+		                	pw.close();
+		                	
+		                } catch(Exception exception) {
+		                	exception.printStackTrace();
+		                }
+		                
+
 		                //System.out.println(newMealProbability.getProbability());
+
 					}
 				}
 	            
@@ -799,23 +843,23 @@ public class Main extends Application {
 	
 	            Simulation sim = new Simulation(map, mp, ordersPerHour);
 	            sim.run();
-
-                // Open file save dialog to let the user choose where they want results saved
-                // Adapted from https://www.genuinecoder.com/save-files-javafx-filechooser/
-                FileChooser fileChooser = new FileChooser();
-                FileChooser.ExtensionFilter extensions = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-                fileChooser.getExtensionFilters().add(extensions);
-
-                File results = fileChooser.showSaveDialog(primaryStage);
-
-                if(results != null) {
-                    sim.saveCSV(results);
-                }
+	            
+	            // Open file save dialog to let the user choose where they want results saved
+	            // Adapted from https://www.genuinecoder.com/save-files-javafx-filechooser/
+	            FileChooser fileChooser = new FileChooser();
+	            FileChooser.ExtensionFilter extensions = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+	            fileChooser.getExtensionFilters().add(extensions);
+	            
+	            File results = fileChooser.showSaveDialog(primaryStage);
+	            
+	            if(results != null) {
+	            	sim.saveCSV(results);
+	            }
         	}
         	else {
         		errorMessage.setVisible(true);
         	}
-
+            
         });
         
     }

@@ -34,7 +34,7 @@ public class Knapsack implements DeliveryScheme{
 		
 		ArrayList<Order> deliveries = new ArrayList<Order>(); /* Orders to be "packed" onto drone */
 		
-		/* Add orders that have previouslt been skipped first */
+		/* Add orders that have previously been skipped first */
 		while(!skipped.isEmpty()) {
 			if(weight + skipped.get(0).getMealWeight() <= drone.getCargoWeight()) {
 				 Order add = skipped.remove(0);
@@ -59,7 +59,7 @@ public class Knapsack implements DeliveryScheme{
 		/* While the time it would take to deliver the orders is greater than max flight time, remove orders */
 		while(times[times.length - 1] > drone.getMaxFlightTime()) {
 			Order removed = deliveries.remove(deliveries.size() - 1);
-			pending.add(removed);
+			skipped.add(removed);
 			times = drone.getFlightTime(deliveries, currentMinute);
 		} /* End while */
 		

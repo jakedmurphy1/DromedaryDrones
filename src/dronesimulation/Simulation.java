@@ -61,7 +61,9 @@ public class Simulation {
 				totalNumOrders += orders.size();
 
 				// Get the results from each scheme
-				deliveredOrders = simulate(fifo);
+				
+				
+				deliveredOrders = simulate(knapsack);
 				// Update worst time and total time
 				for(Order o : deliveredOrders) {
 					totalFIFOTime += o.getTotalDeliveryTime();
@@ -70,15 +72,17 @@ public class Simulation {
 					}
 				}
 				// Output each order to CSV
+				
 				for (Order deliveredOrder : deliveredOrders) {
 					// Add scheme label
 					writer.append("FIFO,");
-					// the time it was delivered, the place it was delivered to, etc.
+					
 					writer.append(simCount + "," + deliveredOrder.getMealWeight() + "," + deliveredOrder.getOrderTime() + "," + deliveredOrder.getTotalDeliveryTime() + ",");
 					writer.append(deliveredOrder.getDeliveryPoint().getX() + "," + deliveredOrder.getDeliveryPoint().getY() + "\n");
 				}
-
-				deliveredOrders = simulate(knapsack);
+				
+				
+				deliveredOrders = simulate(fifo);
 				for(Order o : deliveredOrders) {
 					totalKnapsackTime += o.getTotalDeliveryTime();
 					if(o.getTotalDeliveryTime() > worstKnapsackTime) {
@@ -98,6 +102,7 @@ public class Simulation {
 				// clear the orders
 				fifo.clearDeliveredOrders();
 				knapsack.clearDeliveredOrders();
+
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -115,7 +120,8 @@ public class Simulation {
 		// The next minute the drone is available to deliver orders
 		int nextAvailableMinute = 0;
 		double deliveryTime;
-		while(minute < 240 || !scheme.isEmpty()) {
+		while(minute < 240) {
+		//while(minute < 240 || !scheme.isEmpty()) {
 			// Add the next order if it has arrived
 			if(currentOrderIndex < orders.size() && orders.get(currentOrderIndex).getOrderTime() == minute) {
 				scheme.addOrder(orders.get(currentOrderIndex));
