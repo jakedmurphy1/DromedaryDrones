@@ -3,6 +3,10 @@
 NOTE: JavaFX should come pre-initialized with this project, however, if there are errors because JavaFX is not
       linked with eclipse, follow the directions to install the JavaFX libraries for eclipse at: 
       https://www.eclipse.org/efxclipse/install.html
+      
+NB: To run the completed sprint one product, nativate to the updateCampusMap branch by opening a git bash instance
+    in the location of the cloned project, and entering the command "git checkout updateCampusMap", then follow
+    the instructions below. 
 
 How to Run: 
 1. Clone the GitHub repository for our Dromedary Drones simulation from: https://github.com/jakedmurphy1/DromedaryDrones.git
