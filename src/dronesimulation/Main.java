@@ -444,7 +444,7 @@ public class Main extends Application {
             FoodItem drinkItem = new FoodItem(14);
             
         	CampusMap map = new CampusMap("Grove City College");
-            int[] ordersPerHour = {15, 17, 22, 12};
+            int[] ordersPerHour = {38, 45, 60, 30};
             // Meal 1
             HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
             items1.put(burgerItem, 1);
