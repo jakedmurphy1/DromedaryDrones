@@ -48,12 +48,7 @@ public class Main extends Application {
 	
 	FileWriter fw;
 	PrintWriter pw;
-	
-	public void mouseClicked(MouseEvent e) {
-	    int x = (int) e.getX();
-	    int y = (int) e.getY();
-	    System.out.println(x+","+y);//these co-ords are relative to the component
-	}
+
 	
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -65,7 +60,7 @@ public class Main extends Application {
         
         
         
-        /*GET LOCATION POINTS SCREEN*/
+        /* GET LOCATION POINTS SCREEN */
         
         //Create Layout
         StackPane createPoints = new StackPane();
