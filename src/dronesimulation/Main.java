@@ -444,46 +444,73 @@ public class Main extends Application {
             FoodItem drinkItem = new FoodItem(14);
             
         	CampusMap map = new CampusMap("Grove City College");
-            int[] ordersPerHour = {15, 17, 22, 12};
+            int[] ordersPerHour = {38, 45, 60, 30};
             // Meal 1
             HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
-            items1.put(burgerItem, 2);
-            items1.put(drinkItem, 1);
+            items1.put(burgerItem, 1);
+            items1.put(friesItem, 1);
+            items1.put(drinkItem, 1); //0.55 percent chance
             Meal meal1 = new Meal(items1);
-            
-            //Verify order weight
             if(meal1.getWeight() > drone.getCargoWeight())
             {
             	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
             	return;
             }
-            
             MealProbability mp1 = new MealProbability(meal1, 0.5);
             
-            // Meal 2
+            //second meal
             HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
-            items2.put(burgerItem, 1);
+            items2.put(burgerItem, 2);
             items2.put(friesItem, 1);
+            items2.put(drinkItem, 1); //0.55 percent chance
             Meal meal2 = new Meal(items2);
-            
-            //Verify order weight
             if(meal2.getWeight() > drone.getCargoWeight())
             {
             	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
             	return;
             }
+            MealProbability mp2 = new MealProbability(meal2, 0.2);
             
-            MealProbability mp2 = new MealProbability(meal2, 0.5);
-
-            MealProbability[] mp = {mp1, mp2};
+            //third meal
+            HashMap<FoodItem, Integer> items3 = new HashMap<FoodItem, Integer>();
+            items3.put(burgerItem, 1);
+            items3.put(friesItem, 1);
+            Meal meal3 = new Meal(items3);
+            if(meal3.getWeight() > drone.getCargoWeight())
+            {
+            	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+            	return;
+            }
+            MealProbability mp3 = new MealProbability(meal3, 0.15);
+            
+            //4th meal
+            HashMap<FoodItem, Integer> items4 = new HashMap<FoodItem, Integer>();
+            items4.put(burgerItem, 2);
+            items4.put(friesItem, 1);
+            Meal meal4 = new Meal(items4);
+            if(meal4.getWeight() > drone.getCargoWeight())
+            {
+            	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+            	return;
+            }
+            MealProbability mp4 = new MealProbability(meal4, 0.1);
+            
+            //5th meal
+            HashMap<FoodItem, Integer> items5 = new HashMap<FoodItem, Integer>();
+            items5.put(friesItem, 1);
+            Meal meal5 = new Meal(items5);
+            if(meal5.getWeight() > drone.getCargoWeight())
+            {
+            	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+            	return;
+            }
+            MealProbability mp5 = new MealProbability(meal5, 0.05);
+            
+            MealProbability[] mp = {mp1, mp2, mp3, mp4, mp5};
 
             Simulation sim = new Simulation(map, mp, ordersPerHour);
             sim.run();
-            //File placeToSave = new File("temp.csv");
-            //sim.saveCSV(placeToSave);
-            
-            // Open file save dialog to let the user choose where they want results saved
-            // Adapted from https://www.genuinecoder.com/save-files-javafx-filechooser/
+
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extensions = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
             fileChooser.getExtensionFilters().add(extensions);

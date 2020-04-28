@@ -17,9 +17,9 @@ public class Drone {
     // for the drone we plan to use
     public Drone() {
         cargoWeight = 12 * 16;
-        speed = 536.448;
+        speed = 670.56;
         maxFlightTime = 20;
-        turnAroundTime = 3;
+        turnAroundTime = 2.5;
         deliveryTime = 0.5;
     }
 

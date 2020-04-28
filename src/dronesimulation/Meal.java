@@ -19,4 +19,8 @@ public class Meal {
 		
 		return weight;
 	}
+	
+	private HashMap<FoodItem, Integer> getFoodItems() {
+		return foodItems;
+	}
 }

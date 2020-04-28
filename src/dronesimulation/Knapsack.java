@@ -57,11 +57,12 @@ public class Knapsack implements DeliveryScheme{
 		
 		double[] times = drone.getFlightTime(deliveries, currentMinute);
 		/* While the time it would take to deliver the orders is greater than max flight time, remove orders */
-		while(times[times.length - 1] > drone.getMaxFlightTime()) {
+		while(times[times.length - 1] > (drone.getMaxFlightTime()*0.95)) {
 			Order removed = deliveries.remove(deliveries.size() - 1);
 			skipped.add(removed);
 			times = drone.getFlightTime(deliveries, currentMinute);
 		} /* End while */
+		
 		
 		/* Set the delivery time for each order */
 		for(int i = 0; i < times.length - 1; i++) {
@@ -96,7 +97,7 @@ public class Knapsack implements DeliveryScheme{
 	
 	public void sortOrders(ArrayList<Order> a) {
 		for(int i = 0; i < a.size()-1; i++) {
-			if(a.get(i).getMealWeight() < a.get(i+1).getMealWeight()) {
+			if(a.get(i).getMealWeight() > a.get(i+1).getMealWeight()) {
 				Order temp = a.get(i);
 				a.set(i, a.get(i+1));
 				a.set(i+1, temp);

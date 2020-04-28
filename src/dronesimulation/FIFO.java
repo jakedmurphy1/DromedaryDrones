@@ -32,7 +32,7 @@ public class FIFO implements DeliveryScheme {
 		}
 		//Make sure that the orders can be delivered
 		double[] deliveryTimes = drone.getFlightTime(deliveries, currentMinute);
-		while(deliveryTimes[deliveryTimes.length - 1] > drone.getMaxFlightTime()) {
+		while(deliveryTimes[deliveryTimes.length - 1] > (drone.getMaxFlightTime()*0.95)) {
 			// Remove a point and see if the flight is now feasible
 			Order removedOrder = deliveries.remove(deliveries.size() - 1);
 			pendingOrders.addFirst(removedOrder);
