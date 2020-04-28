@@ -18,6 +18,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -293,6 +294,11 @@ public class Main extends Application {
         startSimulationSettings.setTranslateX(-25);
         startSimulationSettings.setTranslateY(150);
         
+        //Load map
+        Button loadCampusMap = new Button("Load image of campus map");
+        loadCampusMap.setTranslateX(150);
+        loadCampusMap.setTranslateY(150);
+        
         //Set scroll pane
         Pane pane = new Pane();
         pane.setPrefHeight(200);
@@ -351,6 +357,8 @@ public class Main extends Application {
         layout2.getChildren().add(orderTypes);
         layout2.getChildren().add(orderFrequency);
         layout2.getChildren().add(r2);
+        //add new button
+        layout2.getChildren().add(loadCampusMap);
         
         layout2.getChildren().addAll(scrollPane);
         
@@ -421,6 +429,21 @@ public class Main extends Application {
         	
         	numAddOrders++;
         	
+        });
+        
+        //get the location of the campus map
+        loadCampusMap.setOnAction(e -> {
+        	String pictureLocation = "";
+        	JFileChooser chooser = new JFileChooser();
+        	chooser.setCurrentDirectory(new File("."));
+        	chooser.setDialogTitle("Choose Image");
+        	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        	chooser.setAcceptAllFileFilterUsed(false);
+        	chooser.setPreferredSize(new Dimension(600, 400));
+        	
+        	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        		pictureLocation = chooser.getSelectedFile().getAbsolutePath();
+        	}
         });
         
         simulationSettings.setOnAction(e-> {
