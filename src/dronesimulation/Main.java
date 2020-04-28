@@ -2,41 +2,58 @@ package dronesimulation;
 
 import javafx.scene.control.*;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.*;
 import javafx.scene.paint.Color;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
+
 public class Main extends Application {
 	
 	int addOrderYAxis = 165;
 	int numAddOrders = 0;
+	int countCircles = 0;
 	
 	String userDir = System.getProperty("user.dir");
 	String fileLoc = userDir + "\\customSettings.txt";
 	
 	FileWriter fw;
 	PrintWriter pw;
+	
+	public void mouseClicked(MouseEvent e) {
+	    int x = (int) e.getX();
+	    int y = (int) e.getY();
+	    System.out.println(x+","+y);//these co-ords are relative to the component
+	}
 	
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -45,6 +62,150 @@ public class Main extends Application {
         primaryStage.setTitle("Drone Simulation");
         
         //GUI Setup
+        
+        
+        
+        /*GET LOCATION POINTS SCREEN*/
+        
+        //Create Layout
+        StackPane createPoints = new StackPane();
+        
+        Label createPointsTitle = new Label("Set Points By Clicking");
+        createPointsTitle.setTranslateY(-160);
+        createPointsTitle.setTranslateX(250);
+        createPointsTitle.setFont(new Font("Arial", 20));
+        
+        Button undoLastPoint = new Button("Undo Last Point");
+        undoLastPoint.setTranslateY(110);
+        undoLastPoint.setTranslateX(250);
+        
+        Label orLabel = new Label("--- OR ---");
+        orLabel.setTranslateY(142);
+        orLabel.setTranslateX(250);
+        orLabel.setFont(new Font("Arial", 15));
+        
+        Label errorMessagePoints = new Label("");
+        errorMessagePoints.setTranslateY(-185);
+        errorMessagePoints.setTranslateX(250);
+        errorMessagePoints.setFont(new Font("Arial", 12));
+        errorMessagePoints.setTextFill(Color.RED);
+        
+        Button pointsSetNext = new Button("Set Your Points");
+        pointsSetNext.setTranslateY(175);
+        pointsSetNext.setTranslateX(250);
+        
+        Label dispatchPoint = new Label("DISPATCH POINT: ()");
+        dispatchPoint.setTranslateY(-120);
+        dispatchPoint.setTranslateX(250);
+        dispatchPoint.setFont(new Font("Arial", 15));
+        dispatchPoint.setTextFill(Color.RED);
+        
+        Label point1 = new Label("Point 1: ()");
+        point1.setTranslateY(-90);
+        point1.setTranslateX(250);
+        point1.setFont(new Font("Arial", 15));
+        
+        Label point2 = new Label("Point 2: ()");
+        point2.setTranslateY(-50);
+        point2.setTranslateX(250);
+        point2.setFont(new Font("Arial", 15));
+        
+        Label point3 = new Label("Point 3: ()");
+        point3.setTranslateY(-10);
+        point3.setTranslateX(250);
+        point3.setFont(new Font("Arial", 15));
+        
+        Label point4 = new Label("Point 4: ()");
+        point4.setTranslateY(30);
+        point4.setTranslateX(250);
+        point4.setFont(new Font("Arial", 15));
+        
+        Label point5 = new Label("Point 5: ()");
+        point5.setTranslateY(70);
+        point5.setTranslateX(250);
+        point5.setFont(new Font("Arial", 15));
+        
+        FileInputStream input = new FileInputStream("C:\\Users\\MURPHYJD17\\Pictures\\gcc.PNG");
+        Image image = new Image(input);
+        ImageView imageView = new ImageView(image);
+        imageView.setTranslateX(-120);
+        imageView.setFitWidth(500);
+        imageView.setFitHeight(400);
+        
+        Circle dispatchCircle = new Circle();
+        dispatchCircle.setFill(Color.RED);
+        
+        Circle circle1 = new Circle();
+        Circle circle2 = new Circle();
+        Circle circle3 = new Circle();
+        Circle circle4 = new Circle();
+        Circle circle5 = new Circle();
+        
+        ArrayList<Circle> circles = new ArrayList<>(Arrays.asList(dispatchCircle, circle1, circle2, circle3, circle4, circle5));
+        ArrayList<Label> points = new ArrayList<>(Arrays.asList(dispatchPoint, point1, point2, point3, point4, point5));
+        
+        createPoints.getChildren().add(createPointsTitle);
+        createPoints.getChildren().add(imageView);
+        createPoints.getChildren().add(point1);
+        createPoints.getChildren().add(point2);
+        createPoints.getChildren().add(point3);
+        createPoints.getChildren().add(point4);
+        createPoints.getChildren().add(point5);
+        createPoints.getChildren().add(undoLastPoint);
+        createPoints.getChildren().add(orLabel);
+        createPoints.getChildren().add(pointsSetNext);
+        createPoints.getChildren().add(errorMessagePoints);
+        createPoints.getChildren().add(dispatchPoint);
+        
+        Scene scene3 = new Scene(createPoints, 750, 400);
+        
+        imageView.setOnMouseClicked((EventHandler<? super MouseEvent>) new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println((int) event.getSceneX());
+                System.out.println((int) event.getSceneY());
+                if (countCircles != 6) {
+	                //Create a circle
+                	int xValue = (int) (event.getSceneX()-375);
+                	int yValue = (int) (event.getSceneY()-200);
+	                circles.get(countCircles).setTranslateX(xValue);
+	                circles.get(countCircles).setTranslateY(yValue);
+	                circles.get(countCircles).setRadius(10);
+	                createPoints.getChildren().add(circles.get(countCircles));
+	                points.get(countCircles).setText("(" + xValue + ", " + yValue + ")");
+	                countCircles++;
+                }
+
+            }
+        });
+        
+        undoLastPoint.setOnAction(e-> {
+        	if (countCircles > 0) {
+	        	countCircles--;
+	        	createPoints.getChildren().remove(circles.get(countCircles));
+	        	if (countCircles == 0) {
+	        		points.get(countCircles).setText("DISPATCH POINT: ()");
+	        	}
+	        	else {
+	        		points.get(countCircles).setText("Point " + (countCircles) + ": ()");
+	        	}
+        	}
+        });
+        
+        pointsSetNext.setOnAction(e-> {
+        	if (countCircles == 6) {
+        		//Redirect to next screen
+        		//Send points Array?
+        	}
+        	else {
+        		errorMessagePoints.setText("* ALL 6 POINTS MUST BE SET *");
+        	}
+        });
+        
+        
+        
+      
+        
         
         /* WELCOME SCREEN */
         Button startSimulation = new Button("Start Simulation");
@@ -285,9 +446,7 @@ public class Main extends Application {
         addOrder.setTranslateX(-290);
         addOrder.setTranslateY(150);
         
-        Button deleteSelectedRow = new Button("Delete Selected Row");
-        deleteSelectedRow.setTranslateX(-165);
-        deleteSelectedRow.setTranslateY(150);
+
         
         Button startSimulationSettings = new Button("Start Simulation");
         startSimulationSettings.setTranslateX(-25);
@@ -366,7 +525,6 @@ public class Main extends Application {
         layout2.getChildren().add(hourField3);
         layout2.getChildren().add(hourField4);
         layout2.getChildren().add(addOrder);
-        layout2.getChildren().add(deleteSelectedRow);
         layout2.getChildren().add(startSimulationSettings);
         layout2.getChildren().add(errorMessage);
         
