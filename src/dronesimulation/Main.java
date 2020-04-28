@@ -64,7 +64,7 @@ public class Main extends Application {
         title.setTranslateY(-160);
         title.setFont(new Font("Arial", 25));
         
-        Label description = new Label("Welcome to the drone delivery simulation by Dromedary Drones! Click �Start Simulation� to begin a new simulation with the default settings, or make a custom simulation in the settings tab.");
+        Label description = new Label("Welcome to the drone delivery simulation by Dromedary Drones! Click Start Simulation to begin a new simulation with the default settings, or make a custom simulation in the settings tab.");
         description.setTranslateY(-100);
         description.setWrapText(true);
         description.setMaxWidth(600);
@@ -378,17 +378,49 @@ public class Main extends Application {
         layout2.getChildren().add(startSimulationSettings);
         layout2.getChildren().add(errorMessage);
         
+        /* Default Settings Scene */
+        Button backButton = new Button("Back");
+        backButton.setTranslateX(-320);
+        backButton.setTranslateY(-170);
+        
+        Label default_title = new Label("Welcome to the drone delivery simulation by Dromedary Drones!");
+        default_title.setTextAlignment(TextAlignment.CENTER);
+        default_title.setTranslateY(-85);
+        default_title.setFont(new Font("Arial", 25));
+        
+        Label settings = new Label("\nThe default settings are as follows: \n\tOrder 1: 1 burger, 1 fries, 1 drink\n" + 
+        		"\tOrder 2: 2 burgers, 1 fries, 1 drink\n\tOrder 3: 1 burger, 1 fries, 0 drinks\n" + 
+        		"\tOrder 4: 2 burgers, 1 fries, 0 drinks\n\tOrder 5: 0 burgers, 1 fries, 0 drinks");
+        settings.setTranslateY(25);
+        settings.setWrapText(true);
+        settings.setMaxWidth(600);
+        settings.setTextAlignment(TextAlignment.LEFT);
+        settings.setFont(new Font("Arial", 25));
+        
+        //Create Layout
+        StackPane layout3 = new StackPane();
+        
+        //Add Elements to Layout
+        layout3.getChildren().add(backButton);
+        layout3.getChildren().add(default_title);
+        layout3.getChildren().add(settings);
+        
         
             
         
         /* SET THE SCENES */
         Scene scene1 = new Scene(layout, 750, 400);
         Scene scene2 = new Scene(layout2, 750, 400);
+        Scene scene3 = new Scene(layout3, 750, 400);
         primaryStage.setScene(scene1);
         primaryStage.show();
         
         
-        
+        //go back from the default settings page
+        backButton.setOnAction(e-> {
+        	primaryStage.setScene(scene1);
+        	primaryStage.show();
+        });
         
         /* SETUP BUTTON ACTIONS */
         addOrder.setOnAction(e-> {
@@ -456,6 +488,11 @@ public class Main extends Application {
         	//Create and Set the Scene
             primaryStage.setScene(scene1);
             primaryStage.show();
+        });
+        
+        defaultSettings.setOnAction(e -> {
+        	primaryStage.setScene(scene3);
+        	primaryStage.show();
         });
         
         startSimulation.setOnAction(e-> {
