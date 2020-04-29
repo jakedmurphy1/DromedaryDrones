@@ -38,6 +38,8 @@ public class CampusMap {
 			campus.put("Harbison", new DeliveryPoint(76, -213));
 			campus.put("Alumni", new DeliveryPoint(198, -914));
 		}
+
+		
 	}
 
 	public DeliveryPoint[] getPoints() {

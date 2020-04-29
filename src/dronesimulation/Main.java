@@ -44,13 +44,19 @@ public class Main extends Application {
 	int numAddOrders = 0;
 	int countCircles = 0;
 	
-	String userDir = System.getProperty("user.dir");
-	String fileLoc = userDir + "\\customSettings.txt";
+	private String userDir = System.getProperty("user.dir");
+	private String fileLoc = userDir + "\\customSettings.txt";
 	
-	FileWriter fw;
-	PrintWriter pw;
+	private FileWriter fw;
+	private PrintWriter pw;
 	
 	private String pictureLocation = "c:\\users\\dybasjt17\\desktop\\GCC-Campus-Map.jpg";
+	
+	private ArrayList<HashMap<Integer, Integer>> customPoints = new ArrayList<>();
+	
+	public ArrayList<HashMap<Integer, Integer>> getCustomPoints() {
+		return customPoints;
+	}
 	
 	public void mouseClicked(MouseEvent e) {
 	    int x = (int) e.getX();
@@ -175,9 +181,10 @@ public class Main extends Application {
 	                circles.get(countCircles).setRadius(10);
 	                createPoints.getChildren().add(circles.get(countCircles));
 	                points.get(countCircles).setText("(" + xValue + ", " + yValue + ")");
+	                customPoints.add(new HashMap<Integer, Integer>());
+	                customPoints.get(countCircles).put(xValue, yValue);
 	                countCircles++;
                 }
-
             }
         });
         
@@ -196,8 +203,7 @@ public class Main extends Application {
         
         pointsSetNext.setOnAction(e-> {
         	if (countCircles == 6) {
-        		//Redirect to next screen
-        		//Send points Array?
+        		CampusMap customMap = new CampusMap("Custom");
         	}
         	else {
         		errorMessagePoints.setText("* ALL 6 POINTS MUST BE SET *");
@@ -211,21 +217,12 @@ public class Main extends Application {
         	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         	chooser.setAcceptAllFileFilterUsed(true);
         	
+        	
         	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
         		pictureLocation = chooser.getSelectedFile().getAbsolutePath();
         		System.out.println(pictureLocation);
         	}
-        	try {
-				FileInputStream input2 = new FileInputStream(pictureLocation);
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-            Image image2 = new Image(input);
-            ImageView imageView2 = new ImageView(image);
-            imageView.setTranslateX(-120);
-            imageView.setFitWidth(500);
-            imageView.setFitHeight(400);
+
         });
         
       
@@ -572,18 +569,6 @@ public class Main extends Application {
         
         /* SETUP BUTTON ACTIONS */
         loadCampusMap.setOnAction(e -> {
-        	/*JFileChooser chooser = new JFileChooser();
-        	chooser.setCurrentDirectory(new File("."));
-        	chooser.setDialogTitle("Choose Image");
-        	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        	chooser.setAcceptAllFileFilterUsed(true);
-        	
-        	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-        		pictureLocation = chooser.getSelectedFile().getAbsolutePath();
-        		System.out.println(pictureLocation);
-        		primaryStage.setScene(scene3);
-        		primaryStage.show();
-        	}*/
         	primaryStage.setScene(scene3);
         	primaryStage.show();
         });
