@@ -1,5 +1,6 @@
 package dronesimulation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -41,6 +42,11 @@ public class CampusMap {
 
 		
 	}
+	
+	public CampusMap(ArrayList<HashMap<Integer, Integer>> a) {
+		campus = new HashMap<String, DeliveryPoint>();
+		setPoints(a);
+	}
 
 	public DeliveryPoint[] getPoints() {
 		DeliveryPoint[] points = new DeliveryPoint[campus.values().size()];
@@ -50,6 +56,25 @@ public class CampusMap {
 			i++;
 		}
 		return points;
+	}
+	
+	public void setPoints(ArrayList<HashMap<Integer, Integer>> a) {
+		ArrayList<Integer> xValues = new ArrayList<Integer>();
+		ArrayList<Integer> yValues = new ArrayList<Integer>();
+		
+		for(int i = 0; i < a.size(); i++) {
+			for(int k : a.get(i).keySet()) {
+				xValues.add(k);
+			}
+			for(int v : a.get(i).values()) {
+				yValues.add(v);
+				System.out.println("V VALUE IN CM: " + v);
+			}
+		}
+		
+		for(int i = 0; i < xValues.size() - 1; i++) {
+			campus.put("Custom Point " + i, new DeliveryPoint(xValues.get(i), yValues.get(i)));
+		}
 	}
 
 	public void printCampusPoints() {
