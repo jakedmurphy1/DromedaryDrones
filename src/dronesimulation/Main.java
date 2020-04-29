@@ -27,6 +27,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -49,6 +50,8 @@ public class Main extends Application {
 	FileWriter fw;
 	PrintWriter pw;
 	
+	private String pictureLocation = "c:\\users\\dybasjt17\\desktop\\GCC-Campus-Map.jpg";
+	
 	public void mouseClicked(MouseEvent e) {
 	    int x = (int) e.getX();
 	    int y = (int) e.getY();
@@ -70,19 +73,18 @@ public class Main extends Application {
         //Create Layout
         StackPane createPoints = new StackPane();
         
+        Button uploadImage = new Button("Upload New Map");
+        uploadImage.setTranslateY(110);
+        uploadImage.setTranslateX(250);
+        
         Label createPointsTitle = new Label("Set Points By Clicking");
         createPointsTitle.setTranslateY(-160);
         createPointsTitle.setTranslateX(250);
         createPointsTitle.setFont(new Font("Arial", 20));
         
         Button undoLastPoint = new Button("Undo Last Point");
-        undoLastPoint.setTranslateY(110);
         undoLastPoint.setTranslateX(250);
-        
-        Label orLabel = new Label("--- OR ---");
-        orLabel.setTranslateY(142);
-        orLabel.setTranslateX(250);
-        orLabel.setFont(new Font("Arial", 15));
+        undoLastPoint.setTranslateY(142);
         
         Label errorMessagePoints = new Label("");
         errorMessagePoints.setTranslateY(-185);
@@ -125,13 +127,13 @@ public class Main extends Application {
         point5.setTranslateX(250);
         point5.setFont(new Font("Arial", 15));
         
-        FileInputStream input = new FileInputStream("C:\\Users\\MURPHYJD17\\Pictures\\gcc.PNG");
+        FileInputStream input = new FileInputStream(pictureLocation);
         Image image = new Image(input);
         ImageView imageView = new ImageView(image);
         imageView.setTranslateX(-120);
         imageView.setFitWidth(500);
         imageView.setFitHeight(400);
-        
+      
         Circle dispatchCircle = new Circle();
         dispatchCircle.setFill(Color.RED);
         
@@ -152,10 +154,10 @@ public class Main extends Application {
         createPoints.getChildren().add(point4);
         createPoints.getChildren().add(point5);
         createPoints.getChildren().add(undoLastPoint);
-        createPoints.getChildren().add(orLabel);
         createPoints.getChildren().add(pointsSetNext);
         createPoints.getChildren().add(errorMessagePoints);
         createPoints.getChildren().add(dispatchPoint);
+        createPoints.getChildren().add(uploadImage);
         
         Scene scene3 = new Scene(createPoints, 750, 400);
         
@@ -202,7 +204,29 @@ public class Main extends Application {
         	}
         });
         
-        
+        uploadImage.setOnAction(e -> {
+        	JFileChooser chooser = new JFileChooser();
+        	chooser.setCurrentDirectory(new File("."));
+        	chooser.setDialogTitle("Choose Image");
+        	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        	chooser.setAcceptAllFileFilterUsed(true);
+        	
+        	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        		pictureLocation = chooser.getSelectedFile().getAbsolutePath();
+        		System.out.println(pictureLocation);
+        	}
+        	try {
+				FileInputStream input2 = new FileInputStream(pictureLocation);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+            Image image2 = new Image(input);
+            ImageView imageView2 = new ImageView(image);
+            imageView.setTranslateX(-120);
+            imageView.setFitWidth(500);
+            imageView.setFitHeight(400);
+        });
         
       
         
@@ -220,7 +244,6 @@ public class Main extends Application {
         defaultSettings.setMaxSize(200, 50);
         defaultSettings.setTranslateY(80);
         
-        Button loadCampusMap = new Button("Load Image of Campus Map");
         
         Label title = new Label("Dromedary Drones Food Delivery Simulation");
         title.setTranslateY(-160);
@@ -250,6 +273,10 @@ public class Main extends Application {
         Button customSimulationBackButton = new Button("Back");
         customSimulationBackButton.setTranslateX(-320);
         customSimulationBackButton.setTranslateY(-170);
+        
+        Button loadCampusMap = new Button("Load Image of Campus Map");
+        loadCampusMap.setTranslateX(150);
+        loadCampusMap.setTranslateY(150);
         
         Label simulationSettingsTitle = new Label("Setup/Custom Simulation");
         simulationSettingsTitle.setTranslateY(-160);
@@ -529,6 +556,7 @@ public class Main extends Application {
         layout2.getChildren().add(addOrder);
         layout2.getChildren().add(startSimulationSettings);
         layout2.getChildren().add(errorMessage);
+        layout2.getChildren().add(loadCampusMap);
         
         
             
@@ -543,6 +571,24 @@ public class Main extends Application {
         
         
         /* SETUP BUTTON ACTIONS */
+        loadCampusMap.setOnAction(e -> {
+        	/*JFileChooser chooser = new JFileChooser();
+        	chooser.setCurrentDirectory(new File("."));
+        	chooser.setDialogTitle("Choose Image");
+        	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        	chooser.setAcceptAllFileFilterUsed(true);
+        	
+        	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        		pictureLocation = chooser.getSelectedFile().getAbsolutePath();
+        		System.out.println(pictureLocation);
+        		primaryStage.setScene(scene3);
+        		primaryStage.show();
+        	}*/
+        	primaryStage.setScene(scene3);
+        	primaryStage.show();
+        });
+        	
+        
         addOrder.setOnAction(e-> {
         	addBurgers[numAddOrders] = new TextField();
         	addBurgers[numAddOrders].setTranslateX(30);
