@@ -50,7 +50,7 @@ public class Main extends Application {
 	FileWriter fw;
 	PrintWriter pw;
 	
-	private String pictureLocation = "c:\\users\\dybasjt17\\desktop\\GCC-Campus-Map.jpg";
+	private String pictureLocation = "gcc.png";
 	
 	public void mouseClicked(MouseEvent e) {
 	    int x = (int) e.getX();
@@ -215,17 +215,22 @@ public class Main extends Application {
         		pictureLocation = chooser.getSelectedFile().getAbsolutePath();
         		System.out.println(pictureLocation);
         	}
+        	
+        	FileInputStream input2 = null;
+        	
         	try {
-				FileInputStream input2 = new FileInputStream(pictureLocation);
+				input2 = new FileInputStream(pictureLocation);
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-            Image image2 = new Image(input);
-            ImageView imageView2 = new ImageView(image);
-            imageView.setTranslateX(-120);
-            imageView.setFitWidth(500);
-            imageView.setFitHeight(400);
+        	if(input2 != null) {
+	            Image image2 = new Image(input2);
+	            imageView.setImage(image2);
+//	            imageView.setTranslateX(-120);
+//	            imageView.setFitWidth(500);
+//	            imageView.setFitHeight(400);
+        	}
         });
         
       
