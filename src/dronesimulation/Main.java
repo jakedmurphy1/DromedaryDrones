@@ -220,6 +220,8 @@ public class Main extends Application {
         defaultSettings.setMaxSize(200, 50);
         defaultSettings.setTranslateY(80);
         
+        Button loadCampusMap = new Button("Load Image of Campus Map");
+        
         Label title = new Label("Dromedary Drones Food Delivery Simulation");
         title.setTranslateY(-160);
         title.setFont(new Font("Arial", 25));
