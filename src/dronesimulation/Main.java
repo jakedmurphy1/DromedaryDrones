@@ -92,8 +92,8 @@ public class Main extends Application {
         createPointsTitle.setFont(new Font("Arial", 20));
         
         Button undoLastPoint = new Button("Undo Last Point");
+        undoLastPoint.setTranslateY(130);
         undoLastPoint.setTranslateX(250);
-        undoLastPoint.setTranslateY(142);
         
         Label errorMessagePoints = new Label("");
         errorMessagePoints.setTranslateY(-185);
@@ -102,7 +102,7 @@ public class Main extends Application {
         errorMessagePoints.setTextFill(Color.RED);
         
         Button pointsSetNext = new Button("Set Your Points");
-        pointsSetNext.setTranslateY(175);
+        pointsSetNext.setTranslateY(160);
         pointsSetNext.setTranslateX(250);
         
         Label dispatchPoint = new Label("DISPATCH POINT: ()");
