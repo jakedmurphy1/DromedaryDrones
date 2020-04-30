@@ -44,15 +44,13 @@ public class Main extends Application {
 	int numAddOrders = 0;
 	int countCircles = 0;
 	
-	private String userDir = System.getProperty("user.dir");
-	private String fileLoc = userDir + "\\customSettings.txt";
+	String userDir = System.getProperty("user.dir");
+	String fileLoc = userDir + "\\customSettings.txt";
 	
-	private FileWriter fw;
-	private PrintWriter pw;
+	FileWriter fw;
+	PrintWriter pw;
 	
-	private ArrayList<HashMap<Integer, Integer>> customPoints = new ArrayList<>();
-	
-	private CampusMap customMap = null;
+	private String pictureLocation = "gcc.png";
 	
 	public void mouseClicked(MouseEvent e) {
 	    int x = (int) e.getX();
@@ -177,10 +175,9 @@ public class Main extends Application {
 	                circles.get(countCircles).setRadius(10);
 	                createPoints.getChildren().add(circles.get(countCircles));
 	                points.get(countCircles).setText("(" + xValue + ", " + yValue + ")");
-	                customPoints.add(new HashMap<Integer, Integer>());
-	                customPoints.get(countCircles).put(xValue, yValue);
 	                countCircles++;
                 }
+
             }
         });
         
@@ -199,90 +196,8 @@ public class Main extends Application {
         
         pointsSetNext.setOnAction(e-> {
         	if (countCircles == 6) {
-        		for(int i = 0; i < 6; i++) {
-        			System.out.println("X: " + customPoints.get(i).keySet());
-        		}
-        		CampusMap customMap = new CampusMap(customPoints);
-        		Drone drone = new Drone();
-            	FoodItem burgerItem = new FoodItem(6);
-                FoodItem friesItem = new FoodItem(4);
-                FoodItem drinkItem = new FoodItem(14);
-                int[] ordersPerHour = {38, 45, 60, 30};
-                // Meal 1
-                HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
-                items1.put(burgerItem, 1);
-                items1.put(friesItem, 1);
-                items1.put(drinkItem, 1); //0.55 percent chance
-                Meal meal1 = new Meal(items1);
-                if(meal1.getWeight() > drone.getCargoWeight())
-                {
-                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
-                	return;
-                }
-                MealProbability mp1 = new MealProbability(meal1, 0.5);
-                
-                //second meal
-                HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
-                items2.put(burgerItem, 2);
-                items2.put(friesItem, 1);
-                items2.put(drinkItem, 1); //0.55 percent chance
-                Meal meal2 = new Meal(items2);
-                if(meal2.getWeight() > drone.getCargoWeight())
-                {
-                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
-                	return;
-                }
-                MealProbability mp2 = new MealProbability(meal2, 0.2);
-                
-                //third meal
-                HashMap<FoodItem, Integer> items3 = new HashMap<FoodItem, Integer>();
-                items3.put(burgerItem, 1);
-                items3.put(friesItem, 1);
-                Meal meal3 = new Meal(items3);
-                if(meal3.getWeight() > drone.getCargoWeight())
-                {
-                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
-                	return;
-                }
-                MealProbability mp3 = new MealProbability(meal3, 0.15);
-                
-                //4th meal
-                HashMap<FoodItem, Integer> items4 = new HashMap<FoodItem, Integer>();
-                items4.put(burgerItem, 2);
-                items4.put(friesItem, 1);
-                Meal meal4 = new Meal(items4);
-                if(meal4.getWeight() > drone.getCargoWeight())
-                {
-                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
-                	return;
-                }
-                MealProbability mp4 = new MealProbability(meal4, 0.1);
-                
-                //5th meal
-                HashMap<FoodItem, Integer> items5 = new HashMap<FoodItem, Integer>();
-                items5.put(friesItem, 1);
-                Meal meal5 = new Meal(items5);
-                if(meal5.getWeight() > drone.getCargoWeight())
-                {
-                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
-                	return;
-                }
-                MealProbability mp5 = new MealProbability(meal5, 0.05);
-                
-                MealProbability[] mp = {mp1, mp2, mp3, mp4, mp5};
-
-                Simulation sim = new Simulation(customMap, mp, ordersPerHour);
-                sim.run();
-
-                FileChooser fileChooser = new FileChooser();
-                FileChooser.ExtensionFilter extensions = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-                fileChooser.getExtensionFilters().add(extensions);
-                
-                File results = fileChooser.showSaveDialog(primaryStage);
-                
-                if(results != null) {
-                	sim.saveCSV(results);
-                }
+        		//Redirect to next screen
+        		//Send points Array?
         	}
         	else {
         		errorMessagePoints.setText("* ALL 6 POINTS MUST BE SET *");
@@ -296,12 +211,26 @@ public class Main extends Application {
         	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         	chooser.setAcceptAllFileFilterUsed(true);
         	
-        	
         	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
         		pictureLocation = chooser.getSelectedFile().getAbsolutePath();
         		System.out.println(pictureLocation);
         	}
         	
+        	FileInputStream input2 = null;
+        	
+        	try {
+				input2 = new FileInputStream(pictureLocation);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        	if(input2 != null) {
+	            Image image2 = new Image(input2);
+	            imageView.setImage(image2);
+//	            imageView.setTranslateX(-120);
+//	            imageView.setFitWidth(500);
+//	            imageView.setFitHeight(400);
+        	}
         });
         
       
@@ -325,7 +254,7 @@ public class Main extends Application {
         title.setTranslateY(-160);
         title.setFont(new Font("Arial", 25));
         
-        Label description = new Label("Welcome to the drone delivery simulation by Dromedary Drones! Click �Start Simulation� to begin a new simulation with the default settings, or make a custom simulation in the settings tab.");
+        Label description = new Label("Welcome to the drone delivery simulation by Dromedary Drones! Click Start Simulation to begin a new simulation with the default settings, or make a custom simulation in the settings tab.");
         description.setTranslateY(-100);
         description.setWrapText(true);
         description.setMaxWidth(600);
@@ -648,6 +577,18 @@ public class Main extends Application {
         
         /* SETUP BUTTON ACTIONS */
         loadCampusMap.setOnAction(e -> {
+        	/*JFileChooser chooser = new JFileChooser();
+        	chooser.setCurrentDirectory(new File("."));
+        	chooser.setDialogTitle("Choose Image");
+        	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        	chooser.setAcceptAllFileFilterUsed(true);
+        	
+        	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        		pictureLocation = chooser.getSelectedFile().getAbsolutePath();
+        		System.out.println(pictureLocation);
+        		primaryStage.setScene(scene3);
+        		primaryStage.show();
+        	}*/
         	primaryStage.setScene(scene3);
         	primaryStage.show();
         });
