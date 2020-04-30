@@ -70,7 +70,7 @@ public class Main extends Application {
         
         
         
-        /*GET LOCATION POINTS SCREEN*/
+        /* GET LOCATION POINTS SCREEN */
         
         //Create Layout
         StackPane createPoints = new StackPane();
@@ -390,6 +390,10 @@ public class Main extends Application {
         backToHome.setTranslateX(200);
         backToHome.setTranslateY(150);
         
+        Button goToCustomSettings = new Button("Go to Custom Settings");
+        goToCustomSettings.setTranslateX(200);
+        goToCustomSettings.setTranslateY(100);
+        
         //Create Layout
         StackPane defaultSettingsScreen = new StackPane();
         
@@ -399,6 +403,7 @@ public class Main extends Application {
         defaultSettingsScreen.getChildren().add(header);
         defaultSettingsScreen.getChildren().add(description3);
         defaultSettingsScreen.getChildren().add(backToHome);
+        defaultSettingsScreen.getChildren().add(goToCustomSettings);
         
         Scene defaultSettingsScene = new Scene(defaultSettingsScreen, 750, 400);
         
@@ -406,6 +411,7 @@ public class Main extends Application {
         	primaryStage.setScene(defaultSettingsScene);
         	primaryStage.show();
         });
+        
         
 
 
@@ -732,6 +738,12 @@ public class Main extends Application {
         		primaryStage.show();
         	}*/
         	primaryStage.setScene(scene3);
+        	primaryStage.show();
+        });
+        
+        
+        goToCustomSettings.setOnAction( e -> {
+        	primaryStage.setScene(scene2);
         	primaryStage.show();
         });
         	
