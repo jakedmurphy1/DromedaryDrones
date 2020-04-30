@@ -54,12 +54,6 @@ public class Main extends Application {
 	private ArrayList<HashMap<Integer, Integer>> customPoints = new ArrayList<>();
 	private CampusMap customMap = null;
 	
-	public void mouseClicked(MouseEvent e) {
-	    int x = (int) e.getX();
-	    int y = (int) e.getY();
-	    System.out.println(x+","+y);//these co-ords are relative to the component
-	}
-	
     @Override
     public void start(Stage primaryStage) throws Exception{
     	//Do we need this??
