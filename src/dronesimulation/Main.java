@@ -27,6 +27,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -48,7 +49,16 @@ public class Main extends Application {
 	
 	FileWriter fw;
 	PrintWriter pw;
-
+	
+	private String pictureLocation = "gcc.png";
+	private ArrayList<HashMap<Integer, Integer>> customPoints = new ArrayList<>();
+	private CampusMap customMap = null;
+	
+	public void mouseClicked(MouseEvent e) {
+	    int x = (int) e.getX();
+	    int y = (int) e.getY();
+	    System.out.println(x+","+y);//these co-ords are relative to the component
+	}
 	
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -65,19 +75,18 @@ public class Main extends Application {
         //Create Layout
         StackPane createPoints = new StackPane();
         
+        Button uploadImage = new Button("Upload New Map");
+        uploadImage.setTranslateY(110);
+        uploadImage.setTranslateX(250);
+        
         Label createPointsTitle = new Label("Set Points By Clicking");
         createPointsTitle.setTranslateY(-160);
         createPointsTitle.setTranslateX(250);
         createPointsTitle.setFont(new Font("Arial", 20));
         
         Button undoLastPoint = new Button("Undo Last Point");
-        undoLastPoint.setTranslateY(110);
         undoLastPoint.setTranslateX(250);
-        
-        Label orLabel = new Label("--- OR ---");
-        orLabel.setTranslateY(142);
-        orLabel.setTranslateX(250);
-        orLabel.setFont(new Font("Arial", 15));
+        undoLastPoint.setTranslateY(142);
         
         Label errorMessagePoints = new Label("");
         errorMessagePoints.setTranslateY(-185);
@@ -120,13 +129,13 @@ public class Main extends Application {
         point5.setTranslateX(250);
         point5.setFont(new Font("Arial", 15));
         
-        FileInputStream input = new FileInputStream("C:\\Users\\MURPHYJD17\\Pictures\\gcc.PNG");
+        FileInputStream input = new FileInputStream(pictureLocation);
         Image image = new Image(input);
         ImageView imageView = new ImageView(image);
         imageView.setTranslateX(-120);
         imageView.setFitWidth(500);
         imageView.setFitHeight(400);
-        
+      
         Circle dispatchCircle = new Circle();
         dispatchCircle.setFill(Color.RED);
         
@@ -147,10 +156,10 @@ public class Main extends Application {
         createPoints.getChildren().add(point4);
         createPoints.getChildren().add(point5);
         createPoints.getChildren().add(undoLastPoint);
-        createPoints.getChildren().add(orLabel);
         createPoints.getChildren().add(pointsSetNext);
         createPoints.getChildren().add(errorMessagePoints);
         createPoints.getChildren().add(dispatchPoint);
+        createPoints.getChildren().add(uploadImage);
         
         Scene scene3 = new Scene(createPoints, 750, 400);
         
@@ -168,6 +177,9 @@ public class Main extends Application {
 	                circles.get(countCircles).setRadius(10);
 	                createPoints.getChildren().add(circles.get(countCircles));
 	                points.get(countCircles).setText("(" + xValue + ", " + yValue + ")");
+	                customPoints.add(new HashMap<Integer, Integer>());
+	                //todo: add a scale factor
+	                customPoints.get(countCircles).put(xValue*10,  yValue*10);
 	                countCircles++;
                 }
 
@@ -189,15 +201,124 @@ public class Main extends Application {
         
         pointsSetNext.setOnAction(e-> {
         	if (countCircles == 6) {
-        		//Redirect to next screen
-        		//Send points Array?
+        		for(int i = 0; i < 6; i++) {
+        			System.out.println("X: " + customPoints.get(i).keySet());
+        		}
+        		CampusMap customMap = new CampusMap(customPoints);
+        		Drone drone = new Drone();
+            	FoodItem burgerItem = new FoodItem(6);
+                FoodItem friesItem = new FoodItem(4);
+                FoodItem drinkItem = new FoodItem(14);
+                int[] ordersPerHour = {38, 45, 60, 30};
+                // Meal 1
+                HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
+                items1.put(burgerItem, 1);
+                items1.put(friesItem, 1);
+                items1.put(drinkItem, 1); //0.55 percent chance
+                Meal meal1 = new Meal(items1);
+                if(meal1.getWeight() > drone.getCargoWeight())
+                {
+                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+                	return;
+                }
+                MealProbability mp1 = new MealProbability(meal1, 0.5);
+                
+                //second meal
+                HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
+                items2.put(burgerItem, 2);
+                items2.put(friesItem, 1);
+                items2.put(drinkItem, 1); //0.55 percent chance
+                Meal meal2 = new Meal(items2);
+                if(meal2.getWeight() > drone.getCargoWeight())
+                {
+                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+                	return;
+                }
+                MealProbability mp2 = new MealProbability(meal2, 0.2);
+                
+                //third meal
+                HashMap<FoodItem, Integer> items3 = new HashMap<FoodItem, Integer>();
+                items3.put(burgerItem, 1);
+                items3.put(friesItem, 1);
+                Meal meal3 = new Meal(items3);
+                if(meal3.getWeight() > drone.getCargoWeight())
+                {
+                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+                	return;
+                }
+                MealProbability mp3 = new MealProbability(meal3, 0.15);
+                
+                //4th meal
+                HashMap<FoodItem, Integer> items4 = new HashMap<FoodItem, Integer>();
+                items4.put(burgerItem, 2);
+                items4.put(friesItem, 1);
+                Meal meal4 = new Meal(items4);
+                if(meal4.getWeight() > drone.getCargoWeight())
+                {
+                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+                	return;
+                }
+                MealProbability mp4 = new MealProbability(meal4, 0.1);
+                
+                //5th meal
+                HashMap<FoodItem, Integer> items5 = new HashMap<FoodItem, Integer>();
+                items5.put(friesItem, 1);
+                Meal meal5 = new Meal(items5);
+                if(meal5.getWeight() > drone.getCargoWeight())
+                {
+                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+                	return;
+                }
+                MealProbability mp5 = new MealProbability(meal5, 0.05);
+                
+                MealProbability[] mp = {mp1, mp2, mp3, mp4, mp5};
+
+                Simulation sim = new Simulation(customMap, mp, ordersPerHour);
+                sim.run();
+
+                FileChooser fileChooser = new FileChooser();
+                FileChooser.ExtensionFilter extensions = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+                fileChooser.getExtensionFilters().add(extensions);
+                
+                File results = fileChooser.showSaveDialog(primaryStage);
+                
+                if(results != null) {
+                	sim.saveCSV(results);
+                }
         	}
         	else {
         		errorMessagePoints.setText("* ALL 6 POINTS MUST BE SET *");
         	}
         });
         
-        
+        uploadImage.setOnAction(e -> {
+        	JFileChooser chooser = new JFileChooser();
+        	chooser.setCurrentDirectory(new File("."));
+        	chooser.setDialogTitle("Choose Image");
+        	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        	chooser.setAcceptAllFileFilterUsed(true);
+        	
+        	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        		pictureLocation = chooser.getSelectedFile().getAbsolutePath();
+        		System.out.println(pictureLocation);
+        	}
+        	
+        	FileInputStream input2 = null;
+        	
+        	try {
+				input2 = new FileInputStream(pictureLocation);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        	if(input2 != null) {
+	            Image image2 = new Image(input2);
+	            imageView.setImage(image2);
+//	            imageView.setTranslateX(-120);
+//	            imageView.setFitWidth(500);
+//	            imageView.setFitHeight(400);
+        	}
+        });
         
       
         
@@ -215,11 +336,12 @@ public class Main extends Application {
         defaultSettings.setMaxSize(200, 50);
         defaultSettings.setTranslateY(80);
         
+        
         Label title = new Label("Dromedary Drones Food Delivery Simulation");
         title.setTranslateY(-160);
         title.setFont(new Font("Arial", 25));
         
-        Label description = new Label("Welcome to the drone delivery simulation by Dromedary Drones! Click �Start Simulation� to begin a new simulation with the default settings, or make a custom simulation in the settings tab.");
+        Label description = new Label("Welcome to the drone delivery simulation by Dromedary Drones! Click Start Simulation to begin a new simulation with the default settings, or make a custom simulation in the settings tab.");
         description.setTranslateY(-100);
         description.setWrapText(true);
         description.setMaxWidth(600);
@@ -235,7 +357,63 @@ public class Main extends Application {
         layout.getChildren().add(title);
         layout.getChildren().add(description);
         
-    
+        
+        
+        /* DEFAULT SETTINGS SCREEN */
+        Label title2 = new Label("Dromedary Drones Food Delivery Simulation Default Settings");
+        title2.setTranslateY(-160);
+        title2.setFont(new Font("Arial", 25));
+        
+        
+        Label header = new Label("The default simulation settings are as follows");
+        header.setTranslateY(-75);
+        header.setFont(new Font("Arial", 20));
+        header.setMaxWidth(600);
+        header.setTextAlignment(TextAlignment.LEFT);
+        
+        Label description2 = new Label("\n\tCampus: Grove City College\n\tOrder 1: 1 Burger, 1 Fries, 1 Drink, 50% Probability" + 
+        		"\n\tOrder 2: 2 Burgers, 1 Fries, 1 Drink, 20% Probability\n\tOrder 3: 1 Burger, 1 Fries, 15% Probability\n\tOrder 4: 2 Burgers, 1 Fries, 10% Probability" + 
+        		"\n\tOrder 5: 1 Fries, 5% Probability\n");
+        description2.setTranslateY(-10);
+        description2.setWrapText(true);
+        description2.setMaxWidth(600);
+        description2.setTextAlignment(TextAlignment.LEFT);
+        
+        Label description3 = new Label("\n\tOrders in Hour 1: 38\n\tOrders in Hour 2: 45\n\tOrders in Hour 3: 60\n\tOrders in Hour 4: 30\n");
+        description3.setTranslateY(75);
+        description3.setWrapText(true);
+        description3.setMaxWidth(600);
+        description3.setTextAlignment(TextAlignment.RIGHT);
+        
+        Button backToHome = new Button("Back");
+        backToHome.setMaxSize(50, 30);
+        backToHome.setTranslateX(200);
+        backToHome.setTranslateY(150);
+        
+        Button goToCustomSettings = new Button("Go to Custom Settings");
+        goToCustomSettings.setTranslateX(200);
+        goToCustomSettings.setTranslateY(100);
+        
+        //Create Layout
+        StackPane defaultSettingsScreen = new StackPane();
+        
+        //Add Elements to Layout
+        defaultSettingsScreen.getChildren().add(title2);
+        defaultSettingsScreen.getChildren().add(description2);
+        defaultSettingsScreen.getChildren().add(header);
+        defaultSettingsScreen.getChildren().add(description3);
+        defaultSettingsScreen.getChildren().add(backToHome);
+        defaultSettingsScreen.getChildren().add(goToCustomSettings);
+        
+        Scene defaultSettingsScene = new Scene(defaultSettingsScreen, 750, 400);
+        
+        defaultSettings.setOnAction( e -> {
+        	primaryStage.setScene(defaultSettingsScene);
+        	primaryStage.show();
+        });
+        
+        
+
 
   
         
@@ -243,6 +421,10 @@ public class Main extends Application {
         Button customSimulationBackButton = new Button("Back");
         customSimulationBackButton.setTranslateX(-320);
         customSimulationBackButton.setTranslateY(-170);
+        
+        Button loadCampusMap = new Button("Load Image of Campus Map");
+        loadCampusMap.setTranslateX(150);
+        loadCampusMap.setTranslateY(150);
         
         Label simulationSettingsTitle = new Label("Setup/Custom Simulation");
         simulationSettingsTitle.setTranslateY(-160);
@@ -522,6 +704,7 @@ public class Main extends Application {
         layout2.getChildren().add(addOrder);
         layout2.getChildren().add(startSimulationSettings);
         layout2.getChildren().add(errorMessage);
+        layout2.getChildren().add(loadCampusMap);
         
         
             
@@ -532,10 +715,39 @@ public class Main extends Application {
         primaryStage.setScene(scene1);
         primaryStage.show();
         
+        backToHome.setOnAction(e-> {
+        	primaryStage.setScene(scene1);
+        	primaryStage.show();
+        });
+        
         
         
         
         /* SETUP BUTTON ACTIONS */
+        loadCampusMap.setOnAction(e -> {
+        	/*JFileChooser chooser = new JFileChooser();
+        	chooser.setCurrentDirectory(new File("."));
+        	chooser.setDialogTitle("Choose Image");
+        	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        	chooser.setAcceptAllFileFilterUsed(true);
+        	
+        	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        		pictureLocation = chooser.getSelectedFile().getAbsolutePath();
+        		System.out.println(pictureLocation);
+        		primaryStage.setScene(scene3);
+        		primaryStage.show();
+        	}*/
+        	primaryStage.setScene(scene3);
+        	primaryStage.show();
+        });
+        
+        
+        goToCustomSettings.setOnAction( e -> {
+        	primaryStage.setScene(scene2);
+        	primaryStage.show();
+        });
+        	
+        
         addOrder.setOnAction(e-> {
         	addBurgers[numAddOrders] = new TextField();
         	addBurgers[numAddOrders].setTranslateX(30);
