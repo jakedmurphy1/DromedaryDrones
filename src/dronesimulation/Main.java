@@ -50,8 +50,6 @@ public class Main extends Application {
 	private FileWriter fw;
 	private PrintWriter pw;
 	
-	private String pictureLocation = "c:\\users\\dybasjt17\\desktop\\GCC-Campus-Map.jpg";
-	
 	private ArrayList<HashMap<Integer, Integer>> customPoints = new ArrayList<>();
 	
 	private CampusMap customMap = null;
