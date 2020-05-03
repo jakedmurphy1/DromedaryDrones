@@ -33,6 +33,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -71,7 +72,11 @@ public class Main extends Application {
         
         Button uploadImage = new Button("Upload New Map");
         uploadImage.setTranslateY(110);
-        uploadImage.setTranslateX(250);
+        uploadImage.setTranslateX(310);
+        
+        Button loadMap = new Button("Load Saved Map");
+        loadMap.setTranslateY(110);
+        loadMap.setTranslateX(190);
         
         Label createPointsTitle = new Label("Set Points By Clicking");
         createPointsTitle.setTranslateY(-160);
@@ -88,7 +93,7 @@ public class Main extends Application {
         errorMessagePoints.setFont(new Font("Arial", 12));
         errorMessagePoints.setTextFill(Color.RED);
         
-        Button pointsSetNext = new Button("Set Your Points");
+        Button pointsSetNext = new Button("Run Simulation");
         pointsSetNext.setTranslateY(175);
         pointsSetNext.setTranslateX(250);
         
@@ -154,6 +159,7 @@ public class Main extends Application {
         createPoints.getChildren().add(errorMessagePoints);
         createPoints.getChildren().add(dispatchPoint);
         createPoints.getChildren().add(uploadImage);
+        createPoints.getChildren().add(loadMap);
         
         Scene scene3 = new Scene(createPoints, 750, 400);
         
@@ -178,6 +184,161 @@ public class Main extends Application {
                 }
 
             }
+        });
+        
+        //LOAD A SAVED MAP
+        loadMap.setOnAction(e -> {
+        	JFileChooser chooser = new JFileChooser();
+        	chooser.setCurrentDirectory(new File("."));
+        	chooser.setDialogTitle("Choose Image");
+        	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        	chooser.setAcceptAllFileFilterUsed(true);
+        	
+        	String mapLocation = null;
+        	
+        	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        		mapLocation = chooser.getSelectedFile().getAbsolutePath();
+        		System.out.println(pictureLocation);
+        	}
+        	
+        	try {
+        		
+				File oldMap = new File(mapLocation);
+				Scanner mapReader = new Scanner(oldMap);
+				pictureLocation = mapReader.nextLine();
+				FileInputStream input2 = null;
+	        	
+	        	try {
+					input2 = new FileInputStream(pictureLocation);
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	        	if(input2 != null) {
+		            Image image2 = new Image(input2);
+		            imageView.setImage(image2);
+	        	}
+	        	
+	        	ArrayList<HashMap<Integer, Integer>> campusMap = new ArrayList<>();
+	        	
+				while(mapReader.hasNextLine()) {
+					String line = mapReader.nextLine();
+					Scanner lr = new Scanner(line);
+					lr.useDelimiter(" ");
+					while(lr.hasNext()) {
+						HashMap<Integer, Integer> point = new HashMap<>();
+						int x = Integer.parseInt(lr.next());
+						int y = Integer.parseInt(lr.next());
+						if (countCircles != 6) {
+			                //Create a circle
+			                circles.get(countCircles).setTranslateX(x);
+			                circles.get(countCircles).setTranslateY(y);
+			                circles.get(countCircles).setRadius(10);
+			                createPoints.getChildren().add(circles.get(countCircles));
+			                countCircles++;
+		                }
+						point.put(x, y);
+						campusMap.add(point);
+					}
+				}
+				
+				CampusMap loadedMap = new CampusMap(campusMap);
+				
+				
+				//RUN LOADED MAP WITH DEFAULT SIM SETTINGS
+				if (countCircles == 6) {
+	        		Drone drone = new Drone();
+	            	FoodItem burgerItem = new FoodItem(6);
+	                FoodItem friesItem = new FoodItem(4);
+	                FoodItem drinkItem = new FoodItem(14);
+	                int[] ordersPerHour = {38, 45, 60, 30};
+	                // Meal 1
+	                HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
+	                items1.put(burgerItem, 1);
+	                items1.put(friesItem, 1);
+	                items1.put(drinkItem, 1); //0.55 percent chance
+	                Meal meal1 = new Meal(items1);
+	                if(meal1.getWeight() > drone.getCargoWeight())
+	                {
+	                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+	                	return;
+	                }
+	                MealProbability mp1 = new MealProbability(meal1, 0.5);
+	                
+	                //second meal
+	                HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
+	                items2.put(burgerItem, 2);
+	                items2.put(friesItem, 1);
+	                items2.put(drinkItem, 1); //0.55 percent chance
+	                Meal meal2 = new Meal(items2);
+	                if(meal2.getWeight() > drone.getCargoWeight())
+	                {
+	                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+	                	return;
+	                }
+	                MealProbability mp2 = new MealProbability(meal2, 0.2);
+	                
+	                //third meal
+	                HashMap<FoodItem, Integer> items3 = new HashMap<FoodItem, Integer>();
+	                items3.put(burgerItem, 1);
+	                items3.put(friesItem, 1);
+	                Meal meal3 = new Meal(items3);
+	                if(meal3.getWeight() > drone.getCargoWeight())
+	                {
+	                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+	                	return;
+	                }
+	                MealProbability mp3 = new MealProbability(meal3, 0.15);
+	                
+	                //4th meal
+	                HashMap<FoodItem, Integer> items4 = new HashMap<FoodItem, Integer>();
+	                items4.put(burgerItem, 2);
+	                items4.put(friesItem, 1);
+	                Meal meal4 = new Meal(items4);
+	                if(meal4.getWeight() > drone.getCargoWeight())
+	                {
+	                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+	                	return;
+	                }
+	                MealProbability mp4 = new MealProbability(meal4, 0.1);
+	                
+	                //5th meal
+	                HashMap<FoodItem, Integer> items5 = new HashMap<FoodItem, Integer>();
+	                items5.put(friesItem, 1);
+	                Meal meal5 = new Meal(items5);
+	                if(meal5.getWeight() > drone.getCargoWeight())
+	                {
+	                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
+	                	return;
+	                }
+	                MealProbability mp5 = new MealProbability(meal5, 0.05);
+	                
+	                MealProbability[] mp = {mp1, mp2, mp3, mp4, mp5};
+
+	                Simulation sim = new Simulation(loadedMap, mp, ordersPerHour);
+	                sim.run();
+
+	                FileChooser fileChooser = new FileChooser();
+	                FileChooser.ExtensionFilter extensions = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+	                fileChooser.getExtensionFilters().add(extensions);
+	                
+	                File results = fileChooser.showSaveDialog(primaryStage);
+	                
+	                if(results != null) {
+	                	sim.saveCSV(results);
+	                }
+	        	}
+	        	else {
+	        		errorMessagePoints.setText("* ALL 6 POINTS MUST BE SET *");
+	        	}
+
+				
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        	
+        	
         });
         
         undoLastPoint.setOnAction(e-> {
