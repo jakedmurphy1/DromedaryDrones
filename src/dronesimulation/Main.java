@@ -64,7 +64,43 @@ public class Main extends Application {
         
         //GUI Setup
         
+        /* WELCOME SCREEN */
+        Button startSimulation = new Button("Start Simulation");
+        startSimulation.setMaxSize(200, 50);
+        startSimulation.setTranslateX(110);
         
+        Button simulationSettings = new Button("Simulation Setup/Settings");
+        simulationSettings.setMaxSize(200, 50);
+        simulationSettings.setTranslateX(-110);
+        
+        Button defaultSettings = new Button("View Default Settings");
+        defaultSettings.setMaxSize(200, 50);
+        defaultSettings.setTranslateY(80);
+        
+        
+        Label title = new Label("Dromedary Drones Food Delivery Simulation");
+        title.setTranslateY(-160);
+        title.setFont(new Font("Arial", 25));
+        
+        Label description = new Label("Welcome to the drone delivery simulation by Dromedary Drones! Click Start Simulation to begin a new simulation with the default settings, or make a custom simulation in the settings tab.");
+        description.setTranslateY(-100);
+        description.setWrapText(true);
+        description.setMaxWidth(600);
+        description.setTextAlignment(TextAlignment.CENTER);
+        
+        //Create Layout
+        StackPane layout= new StackPane();
+        
+        //Add Elements to Layout
+        layout.getChildren().add(startSimulation);
+        layout.getChildren().add(simulationSettings);
+        layout.getChildren().add(defaultSettings);
+        layout.getChildren().add(title);
+        layout.getChildren().add(description);
+        
+        Scene scene1 = new Scene(layout, 750, 400);
+        primaryStage.setScene(scene1);
+        primaryStage.show();
         
         /* GET LOCATION POINTS SCREEN */
         
@@ -351,6 +387,10 @@ public class Main extends Application {
                 if(results != null) {
                 	sim.saveCSV(results);
                 }
+                
+                primaryStage.setScene(scene1);
+                primaryStage.show();
+                
         	}
         	else {
         		errorMessagePoints.setText("* ALL 6 POINTS MUST BE SET *");
@@ -382,45 +422,6 @@ public class Main extends Application {
 	            imageView.setImage(image2);
         	}
         });
-        
-      
-        
-        
-        /* WELCOME SCREEN */
-        Button startSimulation = new Button("Start Simulation");
-        startSimulation.setMaxSize(200, 50);
-        startSimulation.setTranslateX(110);
-        
-        Button simulationSettings = new Button("Simulation Setup/Settings");
-        simulationSettings.setMaxSize(200, 50);
-        simulationSettings.setTranslateX(-110);
-        
-        Button defaultSettings = new Button("View Default Settings");
-        defaultSettings.setMaxSize(200, 50);
-        defaultSettings.setTranslateY(80);
-        
-        
-        Label title = new Label("Dromedary Drones Food Delivery Simulation");
-        title.setTranslateY(-160);
-        title.setFont(new Font("Arial", 25));
-        
-        Label description = new Label("Welcome to the drone delivery simulation by Dromedary Drones! Click Start Simulation to begin a new simulation with the default settings, or make a custom simulation in the settings tab.");
-        description.setTranslateY(-100);
-        description.setWrapText(true);
-        description.setMaxWidth(600);
-        description.setTextAlignment(TextAlignment.CENTER);
-        
-        //Create Layout
-        StackPane layout= new StackPane();
-        
-        //Add Elements to Layout
-        layout.getChildren().add(startSimulation);
-        layout.getChildren().add(simulationSettings);
-        layout.getChildren().add(defaultSettings);
-        layout.getChildren().add(title);
-        layout.getChildren().add(description);
-        
-        
         
         /* DEFAULT SETTINGS SCREEN */
         Label title2 = new Label("Dromedary Drones Food Delivery Simulation Default Settings");
@@ -773,10 +774,7 @@ public class Main extends Application {
             
         
         /* SET THE SCENES */
-        Scene scene1 = new Scene(layout, 750, 400);
         Scene scene2 = new Scene(layout2, 750, 400);
-        primaryStage.setScene(scene1);
-        primaryStage.show();
         
         backToHome.setOnAction(e-> {
         	primaryStage.setScene(scene1);
@@ -949,6 +947,8 @@ public class Main extends Application {
             	sim.saveCSV(results);
             }
             
+            primaryStage.setScene(scene1);
+            primaryStage.show();
             
             
         });
@@ -1310,6 +1310,10 @@ public class Main extends Application {
 	            if(results != null) {
 	            	sim.saveCSV(results);
 	            }
+	            
+	            primaryStage.setScene(scene1);
+	            primaryStage.show();
+	            
         	}
         	else {
         		errorMessage.setVisible(true);
