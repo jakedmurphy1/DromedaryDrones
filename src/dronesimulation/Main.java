@@ -525,7 +525,7 @@ public class Main extends Application {
 	                points.get(countCircles).setText("(" + xValue + ", " + yValue + ")");
 	                customPoints.add(new HashMap<Integer, Integer>());
 	                //todo: add a scale factor
-	                customPoints.get(countCircles).put(xValue*10,  yValue*10);
+	                customPoints.get(countCircles).put(xValue*4,  yValue*4);
 	                countCircles++;
                 }
 
