@@ -566,6 +566,8 @@ public class Main extends Application {
 	        	
 	        	ArrayList<HashMap<Integer, Integer>> campusMap = new ArrayList<>();
 	        	
+	        	countCircles = 0;
+	        	
 				while(mapReader.hasNextLine()) {
 					String line = mapReader.nextLine();
 					Scanner lr = new Scanner(line);
@@ -579,7 +581,10 @@ public class Main extends Application {
 			                circles.get(countCircles).setTranslateX(x);
 			                circles.get(countCircles).setTranslateY(y);
 			                circles.get(countCircles).setRadius(10);
+			                System.out.println(circles.get(countCircles).getRadius());
 			                createPoints.getChildren().add(circles.get(countCircles));
+			                customPoints.add(new HashMap<Integer, Integer>());
+			                customPoints.get(countCircles).put(x*10,  y*10);
 			                countCircles++;
 		                }
 						point.put(x, y);
@@ -735,6 +740,11 @@ public class Main extends Application {
         
         defaultSettings.setOnAction( e -> {
         	primaryStage.setScene(defaultSettingsScene);
+        	primaryStage.show();
+        });
+        
+        backToHome.setOnAction ( e -> {
+        	primaryStage.setScene(scene1);
         	primaryStage.show();
         });
         
