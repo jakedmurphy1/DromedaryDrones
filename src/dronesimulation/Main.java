@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.Scanner;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -56,12 +57,7 @@ public class Main extends Application {
 	private String pictureLocation = "gcc.png";
 	private ArrayList<HashMap<Integer, Integer>> customPoints = new ArrayList<>();
 	private CampusMap customMap = null;
-	
-	public void mouseClicked(MouseEvent e) {
-	    int x = (int) e.getX();
-	    int y = (int) e.getY();
-	    System.out.println(x+","+y);//these co-ords are relative to the component
-	}
+	private CampusMap loadedMap = null;
 	
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -71,9 +67,45 @@ public class Main extends Application {
         
         //GUI Setup
         
+        /* WELCOME SCREEN */
+        Button startSimulation = new Button("Start Simulation");
+        startSimulation.setMaxSize(200, 50);
+        startSimulation.setTranslateX(110);
+        
+        Button simulationSettings = new Button("Simulation Setup/Settings");
+        simulationSettings.setMaxSize(200, 50);
+        simulationSettings.setTranslateX(-110);
+        
+        Button defaultSettings = new Button("View Default Settings");
+        defaultSettings.setMaxSize(200, 50);
+        defaultSettings.setTranslateY(80);
         
         
-        /*GET LOCATION POINTS SCREEN*/
+        Label title = new Label("Dromedary Drones Food Delivery Simulation");
+        title.setTranslateY(-160);
+        title.setFont(new Font("Arial", 25));
+        
+        Label description = new Label("Welcome to the drone delivery simulation by Dromedary Drones! Click Start Simulation to begin a new simulation with the default settings, or make a custom simulation in the settings tab.");
+        description.setTranslateY(-100);
+        description.setWrapText(true);
+        description.setMaxWidth(600);
+        description.setTextAlignment(TextAlignment.CENTER);
+        
+        //Create Layout
+        StackPane layout= new StackPane();
+        
+        //Add Elements to Layout
+        layout.getChildren().add(startSimulation);
+        layout.getChildren().add(simulationSettings);
+        layout.getChildren().add(defaultSettings);
+        layout.getChildren().add(title);
+        layout.getChildren().add(description);
+        
+        Scene scene1 = new Scene(layout, 750, 400);
+        primaryStage.setScene(scene1);
+        primaryStage.show();
+        
+        /* GET LOCATION POINTS SCREEN */
         
         //Create Layout
         StackPane createPoints = new StackPane();
@@ -81,6 +113,10 @@ public class Main extends Application {
         Button uploadImage = new Button("Upload New Map");
         uploadImage.setTranslateY(70);
         uploadImage.setTranslateX(250);
+        
+        Button loadMap = new Button("Load Saved Map");
+        loadMap.setTranslateY(110);
+        loadMap.setTranslateX(190);
         
         Button saveMap = new Button("Save Map and Points");
         saveMap.setTranslateY(100);
@@ -168,6 +204,7 @@ public class Main extends Application {
         createPoints.getChildren().add(dispatchPoint);
         createPoints.getChildren().add(uploadImage);
         createPoints.getChildren().add(saveMap);
+        createPoints.getChildren().add(loadMap);
         
         Scene scene3 = new Scene(createPoints, 750, 400);
         
@@ -194,6 +231,72 @@ public class Main extends Application {
             }
         });
         
+        //LOAD A SAVED MAP
+        loadMap.setOnAction(e -> {
+        	JFileChooser chooser = new JFileChooser();
+        	chooser.setCurrentDirectory(new File("."));
+        	chooser.setDialogTitle("Choose Image");
+        	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        	chooser.setAcceptAllFileFilterUsed(true);
+        	
+        	String mapLocation = null;
+        	
+        	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        		mapLocation = chooser.getSelectedFile().getAbsolutePath();
+        	}
+        	
+        	try {
+        		
+				File oldMap = new File(mapLocation);
+				Scanner mapReader = new Scanner(oldMap);
+				pictureLocation = mapReader.nextLine();
+				FileInputStream input2 = null;
+	        	
+	        	try {
+					input2 = new FileInputStream(pictureLocation);
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	        	if(input2 != null) {
+		            Image image2 = new Image(input2);
+		            imageView.setImage(image2);
+	        	}
+	        	
+	        	ArrayList<HashMap<Integer, Integer>> campusMap = new ArrayList<>();
+	        	
+				while(mapReader.hasNextLine()) {
+					String line = mapReader.nextLine();
+					Scanner lr = new Scanner(line);
+					lr.useDelimiter(" ");
+					while(lr.hasNext()) {
+						HashMap<Integer, Integer> point = new HashMap<>();
+						int x = Integer.parseInt(lr.next());
+						int y = Integer.parseInt(lr.next());
+						if (countCircles != 6) {
+			                //Create a circle
+			                circles.get(countCircles).setTranslateX(x);
+			                circles.get(countCircles).setTranslateY(y);
+			                circles.get(countCircles).setRadius(10);
+			                createPoints.getChildren().add(circles.get(countCircles));
+			                countCircles++;
+		                }
+						point.put(x, y);
+						campusMap.add(point);
+					}
+				}
+				
+				customMap = new CampusMap(campusMap);
+				
+				
+				
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
+        	
+        	
+        });
+        
         undoLastPoint.setOnAction(e-> {
         	if (countCircles > 0) {
 	        	countCircles--;
@@ -209,10 +312,9 @@ public class Main extends Application {
         
         pointsSetNext.setOnAction(e-> {
         	if (countCircles == 6) {
-        		for(int i = 0; i < 6; i++) {
-        			System.out.println("X: " + customPoints.get(i).keySet());
+        		if(customMap == null) {
+        			customMap = new CampusMap(customPoints);
         		}
-        		CampusMap customMap = new CampusMap(customPoints);
         		Drone drone = new Drone();
             	FoodItem burgerItem = new FoodItem(6);
                 FoodItem friesItem = new FoodItem(4);
@@ -293,6 +395,10 @@ public class Main extends Application {
                 if(results != null) {
                 	sim.saveCSV(results);
                 }
+                
+                primaryStage.setScene(scene1);
+                primaryStage.show();
+                
         	}
         	else {
         		errorMessagePoints.setText("* ALL 6 POINTS MUST BE SET *");
@@ -322,9 +428,6 @@ public class Main extends Application {
         	if(input2 != null) {
 	            Image image2 = new Image(input2);
 	            imageView.setImage(image2);
-//	            imageView.setTranslateX(-120);
-//	            imageView.setFitWidth(500);
-//	            imageView.setFitHeight(400);
         	}
         });
         
@@ -397,8 +500,6 @@ public class Main extends Application {
         layout.getChildren().add(title);
         layout.getChildren().add(description);
         
-        
-        
         /* DEFAULT SETTINGS SCREEN */
         Label title2 = new Label("Dromedary Drones Food Delivery Simulation Default Settings");
         title2.setTranslateY(-160);
@@ -430,6 +531,10 @@ public class Main extends Application {
         backToHome.setTranslateX(200);
         backToHome.setTranslateY(150);
         
+        Button goToCustomSettings = new Button("Go to Custom Settings");
+        goToCustomSettings.setTranslateX(200);
+        goToCustomSettings.setTranslateY(100);
+        
         //Create Layout
         StackPane defaultSettingsScreen = new StackPane();
         
@@ -439,6 +544,7 @@ public class Main extends Application {
         defaultSettingsScreen.getChildren().add(header);
         defaultSettingsScreen.getChildren().add(description3);
         defaultSettingsScreen.getChildren().add(backToHome);
+        defaultSettingsScreen.getChildren().add(goToCustomSettings);
         
         Scene defaultSettingsScene = new Scene(defaultSettingsScreen, 750, 400);
         
@@ -446,6 +552,7 @@ public class Main extends Application {
         	primaryStage.setScene(defaultSettingsScene);
         	primaryStage.show();
         });
+        
         
 
 
@@ -744,10 +851,7 @@ public class Main extends Application {
             
         
         /* SET THE SCENES */
-        Scene scene1 = new Scene(layout, 750, 400);
         Scene scene2 = new Scene(layout2, 750, 400);
-        primaryStage.setScene(scene1);
-        primaryStage.show();
         
         backToHome.setOnAction(e-> {
         	primaryStage.setScene(scene1);
@@ -772,6 +876,12 @@ public class Main extends Application {
         		primaryStage.show();
         	}*/
         	primaryStage.setScene(scene3);
+        	primaryStage.show();
+        });
+        
+        
+        goToCustomSettings.setOnAction( e -> {
+        	primaryStage.setScene(scene2);
         	primaryStage.show();
         });
         	
@@ -914,6 +1024,8 @@ public class Main extends Application {
             	sim.saveCSV(results);
             }
             
+            primaryStage.setScene(scene1);
+            primaryStage.show();
             
             
         });
@@ -1275,6 +1387,10 @@ public class Main extends Application {
 	            if(results != null) {
 	            	sim.saveCSV(results);
 	            }
+	            
+	            primaryStage.setScene(scene1);
+	            primaryStage.show();
+	            
         	}
         	else {
         		errorMessage.setVisible(true);
