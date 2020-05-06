@@ -1088,10 +1088,12 @@ public class Main extends Application {
 	        	
 	        	//Get orders per hour from user input
 	            int[] ordersPerHour = new int[4];
-	            ordersPerHour[0] = Integer.parseInt(hour1.getText());
-	            ordersPerHour[1] = Integer.parseInt(hour2.getText());
-	            ordersPerHour[2] = Integer.parseInt(hour3.getText());
-	            ordersPerHour[3] = Integer.parseInt(hour4.getText());
+	            ordersPerHour[0] = Integer.parseInt(hourField1.getText());
+	            ordersPerHour[1] = Integer.parseInt(hourField2.getText());
+	            ordersPerHour[2] = Integer.parseInt(hourField3.getText());
+	            ordersPerHour[3] = Integer.parseInt(hourField4.getText());
+	            
+	            
 	            
 	            //Create arraylist to hold order then convert to array later
 	            ArrayList<MealProbability> groupOrders = new ArrayList<MealProbability>();
