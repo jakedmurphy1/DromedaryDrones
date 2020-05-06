@@ -54,7 +54,7 @@ public class Main extends Application {
 	private String pictureLocation = "gcc.png";
 	private ArrayList<HashMap<Integer, Integer>> customPoints = new ArrayList<>();
 	private CampusMap customMap = null;
-	private CampusMap loadedMap = null;
+	//private CampusMap loadedMap = null;
 	
     @Override
     public void start(Stage primaryStage) throws Exception{
