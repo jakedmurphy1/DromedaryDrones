@@ -28,7 +28,9 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -108,11 +110,15 @@ public class Main extends Application {
         StackPane createPoints = new StackPane();
         
         Button uploadImage = new Button("Upload New Map");
-        uploadImage.setTranslateY(110);
+        uploadImage.setTranslateY(70);
         uploadImage.setTranslateX(310);
         
+        Button saveMap = new Button("Save Map and Points");
+        saveMap.setTranslateY(100);
+        saveMap.setTranslateX(250);
+        
         Button loadMap = new Button("Load Saved Map");
-        loadMap.setTranslateY(110);
+        loadMap.setTranslateY(70);
         loadMap.setTranslateX(190);
         
         Label createPointsTitle = new Label("Set Points By Clicking");
@@ -135,33 +141,33 @@ public class Main extends Application {
         pointsSetNext.setTranslateX(250);
         
         Label dispatchPoint = new Label("DISPATCH POINT: ()");
-        dispatchPoint.setTranslateY(-120);
+        dispatchPoint.setTranslateY(-130);
         dispatchPoint.setTranslateX(250);
         dispatchPoint.setFont(new Font("Arial", 15));
         dispatchPoint.setTextFill(Color.RED);
         
         Label point1 = new Label("Point 1: ()");
-        point1.setTranslateY(-90);
+        point1.setTranslateY(-100);
         point1.setTranslateX(250);
         point1.setFont(new Font("Arial", 15));
         
         Label point2 = new Label("Point 2: ()");
-        point2.setTranslateY(-50);
+        point2.setTranslateY(-70);
         point2.setTranslateX(250);
         point2.setFont(new Font("Arial", 15));
         
         Label point3 = new Label("Point 3: ()");
-        point3.setTranslateY(-10);
+        point3.setTranslateY(-40);
         point3.setTranslateX(250);
         point3.setFont(new Font("Arial", 15));
         
         Label point4 = new Label("Point 4: ()");
-        point4.setTranslateY(30);
+        point4.setTranslateY(-10);
         point4.setTranslateX(250);
         point4.setFont(new Font("Arial", 15));
         
         Label point5 = new Label("Point 5: ()");
-        point5.setTranslateY(70);
+        point5.setTranslateY(20);
         point5.setTranslateX(250);
         point5.setFont(new Font("Arial", 15));
         
@@ -197,6 +203,7 @@ public class Main extends Application {
         createPoints.getChildren().add(dispatchPoint);
         createPoints.getChildren().add(uploadImage);
         createPoints.getChildren().add(loadMap);
+        createPoints.getChildren().add(saveMap);
         
         Scene scene3 = new Scene(createPoints, 750, 400);
         
@@ -396,6 +403,40 @@ public class Main extends Application {
         		errorMessagePoints.setText("* ALL 6 POINTS MUST BE SET *");
         	}
         });
+        
+        saveMap.setOnAction(e -> {
+        	FileChooser chooser = new FileChooser();
+        	chooser.setInitialDirectory(new File("."));
+          	chooser.setTitle("Save Map");
+          	FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("MAP files (*.map)", "*.map");
+          	chooser.getExtensionFilters().add(extFilter);
+
+          	File file = chooser.showSaveDialog(null);
+
+          	if(file != null) {
+          		try {
+    				FileOutputStream output = new FileOutputStream(file);
+    				output.write(pictureLocation.getBytes());
+    				output.write("\n".getBytes());
+
+    				for(HashMap<Integer,Integer> point : customPoints) {
+    					for(Integer x : point.keySet()) {
+    						String outputPoint = x + "," + point.get(x);
+    						output.write(outputPoint.getBytes());
+    						output.write("\n".getBytes());
+    					}
+    				}
+
+    				output.close();
+    			} catch (FileNotFoundException e1) {
+    				// TODO Auto-generated catch block
+    				e1.printStackTrace();
+    			} catch (IOException e1) {
+    				// TODO Auto-generated catch block
+    				e1.printStackTrace();
+    			}
+          	}
+          });
         
         uploadImage.setOnAction(e -> {
         	JFileChooser chooser = new JFileChooser();
