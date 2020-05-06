@@ -583,15 +583,15 @@ public class Main extends Application {
 						System.out.print("X: " + x + " Y: " + y);
 						if (countCircles != 6) {
 			                //Create a circle
-			                newCircle.get(countCircles).setTranslateX(x/10);
-			                newCircle.get(countCircles).setTranslateY(y/10);
+			                newCircle.get(countCircles).setTranslateX(x/4);
+			                newCircle.get(countCircles).setTranslateY(y/4);
 			                newCircle.get(countCircles).setRadius(10);
 			                if(countCircles == 0) {
 			                	newCircle.get(countCircles).setFill(Color.RED);
 			                }
 			                createPoints.getChildren().add(newCircle.get(countCircles));
 			                customPoints.add(new HashMap<Integer, Integer>());
-			                customPoints.get(countCircles).put(x*10,  y*10);
+			                customPoints.get(countCircles).put(x*4,  y*4);
 			                points.get(countCircles).setText("(" + x + ", " + y + ")");
 			                countCircles++;
 		                }
@@ -601,7 +601,6 @@ public class Main extends Application {
 				}
 				
 				customMap = new CampusMap(campusMap);
-				
 				
 				
 			} catch (FileNotFoundException e1) {
