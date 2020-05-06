@@ -567,6 +567,10 @@ public class Main extends Application {
 	        	ArrayList<HashMap<Integer, Integer>> campusMap = new ArrayList<>();
 	        	
 	        	countCircles = 0;
+	        	ArrayList<Circle> newCircle = new ArrayList<Circle>();
+	        	for(int i = 0; i < 6; i++) {
+	        		newCircle.add(new Circle());
+	        	}
 	        	
 				while(mapReader.hasNextLine()) {
 					String line = mapReader.nextLine();
@@ -576,15 +580,19 @@ public class Main extends Application {
 						HashMap<Integer, Integer> point = new HashMap<>();
 						int x = Integer.parseInt(lr.next());
 						int y = Integer.parseInt(lr.next());
+						System.out.print("X: " + x + " Y: " + y);
 						if (countCircles != 6) {
 			                //Create a circle
-			                circles.get(countCircles).setTranslateX(x);
-			                circles.get(countCircles).setTranslateY(y);
-			                circles.get(countCircles).setRadius(10);
-			                System.out.println(circles.get(countCircles).getRadius());
-			                createPoints.getChildren().add(circles.get(countCircles));
+			                newCircle.get(countCircles).setTranslateX(x/10);
+			                newCircle.get(countCircles).setTranslateY(y/10);
+			                newCircle.get(countCircles).setRadius(10);
+			                if(countCircles == 0) {
+			                	newCircle.get(countCircles).setFill(Color.RED);
+			                }
+			                createPoints.getChildren().add(newCircle.get(countCircles));
 			                customPoints.add(new HashMap<Integer, Integer>());
 			                customPoints.get(countCircles).put(x*10,  y*10);
+			                points.get(countCircles).setText("(" + x + ", " + y + ")");
 			                countCircles++;
 		                }
 						point.put(x, y);
