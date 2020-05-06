@@ -738,29 +738,9 @@ public class Main extends Application {
         	primaryStage.show();
         });
         
-        
 
-
-  
-        
-        
-        
-        
-        
         /* SETUP BUTTON ACTIONS */
         loadCampusMap.setOnAction(e -> {
-        	/*JFileChooser chooser = new JFileChooser();
-        	chooser.setCurrentDirectory(new File("."));
-        	chooser.setDialogTitle("Choose Image");
-        	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        	chooser.setAcceptAllFileFilterUsed(true);
-        	
-        	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-        		pictureLocation = chooser.getSelectedFile().getAbsolutePath();
-        		System.out.println(pictureLocation);
-        		primaryStage.setScene(scene3);
-        		primaryStage.show();
-        	}*/
         	primaryStage.setScene(scene3);
         	primaryStage.show();
         });
