@@ -104,423 +104,6 @@ public class Main extends Application {
         primaryStage.setScene(scene1);
         primaryStage.show();
         
-        /* GET LOCATION POINTS SCREEN */
-        
-        //Create Layout
-        StackPane createPoints = new StackPane();
-        
-        Button uploadImage = new Button("Upload New Map");
-        uploadImage.setTranslateY(70);
-        uploadImage.setTranslateX(310);
-        
-        Button saveMap = new Button("Save Map and Points");
-        saveMap.setTranslateY(100);
-        saveMap.setTranslateX(250);
-        
-        Button loadMap = new Button("Load Saved Map");
-        loadMap.setTranslateY(70);
-        loadMap.setTranslateX(190);
-        
-        Label createPointsTitle = new Label("Set Points By Clicking");
-        createPointsTitle.setTranslateY(-160);
-        createPointsTitle.setTranslateX(250);
-        createPointsTitle.setFont(new Font("Arial", 20));
-        
-        Button undoLastPoint = new Button("Undo Last Point");
-        undoLastPoint.setTranslateX(250);
-        undoLastPoint.setTranslateY(142);
-        
-        Label errorMessagePoints = new Label("");
-        errorMessagePoints.setTranslateY(-185);
-        errorMessagePoints.setTranslateX(250);
-        errorMessagePoints.setFont(new Font("Arial", 12));
-        errorMessagePoints.setTextFill(Color.RED);
-        
-        Button pointsSetNext = new Button("Run Simulation");
-        pointsSetNext.setTranslateY(175);
-        pointsSetNext.setTranslateX(250);
-        
-        Label dispatchPoint = new Label("DISPATCH POINT: ()");
-        dispatchPoint.setTranslateY(-130);
-        dispatchPoint.setTranslateX(250);
-        dispatchPoint.setFont(new Font("Arial", 15));
-        dispatchPoint.setTextFill(Color.RED);
-        
-        Label point1 = new Label("Point 1: ()");
-        point1.setTranslateY(-100);
-        point1.setTranslateX(250);
-        point1.setFont(new Font("Arial", 15));
-        
-        Label point2 = new Label("Point 2: ()");
-        point2.setTranslateY(-70);
-        point2.setTranslateX(250);
-        point2.setFont(new Font("Arial", 15));
-        
-        Label point3 = new Label("Point 3: ()");
-        point3.setTranslateY(-40);
-        point3.setTranslateX(250);
-        point3.setFont(new Font("Arial", 15));
-        
-        Label point4 = new Label("Point 4: ()");
-        point4.setTranslateY(-10);
-        point4.setTranslateX(250);
-        point4.setFont(new Font("Arial", 15));
-        
-        Label point5 = new Label("Point 5: ()");
-        point5.setTranslateY(20);
-        point5.setTranslateX(250);
-        point5.setFont(new Font("Arial", 15));
-        
-        FileInputStream input = new FileInputStream(pictureLocation);
-        Image image = new Image(input);
-        ImageView imageView = new ImageView(image);
-        imageView.setTranslateX(-120);
-        imageView.setFitWidth(500);
-        imageView.setFitHeight(400);
-      
-        Circle dispatchCircle = new Circle();
-        dispatchCircle.setFill(Color.RED);
-        
-        Circle circle1 = new Circle();
-        Circle circle2 = new Circle();
-        Circle circle3 = new Circle();
-        Circle circle4 = new Circle();
-        Circle circle5 = new Circle();
-        
-        ArrayList<Circle> circles = new ArrayList<>(Arrays.asList(dispatchCircle, circle1, circle2, circle3, circle4, circle5));
-        ArrayList<Label> points = new ArrayList<>(Arrays.asList(dispatchPoint, point1, point2, point3, point4, point5));
-        
-        createPoints.getChildren().add(createPointsTitle);
-        createPoints.getChildren().add(imageView);
-        createPoints.getChildren().add(point1);
-        createPoints.getChildren().add(point2);
-        createPoints.getChildren().add(point3);
-        createPoints.getChildren().add(point4);
-        createPoints.getChildren().add(point5);
-        createPoints.getChildren().add(undoLastPoint);
-        createPoints.getChildren().add(pointsSetNext);
-        createPoints.getChildren().add(errorMessagePoints);
-        createPoints.getChildren().add(dispatchPoint);
-        createPoints.getChildren().add(uploadImage);
-        createPoints.getChildren().add(loadMap);
-        createPoints.getChildren().add(saveMap);
-        
-        Scene scene3 = new Scene(createPoints, 750, 400);
-        
-        imageView.setOnMouseClicked((EventHandler<? super MouseEvent>) new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                System.out.println((int) event.getSceneX());
-                System.out.println((int) event.getSceneY());
-                if (countCircles != 6) {
-	                //Create a circle
-                	int xValue = (int) (event.getSceneX()-375);
-                	int yValue = (int) (event.getSceneY()-200);
-	                circles.get(countCircles).setTranslateX(xValue);
-	                circles.get(countCircles).setTranslateY(yValue);
-	                circles.get(countCircles).setRadius(10);
-	                createPoints.getChildren().add(circles.get(countCircles));
-	                points.get(countCircles).setText("(" + xValue + ", " + yValue + ")");
-	                customPoints.add(new HashMap<Integer, Integer>());
-	                //todo: add a scale factor
-	                customPoints.get(countCircles).put(xValue*10,  yValue*10);
-	                countCircles++;
-                }
-
-            }
-        });
-        
-        //LOAD A SAVED MAP
-        loadMap.setOnAction(e -> {
-        	JFileChooser chooser = new JFileChooser();
-        	chooser.setCurrentDirectory(new File("."));
-        	chooser.setDialogTitle("Choose Image");
-        	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        	chooser.setAcceptAllFileFilterUsed(true);
-        	
-        	String mapLocation = null;
-        	
-        	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-        		mapLocation = chooser.getSelectedFile().getAbsolutePath();
-        	}
-        	
-        	try {
-        		
-				File oldMap = new File(mapLocation);
-				Scanner mapReader = new Scanner(oldMap);
-				pictureLocation = mapReader.nextLine();
-				FileInputStream input2 = null;
-	        	
-	        	try {
-					input2 = new FileInputStream(pictureLocation);
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-	        	if(input2 != null) {
-		            Image image2 = new Image(input2);
-		            imageView.setImage(image2);
-	        	}
-	        	
-	        	ArrayList<HashMap<Integer, Integer>> campusMap = new ArrayList<>();
-	        	
-				while(mapReader.hasNextLine()) {
-					String line = mapReader.nextLine();
-					Scanner lr = new Scanner(line);
-					lr.useDelimiter(" ");
-					while(lr.hasNext()) {
-						HashMap<Integer, Integer> point = new HashMap<>();
-						int x = Integer.parseInt(lr.next());
-						int y = Integer.parseInt(lr.next());
-						if (countCircles != 6) {
-			                //Create a circle
-			                circles.get(countCircles).setTranslateX(x);
-			                circles.get(countCircles).setTranslateY(y);
-			                circles.get(countCircles).setRadius(10);
-			                createPoints.getChildren().add(circles.get(countCircles));
-			                countCircles++;
-		                }
-						point.put(x, y);
-						campusMap.add(point);
-					}
-				}
-				
-				customMap = new CampusMap(campusMap);
-				
-				
-				
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			}
-        	
-        	
-        });
-        
-        undoLastPoint.setOnAction(e-> {
-        	if (countCircles > 0) {
-	        	countCircles--;
-	        	createPoints.getChildren().remove(circles.get(countCircles));
-	        	if (countCircles == 0) {
-	        		points.get(countCircles).setText("DISPATCH POINT: ()");
-	        	}
-	        	else {
-	        		points.get(countCircles).setText("Point " + (countCircles) + ": ()");
-	        	}
-        	}
-        });
-        
-        pointsSetNext.setOnAction(e-> {
-        	if (countCircles == 6) {
-        		if(customMap == null) {
-        			customMap = new CampusMap(customPoints);
-        		}
-        		Drone drone = new Drone();
-            	FoodItem burgerItem = new FoodItem(6);
-                FoodItem friesItem = new FoodItem(4);
-                FoodItem drinkItem = new FoodItem(14);
-                int[] ordersPerHour = {38, 45, 60, 30};
-                // Meal 1
-                HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
-                items1.put(burgerItem, 1);
-                items1.put(friesItem, 1);
-                items1.put(drinkItem, 1); //0.55 percent chance
-                Meal meal1 = new Meal(items1);
-                if(meal1.getWeight() > drone.getCargoWeight())
-                {
-                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
-                	return;
-                }
-                MealProbability mp1 = new MealProbability(meal1, 0.5);
-                
-                //second meal
-                HashMap<FoodItem, Integer> items2 = new HashMap<FoodItem, Integer>();
-                items2.put(burgerItem, 2);
-                items2.put(friesItem, 1);
-                items2.put(drinkItem, 1); //0.55 percent chance
-                Meal meal2 = new Meal(items2);
-                if(meal2.getWeight() > drone.getCargoWeight())
-                {
-                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
-                	return;
-                }
-                MealProbability mp2 = new MealProbability(meal2, 0.2);
-                
-                //third meal
-                HashMap<FoodItem, Integer> items3 = new HashMap<FoodItem, Integer>();
-                items3.put(burgerItem, 1);
-                items3.put(friesItem, 1);
-                Meal meal3 = new Meal(items3);
-                if(meal3.getWeight() > drone.getCargoWeight())
-                {
-                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
-                	return;
-                }
-                MealProbability mp3 = new MealProbability(meal3, 0.15);
-                
-                //4th meal
-                HashMap<FoodItem, Integer> items4 = new HashMap<FoodItem, Integer>();
-                items4.put(burgerItem, 2);
-                items4.put(friesItem, 1);
-                Meal meal4 = new Meal(items4);
-                if(meal4.getWeight() > drone.getCargoWeight())
-                {
-                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
-                	return;
-                }
-                MealProbability mp4 = new MealProbability(meal4, 0.1);
-                
-                //5th meal
-                HashMap<FoodItem, Integer> items5 = new HashMap<FoodItem, Integer>();
-                items5.put(friesItem, 1);
-                Meal meal5 = new Meal(items5);
-                if(meal5.getWeight() > drone.getCargoWeight())
-                {
-                	new Alert(Alert.AlertType.ERROR, "Meals must be below weight of " + drone.getCargoWeight() + " oz.").showAndWait();
-                	return;
-                }
-                MealProbability mp5 = new MealProbability(meal5, 0.05);
-                
-                MealProbability[] mp = {mp1, mp2, mp3, mp4, mp5};
-
-                Simulation sim = new Simulation(customMap, mp, ordersPerHour);
-                sim.run();
-
-                FileChooser fileChooser = new FileChooser();
-                FileChooser.ExtensionFilter extensions = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-                fileChooser.getExtensionFilters().add(extensions);
-                
-                File results = fileChooser.showSaveDialog(primaryStage);
-                
-                if(results != null) {
-                	sim.saveCSV(results);
-                }
-                
-                primaryStage.setScene(scene1);
-                primaryStage.show();
-                
-        	}
-        	else {
-        		errorMessagePoints.setText("* ALL 6 POINTS MUST BE SET *");
-        	}
-        });
-        
-        saveMap.setOnAction(e -> {
-        	FileChooser chooser = new FileChooser();
-        	chooser.setInitialDirectory(new File("."));
-          	chooser.setTitle("Save Map");
-          	FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("MAP files (*.map)", "*.map");
-          	chooser.getExtensionFilters().add(extFilter);
-
-          	File file = chooser.showSaveDialog(null);
-
-          	if(file != null) {
-          		try {
-    				FileOutputStream output = new FileOutputStream(file);
-    				output.write(pictureLocation.getBytes());
-    				output.write("\n".getBytes());
-
-    				for(HashMap<Integer,Integer> point : customPoints) {
-    					for(Integer x : point.keySet()) {
-    						String outputPoint = x + "," + point.get(x);
-    						output.write(outputPoint.getBytes());
-    						output.write("\n".getBytes());
-    					}
-    				}
-
-    				output.close();
-    			} catch (FileNotFoundException e1) {
-    				// TODO Auto-generated catch block
-    				e1.printStackTrace();
-    			} catch (IOException e1) {
-    				// TODO Auto-generated catch block
-    				e1.printStackTrace();
-    			}
-          	}
-          });
-        
-        uploadImage.setOnAction(e -> {
-        	JFileChooser chooser = new JFileChooser();
-        	chooser.setCurrentDirectory(new File("."));
-        	chooser.setDialogTitle("Choose Image");
-        	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        	chooser.setAcceptAllFileFilterUsed(true);
-        	
-        	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-        		pictureLocation = chooser.getSelectedFile().getAbsolutePath();
-        		System.out.println(pictureLocation);
-        	}
-        	
-        	FileInputStream input2 = null;
-        	
-        	try {
-				input2 = new FileInputStream(pictureLocation);
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-        	if(input2 != null) {
-	            Image image2 = new Image(input2);
-	            imageView.setImage(image2);
-        	}
-        });
-        
-        /* DEFAULT SETTINGS SCREEN */
-        Label title2 = new Label("Dromedary Drones Food Delivery Simulation Default Settings");
-        title2.setTranslateY(-160);
-        title2.setFont(new Font("Arial", 25));
-        
-        
-        Label header = new Label("The default simulation settings are as follows");
-        header.setTranslateY(-75);
-        header.setFont(new Font("Arial", 20));
-        header.setMaxWidth(600);
-        header.setTextAlignment(TextAlignment.LEFT);
-        
-        Label description2 = new Label("\n\tCampus: Grove City College\n\tOrder 1: 1 Burger, 1 Fries, 1 Drink, 50% Probability" + 
-        		"\n\tOrder 2: 2 Burgers, 1 Fries, 1 Drink, 20% Probability\n\tOrder 3: 1 Burger, 1 Fries, 15% Probability\n\tOrder 4: 2 Burgers, 1 Fries, 10% Probability" + 
-        		"\n\tOrder 5: 1 Fries, 5% Probability\n");
-        description2.setTranslateY(-10);
-        description2.setWrapText(true);
-        description2.setMaxWidth(600);
-        description2.setTextAlignment(TextAlignment.LEFT);
-        
-        Label description3 = new Label("\n\tOrders in Hour 1: 38\n\tOrders in Hour 2: 45\n\tOrders in Hour 3: 60\n\tOrders in Hour 4: 30\n");
-        description3.setTranslateY(75);
-        description3.setWrapText(true);
-        description3.setMaxWidth(600);
-        description3.setTextAlignment(TextAlignment.RIGHT);
-        
-        Button backToHome = new Button("Back");
-        backToHome.setMaxSize(50, 30);
-        backToHome.setTranslateX(200);
-        backToHome.setTranslateY(150);
-        
-        Button goToCustomSettings = new Button("Go to Custom Settings");
-        goToCustomSettings.setTranslateX(200);
-        goToCustomSettings.setTranslateY(100);
-        
-        //Create Layout
-        StackPane defaultSettingsScreen = new StackPane();
-        
-        //Add Elements to Layout
-        defaultSettingsScreen.getChildren().add(title2);
-        defaultSettingsScreen.getChildren().add(description2);
-        defaultSettingsScreen.getChildren().add(header);
-        defaultSettingsScreen.getChildren().add(description3);
-        defaultSettingsScreen.getChildren().add(backToHome);
-        defaultSettingsScreen.getChildren().add(goToCustomSettings);
-        
-        Scene defaultSettingsScene = new Scene(defaultSettingsScreen, 750, 400);
-        
-        defaultSettings.setOnAction( e -> {
-        	primaryStage.setScene(defaultSettingsScene);
-        	primaryStage.show();
-        });
-        
-        
-
-
-  
         
         /* CUSTOM SIMULATION SETTINGS SCREEN */
         Button customSimulationBackButton = new Button("Back");
@@ -817,10 +400,349 @@ public class Main extends Application {
         /* SET THE SCENES */
         Scene scene2 = new Scene(layout2, 750, 400);
         
-        backToHome.setOnAction(e-> {
+        /*backToHome.setOnAction(e-> {
         	primaryStage.setScene(scene1);
         	primaryStage.show();
+        });*/
+        
+        
+        /* GET LOCATION POINTS SCREEN */
+        
+        //Create Layout
+        StackPane createPoints = new StackPane();
+        
+        Button uploadImage = new Button("Upload New Map");
+        uploadImage.setTranslateY(70);
+        uploadImage.setTranslateX(310);
+        
+        Button saveMap = new Button("Save Map and Points");
+        saveMap.setTranslateY(100);
+        saveMap.setTranslateX(250);
+        
+        Button loadMap = new Button("Load Saved Map");
+        loadMap.setTranslateY(70);
+        loadMap.setTranslateX(190);
+        
+        Label createPointsTitle = new Label("Set Points By Clicking");
+        createPointsTitle.setTranslateY(-160);
+        createPointsTitle.setTranslateX(250);
+        createPointsTitle.setFont(new Font("Arial", 20));
+        
+        Button undoLastPoint = new Button("Undo Last Point");
+        undoLastPoint.setTranslateX(250);
+        undoLastPoint.setTranslateY(142);
+        
+        Label errorMessagePoints = new Label("");
+        errorMessagePoints.setTranslateY(-185);
+        errorMessagePoints.setTranslateX(250);
+        errorMessagePoints.setFont(new Font("Arial", 12));
+        errorMessagePoints.setTextFill(Color.RED);
+        
+        Button pointsSetNext = new Button("Back");
+        pointsSetNext.setTranslateY(175);
+        pointsSetNext.setTranslateX(250);
+        
+        Label dispatchPoint = new Label("DISPATCH POINT: ()");
+        dispatchPoint.setTranslateY(-130);
+        dispatchPoint.setTranslateX(250);
+        dispatchPoint.setFont(new Font("Arial", 15));
+        dispatchPoint.setTextFill(Color.RED);
+        
+        Label point1 = new Label("Point 1: ()");
+        point1.setTranslateY(-100);
+        point1.setTranslateX(250);
+        point1.setFont(new Font("Arial", 15));
+        
+        Label point2 = new Label("Point 2: ()");
+        point2.setTranslateY(-70);
+        point2.setTranslateX(250);
+        point2.setFont(new Font("Arial", 15));
+        
+        Label point3 = new Label("Point 3: ()");
+        point3.setTranslateY(-40);
+        point3.setTranslateX(250);
+        point3.setFont(new Font("Arial", 15));
+        
+        Label point4 = new Label("Point 4: ()");
+        point4.setTranslateY(-10);
+        point4.setTranslateX(250);
+        point4.setFont(new Font("Arial", 15));
+        
+        Label point5 = new Label("Point 5: ()");
+        point5.setTranslateY(20);
+        point5.setTranslateX(250);
+        point5.setFont(new Font("Arial", 15));
+        
+        FileInputStream input = new FileInputStream(pictureLocation);
+        Image image = new Image(input);
+        ImageView imageView = new ImageView(image);
+        imageView.setTranslateX(-120);
+        imageView.setFitWidth(500);
+        imageView.setFitHeight(400);
+      
+        Circle dispatchCircle = new Circle();
+        dispatchCircle.setFill(Color.RED);
+        
+        Circle circle1 = new Circle();
+        Circle circle2 = new Circle();
+        Circle circle3 = new Circle();
+        Circle circle4 = new Circle();
+        Circle circle5 = new Circle();
+        
+        ArrayList<Circle> circles = new ArrayList<>(Arrays.asList(dispatchCircle, circle1, circle2, circle3, circle4, circle5));
+        ArrayList<Label> points = new ArrayList<>(Arrays.asList(dispatchPoint, point1, point2, point3, point4, point5));
+        
+        createPoints.getChildren().add(createPointsTitle);
+        createPoints.getChildren().add(imageView);
+        createPoints.getChildren().add(point1);
+        createPoints.getChildren().add(point2);
+        createPoints.getChildren().add(point3);
+        createPoints.getChildren().add(point4);
+        createPoints.getChildren().add(point5);
+        createPoints.getChildren().add(undoLastPoint);
+        createPoints.getChildren().add(pointsSetNext);
+        createPoints.getChildren().add(errorMessagePoints);
+        createPoints.getChildren().add(dispatchPoint);
+        createPoints.getChildren().add(uploadImage);
+        createPoints.getChildren().add(loadMap);
+        createPoints.getChildren().add(saveMap);
+        
+        Scene scene3 = new Scene(createPoints, 750, 400);
+        
+        imageView.setOnMouseClicked((EventHandler<? super MouseEvent>) new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println((int) event.getSceneX());
+                System.out.println((int) event.getSceneY());
+                if (countCircles != 6) {
+	                //Create a circle
+                	int xValue = (int) (event.getSceneX()-375);
+                	int yValue = (int) (event.getSceneY()-200);
+	                circles.get(countCircles).setTranslateX(xValue);
+	                circles.get(countCircles).setTranslateY(yValue);
+	                circles.get(countCircles).setRadius(10);
+	                createPoints.getChildren().add(circles.get(countCircles));
+	                points.get(countCircles).setText("(" + xValue + ", " + yValue + ")");
+	                customPoints.add(new HashMap<Integer, Integer>());
+	                //todo: add a scale factor
+	                customPoints.get(countCircles).put(xValue*10,  yValue*10);
+	                countCircles++;
+                }
+
+            }
         });
+        
+        //LOAD A SAVED MAP
+        loadMap.setOnAction(e -> {
+        	JFileChooser chooser = new JFileChooser();
+        	chooser.setCurrentDirectory(new File("."));
+        	chooser.setDialogTitle("Choose Image");
+        	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        	chooser.setAcceptAllFileFilterUsed(true);
+        	
+        	String mapLocation = null;
+        	
+        	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        		mapLocation = chooser.getSelectedFile().getAbsolutePath();
+        	}
+        	
+        	try {
+        		
+				File oldMap = new File(mapLocation);
+				Scanner mapReader = new Scanner(oldMap);
+				pictureLocation = mapReader.nextLine();
+				FileInputStream input2 = null;
+	        	
+	        	try {
+					input2 = new FileInputStream(pictureLocation);
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	        	if(input2 != null) {
+		            Image image2 = new Image(input2);
+		            imageView.setImage(image2);
+	        	}
+	        	
+	        	ArrayList<HashMap<Integer, Integer>> campusMap = new ArrayList<>();
+	        	
+				while(mapReader.hasNextLine()) {
+					String line = mapReader.nextLine();
+					Scanner lr = new Scanner(line);
+					lr.useDelimiter(" ");
+					while(lr.hasNext()) {
+						HashMap<Integer, Integer> point = new HashMap<>();
+						int x = Integer.parseInt(lr.next());
+						int y = Integer.parseInt(lr.next());
+						if (countCircles != 6) {
+			                //Create a circle
+			                circles.get(countCircles).setTranslateX(x);
+			                circles.get(countCircles).setTranslateY(y);
+			                circles.get(countCircles).setRadius(10);
+			                createPoints.getChildren().add(circles.get(countCircles));
+			                countCircles++;
+		                }
+						point.put(x, y);
+						campusMap.add(point);
+					}
+				}
+				
+				customMap = new CampusMap(campusMap);
+				
+				
+				
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
+        	
+        	
+        });
+        
+        undoLastPoint.setOnAction(e-> {
+        	if (countCircles > 0) {
+	        	countCircles--;
+	        	createPoints.getChildren().remove(circles.get(countCircles));
+	        	if (countCircles == 0) {
+	        		points.get(countCircles).setText("DISPATCH POINT: ()");
+	        	}
+	        	else {
+	        		points.get(countCircles).setText("Point " + (countCircles) + ": ()");
+	        	}
+        	}
+        });
+        
+        pointsSetNext.setOnAction(e-> {
+        	if (countCircles == 6) {
+        		if(customMap == null) {
+        			customMap = new CampusMap(customPoints);
+        		}
+        		primaryStage.setScene(scene2);
+        		primaryStage.show();
+        	}
+       
+        	else {
+        		errorMessagePoints.setText("* ALL 6 POINTS MUST BE SET *");
+        	}
+        });
+        
+        saveMap.setOnAction(e -> {
+        	FileChooser chooser = new FileChooser();
+        	chooser.setInitialDirectory(new File("."));
+          	chooser.setTitle("Save Map");
+          	FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("MAP files (*.map)", "*.map");
+          	chooser.getExtensionFilters().add(extFilter);
+
+          	File file = chooser.showSaveDialog(null);
+
+          	if(file != null) {
+          		try {
+    				FileOutputStream output = new FileOutputStream(file);
+    				output.write(pictureLocation.getBytes());
+    				output.write("\n".getBytes());
+
+    				for(HashMap<Integer,Integer> point : customPoints) {
+    					for(Integer x : point.keySet()) {
+    						String outputPoint = x + " " + point.get(x);
+    						output.write(outputPoint.getBytes());
+    						output.write("\n".getBytes());
+    					}
+    				}
+
+    				output.close();
+    			} catch (FileNotFoundException e1) {
+    				// TODO Auto-generated catch block
+    				e1.printStackTrace();
+    			} catch (IOException e1) {
+    				// TODO Auto-generated catch block
+    				e1.printStackTrace();
+    			}
+          	}
+          });
+        
+        uploadImage.setOnAction(e -> {
+        	JFileChooser chooser = new JFileChooser();
+        	chooser.setCurrentDirectory(new File("."));
+        	chooser.setDialogTitle("Choose Image");
+        	chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        	chooser.setAcceptAllFileFilterUsed(true);
+        	
+        	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        		pictureLocation = chooser.getSelectedFile().getAbsolutePath();
+        		System.out.println(pictureLocation);
+        	}
+        	
+        	FileInputStream input2 = null;
+        	
+        	try {
+				input2 = new FileInputStream(pictureLocation);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        	if(input2 != null) {
+	            Image image2 = new Image(input2);
+	            imageView.setImage(image2);
+        	}
+        });
+        
+        /* DEFAULT SETTINGS SCREEN */
+        Label title2 = new Label("Dromedary Drones Food Delivery Simulation Default Settings");
+        title2.setTranslateY(-160);
+        title2.setFont(new Font("Arial", 25));
+        
+        
+        Label header = new Label("The default simulation settings are as follows");
+        header.setTranslateY(-75);
+        header.setFont(new Font("Arial", 20));
+        header.setMaxWidth(600);
+        header.setTextAlignment(TextAlignment.LEFT);
+        
+        Label description2 = new Label("\n\tCampus: Grove City College\n\tOrder 1: 1 Burger, 1 Fries, 1 Drink, 50% Probability" + 
+        		"\n\tOrder 2: 2 Burgers, 1 Fries, 1 Drink, 20% Probability\n\tOrder 3: 1 Burger, 1 Fries, 15% Probability\n\tOrder 4: 2 Burgers, 1 Fries, 10% Probability" + 
+        		"\n\tOrder 5: 1 Fries, 5% Probability\n");
+        description2.setTranslateY(-10);
+        description2.setWrapText(true);
+        description2.setMaxWidth(600);
+        description2.setTextAlignment(TextAlignment.LEFT);
+        
+        Label description3 = new Label("\n\tOrders in Hour 1: 38\n\tOrders in Hour 2: 45\n\tOrders in Hour 3: 60\n\tOrders in Hour 4: 30\n");
+        description3.setTranslateY(75);
+        description3.setWrapText(true);
+        description3.setMaxWidth(600);
+        description3.setTextAlignment(TextAlignment.RIGHT);
+        
+        Button backToHome = new Button("Back");
+        backToHome.setMaxSize(50, 30);
+        backToHome.setTranslateX(200);
+        backToHome.setTranslateY(150);
+        
+        Button goToCustomSettings = new Button("Go to Custom Settings");
+        goToCustomSettings.setTranslateX(200);
+        goToCustomSettings.setTranslateY(100);
+        
+        //Create Layout
+        StackPane defaultSettingsScreen = new StackPane();
+        
+        //Add Elements to Layout
+        defaultSettingsScreen.getChildren().add(title2);
+        defaultSettingsScreen.getChildren().add(description2);
+        defaultSettingsScreen.getChildren().add(header);
+        defaultSettingsScreen.getChildren().add(description3);
+        defaultSettingsScreen.getChildren().add(backToHome);
+        defaultSettingsScreen.getChildren().add(goToCustomSettings);
+        
+        Scene defaultSettingsScene = new Scene(defaultSettingsScreen, 750, 400);
+        
+        defaultSettings.setOnAction( e -> {
+        	primaryStage.setScene(defaultSettingsScene);
+        	primaryStage.show();
+        });
+        
+        
+
+
+  
+        
         
         
         
@@ -905,12 +827,21 @@ public class Main extends Application {
         startSimulation.setOnAction(e-> {
         	//Start the simulation with DEFAULT settings
         	
+        	CampusMap map = null;
+        	
+        	if(customMap == null) {
+            	map = new CampusMap("Grove City College");
+            }
+            
+            else {
+            	map = customMap;
+            }
+        	
         	Drone drone = new Drone();
         	FoodItem burgerItem = new FoodItem(6);
             FoodItem friesItem = new FoodItem(4);
             FoodItem drinkItem = new FoodItem(14);
             
-        	CampusMap map = new CampusMap("Grove City College");
             int[] ordersPerHour = {38, 45, 60, 30};
             // Meal 1
             HashMap<FoodItem, Integer> items1 = new HashMap<FoodItem, Integer>();
@@ -1147,7 +1078,15 @@ public class Main extends Application {
 	            FoodItem friesItem = new FoodItem(FRIES_WEIGHT);
 	            FoodItem drinkItem = new FoodItem(DRINKS_WEIGHT);
 	            
-	        	CampusMap map = new CampusMap("Grove City College");
+	            CampusMap map = null;
+	            
+	            if(customMap == null) {
+	            	map = new CampusMap("Grove City College");
+	            }
+	            
+	            else {
+	            	map = customMap;
+	            }
 	        	
 	        	//Get orders per hour from user input
 	            int[] ordersPerHour = new int[4];
