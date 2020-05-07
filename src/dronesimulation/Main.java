@@ -591,7 +591,7 @@ public class Main extends Application {
 			                }
 			                createPoints.getChildren().add(newCircle.get(countCircles));
 			                customPoints.add(new HashMap<Integer, Integer>());
-			                customPoints.get(countCircles).put(x*4,  y*4);
+			                customPoints.get(countCircles).put(x,  y);
 			                points.get(countCircles).setText("(" + x + ", " + y + ")");
 			                countCircles++;
 		                }
